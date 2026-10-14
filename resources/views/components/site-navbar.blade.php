@@ -1,130 +1,97 @@
 @php
-    $user    = auth()->user();
-    $isAdmin = $user?->role === 'admin';
-    $initial = $user ? \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($user->name, 0, 1)) : '';
-    $home    = route('home');
+    $user = auth()->user();
+    $isAdmin = $user && $user->role === 'admin';
+    $home = route('home');
+    $initial = $user ? mb_strtoupper(mb_substr($user->name, 0, 1)) : '';
 
     $links = [
-        ['Berita & Agenda',     $home.'#berita'],
-        ['Struktur Organisasi', $home.'#struktur-banom'],
-        ['Statistik Banom',     $home.'#statistik'],
-        ['Cek Kartu NIA',       $home.'#cek-kartu'],
-        ['Kotak Saran',         $home.'#saran'],
+        ['Berita & Agenda', route('public.news.index')],
+        ['Struktur Organisasi', $home . '#struktur-banom'],
+        ['Statistik Banom', $home . '#statistik'],
+        ['Kotak Saran', $home . '#saran'],
     ];
 
     $memberMenu = [
-        ['Dashboard Saya', route('member.dashboard'),  'ph-squares-four'],
-        ['Lihat KIA Saya', route('member.kia'),        'ph-identification-card'],
-        ['Data Saya',      route('member.data'),       'ph-user'],
-        ['Riwayat Infaq',  route('member.infaq'),      'ph-hand-coins'],
-        ['Notifikasi',     route('member.notifikasi'), 'ph-bell'],
-        ['Pengaturan',     route('member.pengaturan'), 'ph-gear'],
+        ['Dashboard Saya', 'member.dashboard', 'ph-squares-four'],
+        ['Lihat KIA Saya', 'member.kia', 'ph-identification-card'],
+        ['Data Saya', 'member.data', 'ph-user'],
+        ['Riwayat Infaq', 'member.infaq', 'ph-hand-coins'],
+        ['Notifikasi', 'member.notifikasi', 'ph-bell'],
+        ['Pengaturan', 'member.pengaturan', 'ph-gear'],
     ];
 @endphp
 
-<style>[x-cloak] { display: none !important; }</style>
+<style>
+    .nu-navbar details > summary { list-style: none; }
+    .nu-navbar details > summary::-webkit-details-marker { display: none; }
+</style>
 
-<div x-data="{ mobile: false }">
+<header class="nu-navbar fixed inset-x-0 top-4 sm:top-6 z-50 px-4">
+    <nav class="mx-auto flex w-full max-w-6xl items-center gap-3 rounded-full border border-stone-200 bg-white/95 px-3 py-2.5 text-stone-950 shadow-[0_12px_40px_rgba(25,35,29,0.10)] backdrop-blur-xl sm:px-5" aria-label="Navigasi utama">
 
-    <!-- NAVBAR -->
-    <nav class="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl bg-stone-950/90 backdrop-blur-md text-white rounded-full px-4 sm:px-6 py-2.5 sm:py-3 flex justify-between items-center z-50 shadow-2xl border border-white/10">
-
-        <!-- KIRI: profil (sudah login) atau Login/Daftar (belum login) -->
-        <div class="flex items-center gap-3">
+        {{-- KIRI: profil anggota / login --}}
+        <div class="flex shrink-0 items-center gap-2">
             @auth
-                <div class="relative" x-data="{ open: false }" @keydown.escape.window="open = false">
-                    <button type="button" @click="open = !open" :aria-expanded="open.toString()" aria-haspopup="menu"
-                            class="flex items-center gap-2 bg-stone-900 border border-white/15 hover:border-lime-400 text-stone-200 px-3 py-1.5 rounded-full text-xs font-bold transition">
-                        <div class="w-7 h-7 rounded-full bg-lime-400 text-stone-950 flex items-center justify-center font-black">{{ $initial }}</div>
-                        <span class="hidden sm:inline-block max-w-[100px] truncate">{{ $user->name }}</span>
-                        <i class="ph ph-caret-down text-xs transition-transform" :class="open && 'rotate-180'"></i>
-                    </button>
-
-                    <div x-show="open" x-cloak @click.outside="open = false" x-transition role="menu"
-                         class="absolute left-0 mt-2 w-60 bg-stone-900 border border-white/10 rounded-2xl shadow-2xl py-2 z-50 text-xs font-semibold">
-                        <div class="px-4 py-2 border-b border-white/10 text-stone-400">
-                            <p class="text-[10px] uppercase tracking-wider">{{ $isAdmin ? 'Masuk sebagai admin' : 'Nomor Induk Anggota' }}</p>
-                            <p class="text-white font-bold truncate {{ $isAdmin ? '' : 'font-mono text-lime-400' }}">
-                                {{ $isAdmin ? $user->email : ($user->nia ?? 'Belum ada') }}
-                            </p>
+                <details class="relative group">
+                    <summary class="flex cursor-pointer items-center gap-2 rounded-full border border-stone-200 bg-stone-50 py-1 pl-1 pr-3 transition hover:bg-stone-100" aria-label="Buka menu akun">
+                        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#183D30] text-sm font-bold text-white">{{ $initial }}</span>
+                        <span class="hidden max-w-24 truncate text-xs font-bold sm:inline">{{ $user->name }}</span>
+                        <i class="ph ph-caret-down text-xs text-stone-500"></i>
+                    </summary>
+                    <div class="absolute left-0 top-full mt-3 w-64 overflow-hidden rounded-2xl border border-stone-200 bg-white p-2 shadow-xl">
+                        <div class="border-b border-stone-100 px-3 py-3">
+                            <p class="truncate text-sm font-bold text-stone-900">{{ $user->name }}</p>
+                            <p class="truncate text-xs text-stone-500">{{ $user->email }}</p>
                         </div>
-
-                        @if ($isAdmin)
-                            <a href="{{ route('admin.dashboard') }}" role="menuitem" class="flex items-center gap-2.5 px-4 py-2 text-stone-200 hover:bg-stone-800 hover:text-lime-400 transition">
-                                <i class="ph ph-squares-four text-base"></i> Panel Admin
-                            </a>
-                            <a href="{{ route('admin.profile.edit') }}" role="menuitem" class="flex items-center gap-2.5 px-4 py-2 text-stone-200 hover:bg-stone-800 hover:text-lime-400 transition">
-                                <i class="ph ph-gear text-base"></i> Pengaturan
-                            </a>
+                        @if($isAdmin)
+                            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm hover:bg-stone-100"><i class="ph ph-squares-four"></i> Panel Admin</a>
+                            <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm hover:bg-stone-100"><i class="ph ph-gear"></i> Pengaturan</a>
                         @else
-                            @foreach ($memberMenu as [$label, $href, $icon])
-                                <a href="{{ $href }}" role="menuitem" class="flex items-center gap-2.5 px-4 py-2 text-stone-200 hover:bg-stone-800 hover:text-lime-400 transition">
-                                    <i class="ph {{ $icon }} text-base"></i> {{ $label }}
-                                </a>
+                            @foreach($memberMenu as [$label, $routeName, $icon])
+                                <a href="{{ route($routeName) }}" class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm hover:bg-stone-100"><i class="ph {{ $icon }}"></i> {{ $label }}</a>
                             @endforeach
-
-                            <div class="border-t border-white/10 my-1"></div>
-
-                            <a href="{{ $home }}#saran" role="menuitem" class="flex items-center gap-2.5 px-4 py-2 text-stone-200 hover:bg-stone-800 hover:text-lime-400 transition">
-                                <i class="ph ph-lifebuoy text-base"></i> Bantuan
-                            </a>
                         @endif
-
-                        <div class="border-t border-white/10 my-1"></div>
-
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="POST" action="{{ route('logout') }}" class="mt-1 border-t border-stone-100 pt-1">
                             @csrf
-                            <button type="submit" role="menuitem" class="w-full flex items-center gap-2.5 text-left px-4 py-2 text-red-400 hover:bg-stone-800 transition">
-                                <i class="ph ph-sign-out text-base"></i> Keluar
-                            </button>
+                            <button type="submit" class="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-red-700 hover:bg-red-50"><i class="ph ph-sign-out"></i> Keluar</button>
                         </form>
                     </div>
-                </div>
+                </details>
             @else
-                <div class="flex items-center gap-2">
-                    <a href="{{ route('member.login') }}" class="text-xs font-bold text-stone-300 hover:text-lime-400 px-2 py-1 transition">Login</a>
-                    <a href="{{ route('member.signup') }}" class="bg-lime-400 hover:bg-lime-300 text-stone-950 px-3.5 py-1.5 rounded-full text-[11px] font-black transition shadow-md">Daftar</a>
-                </div>
+                <a href="{{ route('member.login') }}" class="rounded-full px-3 py-2 text-xs font-bold text-stone-900 hover:bg-stone-100">Login</a>
             @endauth
         </div>
 
-        <!-- TENGAH: menu utama -->
-        <div class="hidden md:flex items-center gap-6 font-bold text-stone-300 text-xs">
-            @foreach ($links as [$label, $href])
-                <a href="{{ $href }}" class="hover:text-white transition">{{ $label }}</a>
+        {{-- TENGAH: navigasi --}}
+        <div class="hidden min-w-0 flex-1 items-center justify-center gap-4 lg:flex xl:gap-7">
+            @foreach($links as [$label, $href])
+                <a href="{{ $href }}" class="whitespace-nowrap text-xs font-semibold text-stone-700 transition hover:text-[#183D30]">{{ $label }}</a>
             @endforeach
         </div>
 
-        <!-- KANAN: logo -->
-        <div class="flex items-center">
-            <a href="{{ $home }}" class="flex items-center gap-2.5 sm:gap-3 pr-1">
-                <div class="flex-col text-right hidden sm:flex">
-                    <span class="font-black text-xs sm:text-sm tracking-tight text-white leading-none">PRNU <span class="text-lime-400">Lesmana</span></span>
-                    <span class="text-[8px] sm:text-[9px] font-semibold text-stone-400 uppercase tracking-widest mt-0.5">Portal Resmi Warga</span>
-                </div>
-                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center text-stone-950 font-black shadow-md shrink-0">
-                    <i class="ph ph-globe-hemisphere-west text-lg sm:text-xl"></i>
-                </div>
+        {{-- KANAN: daftar / identitas --}}
+        <div class="ml-auto flex shrink-0 items-center gap-2 lg:ml-0">
+            @guest
+                <a href="{{ route('member.signup') }}" class="hidden rounded-full bg-[#183D30] px-5 py-2.5 text-xs font-bold text-white transition hover:bg-[#275643] sm:inline-flex">Daftar Anggota</a>
+            @endguest
+            <a href="{{ $home }}" class="flex items-center gap-2" aria-label="Beranda NU Lesmana">
+                <span class="hidden text-right sm:block">
+                    <span class="block text-xs font-black leading-tight text-[#183D30]">PRNU Lesmana</span>
+                    <span class="block text-[9px] font-medium tracking-wide text-stone-500">PORTAL RESMI WARGA</span>
+                </span>
+                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[#183D30] text-white"><i class="ph ph-mosque text-xl"></i></span>
             </a>
-            <button type="button" @click="mobile = !mobile" class="md:hidden text-white text-2xl p-1.5 focus:outline-none ml-2" aria-label="Buka menu">
-                <i class="ph" :class="mobile ? 'ph-x' : 'ph-list'"></i>
-            </button>
+            <details class="relative lg:hidden">
+                <summary class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-stone-200 text-[#183D30]" aria-label="Buka navigasi"><i class="ph ph-list text-xl"></i></summary>
+                <div class="absolute right-0 top-full mt-3 w-64 rounded-2xl border border-stone-200 bg-white p-3 shadow-xl">
+                    @foreach($links as [$label, $href])
+                        <a href="{{ $href }}" class="block rounded-lg px-3 py-2.5 text-sm font-semibold hover:bg-stone-100">{{ $label }}</a>
+                    @endforeach
+                    @guest
+                        <a href="{{ route('member.signup') }}" class="mt-2 block rounded-lg bg-[#183D30] px-3 py-2.5 text-center text-sm font-bold text-white">Daftar Anggota</a>
+                    @endguest
+                </div>
+            </details>
         </div>
     </nav>
-
-    <!-- MENU MOBILE -->
-    <div x-show="mobile" x-cloak x-transition
-         class="fixed top-20 left-1/2 -translate-x-1/2 w-[92%] bg-stone-950/95 text-white rounded-3xl p-6 shadow-2xl border border-white/10 z-40 md:hidden flex flex-col gap-4 font-bold text-sm backdrop-blur-lg">
-        @foreach ($links as [$label, $href])
-            <a href="{{ $href }}" @click="mobile = false" class="hover:text-lime-400 transition py-1 border-b border-white/10">{{ $label }}</a>
-        @endforeach
-
-        @auth
-            <a href="{{ $isAdmin ? route('admin.dashboard') : route('member.dashboard') }}" class="text-lime-400 py-1 font-bold">
-                {{ $isAdmin ? 'Panel Admin' : 'Dashboard Saya' }}
-            </a>
-        @else
-            <a href="{{ route('member.login') }}" class="text-lime-400 py-1 font-bold">Login Anggota</a>
-        @endauth
-    </div>
-</div>
+</header>
