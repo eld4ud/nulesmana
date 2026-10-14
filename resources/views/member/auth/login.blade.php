@@ -118,7 +118,7 @@
         </form>
 
         <div class="mt-6 pt-5 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs font-semibold text-gray-600">
-            <span>Belum punya akun? <a href="{{ route('home') }}#daftar" class="font-black text-green-900 hover:text-green-700">Daftar anggota</a></span>
+            <span>Belum punya akun? <a href="{{ route('member.signup') }}" class="font-black text-green-900 hover:text-green-700">Daftar anggota</a></span>
             <span>Pengurus? <a href="{{ route('login') }}" class="font-black text-green-900 hover:text-green-700">Masuk sebagai admin</a></span>
         </div>
     </div>

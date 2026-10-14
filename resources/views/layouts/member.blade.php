@@ -26,5 +26,7 @@
         <p>© 2026 Pengurus Ranting NU Lesmana. All rights reserved.</p>
     </footer>
 
+    @stack('scripts')
+
 </body>
 </html>

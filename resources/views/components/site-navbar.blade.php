@@ -83,7 +83,7 @@
             @else
                 <div class="flex items-center gap-2">
                     <a href="{{ route('member.login') }}" class="text-xs font-bold text-stone-300 hover:text-lime-400 px-2 py-1 transition">Login</a>
-                    <a href="{{ $home }}#daftar" class="bg-lime-400 hover:bg-lime-300 text-stone-950 px-3.5 py-1.5 rounded-full text-[11px] font-black transition shadow-md">Daftar</a>
+                    <a href="{{ route('member.signup') }}" class="bg-lime-400 hover:bg-lime-300 text-stone-950 px-3.5 py-1.5 rounded-full text-[11px] font-black transition shadow-md">Daftar</a>
                 </div>
             @endauth
         </div>
