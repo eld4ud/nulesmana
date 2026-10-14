@@ -40,48 +40,101 @@
 </head>
 <body class="bg-[#d5f028] text-gray-900 min-h-screen relative overflow-x-hidden selection:bg-green-900 selection:text-white">
 
-    <!-- NAVBAR -->
+   <!-- NAVBAR -->
     <nav class="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-6xl bg-stone-950/90 backdrop-blur-md text-white rounded-full px-4 sm:px-6 py-2.5 sm:py-3 flex justify-between items-center z-50 shadow-2xl border border-white/10 transition-all duration-300">
-        <a href="#" class="flex items-center gap-2.5 sm:gap-3 pl-1">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center text-stone-950 font-black shadow-md shrink-0">
-                <i class="ph ph-globe-hemisphere-west text-lg sm:text-xl"></i>
-            </div>
-            <div class="flex flex-col">
-                <span class="font-black text-xs sm:text-sm tracking-tight text-white font-linktree leading-none">
-                    PRNU <span class="text-lime-400">Lesmana</span>
-                </span>
-                <span class="text-[8px] sm:text-[9px] font-semibold text-stone-400 uppercase tracking-widest mt-0.5">Portal Resmi Warga</span>
-            </div>
-        </a>
+        
+        <!-- KIRI: Tombol Profil (jika login) ATAU Tombol Login/Daftar (jika belum login) -->
+        <div class="flex items-center gap-3">
+            @auth
+                <!-- Dropdown Profil Member / Admin -->
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open" class="flex items-center gap-2 bg-stone-9kt border border-white/15 hover:border-lime-400 text-stone-200 px-3 py-1.5 rounded-full text-xs font-bold transition">
+                        <div class="w-7 h-7 rounded-full bg-lime-400 text-stone-950 flex items-center justify-center font-black">
+                            {{ substr(auth()->user()->name, 0, 1) }}
+                        </div>
+                        <span class="hidden sm:inline-block max-w-[100px] truncate">{{ auth()->user()->name }}</span>
+                        <i class="ph ph-caret-down text-xs"></i>
+                    </button>
 
+                    <!-- Menu Dropdown Profil -->
+                    <div x-show="open" @click.outside="open = false" x-transition class="absolute left-0 mt-2 w-52 bg-stone-900 border border-white/10 rounded-2xl shadow-2xl py-2 z-50 text-xs font-semibold">
+                        <div class="px-4 py-2 border-b border-white/10 text-stone-400">
+                            <p class="text-[10px] uppercase tracking-wider">Masuk sebagai</p>
+                            <p class="text-white font-bold truncate">{{ auth()->user()->email }}</p>
+                        </div>
+
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-stone-200 hover:bg-stone-800 hover:text-lime-400 transition">Panel Admin</a>
+                        @else
+                            <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-stone-200 hover:bg-stone-800 hover:text-lime-400 transition">Dashboard Saya</a>
+                        @endif
+
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-stone-200 hover:bg-stone-800 hover:text-lime-400 transition">Informasi & Pengaturan</a>
+
+                        <div class="border-t border-white/10 my-1"></div>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full text-left px-4 py-2 text-red-400 hover:bg-stone-800 transition">Keluar (Logout)</button>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('login') }}" class="text-xs font-bold text-stone-300 hover:text-lime-400 px-2 py-1 transition">
+                        Login
+                    </a>
+                    <a href="#daftar" class="bg-lime-400 hover:bg-lime-300 text-stone-950 px-3.5 py-1.5 rounded-full text-[11px] font-black transition shadow-md">
+                        Daftar
+                    </a>
+                </div>
+            @endauth
+        </div>
+
+        <!-- TENGAH: Menu Navigasi Utama -->
         <div class="hidden md:flex items-center gap-6 font-bold text-stone-300 text-xs">
             <a href="#berita" class="hover:text-white transition">Berita & Agenda</a>
             <a href="#struktur-banom" class="hover:text-white transition">Struktur Organisasi</a>
             <a href="#statistik" class="hover:text-white transition">Statistik Banom</a>
+            <a href="#cek-kartu" class="hover:text-white transition">Cek Kartu NIA</a>
             <a href="#saran" class="hover:text-white transition">Kotak Saran</a>
         </div>
 
-        <div class="flex items-center gap-2">
-            <a href="{{ route('login') }}" class="hidden lg:inline-block text-xs font-bold text-stone-400 hover:text-white px-2 py-2 transition">
-                Login Admin
+        <!-- KANAN: Logo PRNU Lesmana -->
+        <div class="flex items-center">
+            <a href="#" class="flex items-center gap-2.5 sm:gap-3 pr-1">
+                <div class="flex flex-col text-right hidden sm:flex">
+                    <span class="font-black text-xs sm:text-sm tracking-tight text-white font-linktree leading-none">
+                        PRNU <span class="text-lime-400">Lesmana</span>
+                    </span>
+                    <span class="text-[8px] sm:text-[9px] font-semibold text-stone-400 uppercase tracking-widest mt-0.5">Portal Resmi Warga</span>
+                </div>
+                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center text-stone-950 font-black shadow-md shrink-0">
+                    <i class="ph ph-globe-hemisphere-west text-lg sm:text-xl"></i>
+                </div>
             </a>
-            <a href="#daftar" class="bg-white hover:bg-lime-400 text-stone-950 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-black transition-all duration-300 font-linktree shadow-md flex items-center gap-1.5 sm:gap-2 shrink-0">
-                <i class="ph ph-user-plus text-sm"></i>
-                <span>Daftar</span>
-            </a>
-            <button onclick="toggleMobileMenu()" class="md:hidden text-white text-2xl p-1.5 focus:outline-none ml-1">
+            <button onclick="toggleMobileMenu()" class="md:hidden text-white text-2xl p-1.5 focus:outline-none ml-2">
                 <i class="ph ph-list" id="menuIcon"></i>
             </button>
         </div>
     </nav>
-
+    
     <!-- MENU MOBILE -->
     <div id="mobileMenu" class="fixed top-20 left-1/2 -translate-x-1/2 w-[92%] bg-stone-950/95 text-white rounded-3xl p-6 shadow-2xl border border-white/10 z-40 hidden md:hidden flex flex-col gap-4 font-bold text-sm backdrop-blur-lg">
         <a href="#berita" onclick="toggleMobileMenu()" class="hover:text-lime-400 transition py-1 border-b border-white/10">Berita & Agenda</a>
         <a href="#struktur-banom" onclick="toggleMobileMenu()" class="hover:text-lime-400 transition py-1 border-b border-white/10">Struktur Organisasi</a>
         <a href="#statistik" onclick="toggleMobileMenu()" class="hover:text-lime-400 transition py-1 border-b border-white/10">Statistik Banom</a>
+        <a href="#cek-kartu" onclick="toggleMobileMenu()" class="hover:text-lime-400 transition py-1 border-b border-white/10">Cek Kartu NIA</a>
         <a href="#saran" onclick="toggleMobileMenu()" class="hover:text-lime-400 transition py-1 border-b border-white/10">Kotak Saran</a>
-        <a href="{{ route('login') }}" class="text-lime-400 py-1">Login Admin →</a>
+        @auth
+            @if(auth()->user()->role === 'admin')
+                <a href="{{ route('admin.dashboard') }}" class="text-lime-400 py-1 font-bold">Panel Admin →</a>
+            @else
+                <a href="{{ route('dashboard') }}" class="text-lime-400 py-1 font-bold">Dashboard Member →</a>
+            @endif
+        @else
+            <a href="{{ route('login') }}" class="text-lime-400 py-1 font-bold">Login →</a>
+        @endauth
     </div>
 
     <!-- NOTIFIKASI -->
@@ -94,41 +147,39 @@
         @endif
     </div>
 
-    <!-- ================= HERO (KONSEP LUXE, WARNA LIME & HIJAU) ================= -->
+    <!-- ================= HERO ================= -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-4 sm:pt-8 pb-12 sm:pb-16">
 
         <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-6">
 
             <!-- TEKS KIRI -->
             <div class="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
-                <p class="text-sm sm:text-base font-bold text-gray-800 mb-2">HUHU HAHA</p>
+                <p class="text-sm sm:text-base font-bold text-gray-800 mb-2">PENGURUS RANTING NAHDLATUL ULAMA</p>
                 <h1 class="font-display text-6xl sm:text-8xl lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.92] text-gray-900 mb-5 sm:mb-6">
                     PORTAL RESMI <br>
                     <span class="text-green-900">LESMANA.</span>
                 </h1>
                 <p class="text-sm sm:text-base lg:text-lg font-semibold text-gray-800 mb-6 sm:mb-8 leading-relaxed max-w-lg">
-                    Pusat informasi kegiatan majelis, berita agenda keagamaan, serta layanan pendaftaran anggota Badan Otonom Ranting NU.
+                    Pusat informasi kegiatan majelis, berita agenda keagamaan, serta layanan pendaftaran anggota Badan Otonom Ranting NU dengan verifikasi NIA otomatis.
                 </p>
                 <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
                     <a href="#berita" class="w-full sm:w-auto bg-gray-900 text-white text-xs sm:text-sm font-black px-6 sm:px-8 py-3.5 sm:py-4 rounded-full hover:bg-green-800 transition transform hover:scale-105 shadow-xl font-linktree text-center">
                         Lihat Berita Kegiatan
                     </a>
-                    <a href="#saran" class="w-full sm:w-auto bg-white border-2 border-gray-900 text-gray-900 text-xs sm:text-sm font-black px-6 sm:px-8 py-3.5 sm:py-4 rounded-full hover:bg-gray-50 transition transform hover:scale-105 shadow-xl font-linktree text-center">
-                        Kirim Saran
+                    <a href="#cek-kartu" class="w-full sm:w-auto bg-white border-2 border-gray-900 text-gray-900 text-xs sm:text-sm font-black px-6 sm:px-8 py-3.5 sm:py-4 rounded-full hover:bg-gray-50 transition transform hover:scale-105 shadow-xl font-linktree text-center">
+                        Cek Kartu NIA
                     </a>
                 </div>
             </div>
 
-           <!-- VISUAL KANAN: BENTO PIL & FOTO (konsep OpenBank, tanpa animasi) -->
+            <!-- VISUAL KANAN -->
             <div class="w-full lg:w-1/2">
                 <div class="grid grid-cols-8 gap-3 sm:gap-4 w-full max-w-[34rem] mx-auto lg:mr-0">
 
-                    <!-- 1. ATAS: logo NU -->
                     <div class="col-span-5 h-56 sm:h-[17rem] rounded-[2.2rem] sm:rounded-[3rem] overflow-hidden bg-white shadow-xl flex items-center justify-center p-8 sm:p-12">
                         <img src="https://www.freepnglogos.com/uploads/logo-nu-png/free-transparent-logo-nu-3.png" alt="Logo NU" class="w-full h-full object-contain">
                     </div>
 
-                    <!-- 2. PIL PUTIH: agenda -->
                     <div class="col-span-3 h-56 sm:h-[17rem] rounded-full bg-white shadow-xl flex flex-col items-center justify-center text-center px-3 py-5 sm:px-5">
                         <div class="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-green-900 text-lime-400 flex items-center justify-center text-lg sm:text-2xl mb-2 sm:mb-3 shrink-0">
                             <i class="ph ph-calendar-check"></i>
@@ -138,7 +189,6 @@
                         <p class="text-[9px] sm:text-xs italic text-gray-500 mt-1 sm:mt-2 break-words">Setiap Malam Jumat Kliwon di Masjid Jami'</p>
                     </div>
 
-                    <!-- 3. PIL HIJAU: total kader -->
                     <div class="col-span-3 h-56 sm:h-[17rem] rounded-full bg-green-900 text-white shadow-xl flex flex-col items-center justify-between text-center px-3 py-5 sm:py-8">
                         <div class="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-white text-green-900 flex items-center justify-center text-base sm:text-xl">
                             <i class="ph ph-users-three"></i>
@@ -150,7 +200,6 @@
                         <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-lime-400 text-green-900 flex items-center justify-center font-black text-xs sm:text-base ring-4 ring-white/20">NU</div>
                     </div>
 
-                    <!-- 4. BAWAH: foto Banser -->
                     <div class="relative col-span-5 h-56 sm:h-[17rem] rounded-[2.2rem] sm:rounded-[3rem] overflow-hidden bg-green-950 shadow-xl">
                         <img src="https://tse4.mm.bing.net/th/id/OIP.IH5IAS6MFALaYyTOuSISagHaE2?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Kaderisasi Banser" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-green-950/60 via-transparent to-transparent"></div>
@@ -180,7 +229,7 @@
                 <a href="#daftar" class="group block">
                     <div class="w-12 h-12 border-2 border-green-900 text-green-900 rounded-xl flex items-center justify-center text-2xl group-hover:bg-green-900 group-hover:text-lime-400 transition"><i class="ph ph-user-plus"></i></div>
                     <h3 class="font-black text-base mt-3">Pendaftaran Anggota</h3>
-                    <p class="text-xs sm:text-sm text-gray-700 font-semibold mt-1">Daftar online, lalu diverifikasi oleh pengurus.</p>
+                    <p class="text-xs sm:text-sm text-gray-700 font-semibold mt-1">Daftar online, dapatkan NIA setelah diverifikasi pengurus.</p>
                 </a>
             </div>
         </div>
@@ -203,7 +252,6 @@
                 <button onclick="switchTab('muslimat')" id="tab-muslimat" class="tab-btn bg-gray-100 hover:bg-gray-200 text-gray-700 text-[11px] sm:text-xs font-black px-4 sm:px-6 py-2.5 sm:py-3 rounded-full transition shrink-0 font-linktree">Muslimat NU</button>
             </div>
 
-            <!-- Piramid dirender via JS -->
             <div id="tab-content" class="pb-2"></div>
         </div>
     </section>
@@ -234,7 +282,6 @@
             @if($mainNews)
                 <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
 
-                    <!-- BERITA UTAMA -->
                     <div class="lg:col-span-3 group p-3 rounded-2xl border border-gray-200 bg-gradient-to-br from-lime-100 to-white shadow-sm hover:shadow-lg transition duration-300">
                         <a href="{{ url('/news/' . $mainNews->id) }}" class="block">
                             <div class="relative h-56 sm:h-80 lg:h-[390px] overflow-hidden rounded-xl bg-green-950">
@@ -274,7 +321,6 @@
                         </div>
                     </div>
 
-                    <!-- FEED BERITA -->
                     <div class="lg:col-span-2 flex flex-col gap-5">
                         @forelse($sideNews as $news)
                             <article class="group flex flex-col sm:flex-row gap-4 p-3 rounded-2xl border border-gray-200 bg-gradient-to-br from-lime-100 to-white shadow-sm hover:shadow-lg transition duration-300">
@@ -349,6 +395,25 @@
         </div>
     </section>
 
+    <!-- ================= CEK / CETAK KARTU BERDASARKAN NIA ================= -->
+    <section id="cek-kartu" class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 scroll-mt-28">
+        <div class="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 lg:p-12 shadow-2xl border border-gray-100 text-center max-w-3xl mx-auto">
+            <span class="bg-green-100 text-green-800 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">Validasi Anggota</span>
+            <h2 class="font-display text-4xl sm:text-5xl text-gray-900 mb-2">CEK KARTU ANGGOTA (NIA)</h2>
+            <p class="text-xs sm:text-sm text-gray-600 font-medium mb-6">
+                Masukkan Nomor Induk Anggota (NIA) Anda untuk memverifikasi keaktifan data dan mencetak kartu anggota secara mandiri.
+            </p>
+
+            <form action="#" method="GET" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input type="text" name="nia" placeholder="Contoh: NLS-202610-0001" required
+                    class="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-xs sm:text-sm font-mono text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-900">
+                <button type="submit" class="px-6 py-3 bg-green-900 text-white font-black text-xs sm:text-sm rounded-xl hover:bg-green-800 transition shadow-md font-linktree whitespace-nowrap">
+                    Cek & Cetak
+                </button>
+            </form>
+        </div>
+    </section>
+
     <!-- ================= KOTAK SARAN & PENDAFTARAN ================= -->
     <section id="saran" class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 pb-20 sm:pb-24 scroll-mt-28">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
@@ -386,41 +451,47 @@
                     <h3 class="font-display text-4xl sm:text-5xl text-white mb-1.5">FORMULIR PENDAFTARAN</h3>
                     <p class="text-xs text-green-200 font-medium mb-6">Daftarkan diri Anda menjadi bagian dari Badan Otonom NU Lesmana.</p>
 
-                    <form action="{{ route('member.register') }}" method="POST" class="space-y-3.5 sm:space-y-4">
-                        @csrf
-                        <div>
-                            <label class="block text-xs font-bold uppercase mb-1 text-green-100">Nama Lengkap</label>
-                            <input type="text" name="name" required placeholder="Sesuai KTP / KK" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white placeholder-green-200/50 outline-none focus:ring-2 focus:ring-lime-400">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase mb-1 text-green-100">Jenis Kelamin</label>
-                            <select name="gender" required class="w-full bg-green-950 border border-white/20 rounded-xl px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white outline-none focus:ring-2 focus:ring-lime-400">
-                                <option value="Laki-laki">Laki-laki</option>
-                                <option value="Perempuan">Perempuan</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase mb-1 text-green-100">Pilihan Banom</label>
-                            <select name="banom" required class="w-full bg-green-950 border border-white/20 rounded-xl px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white outline-none focus:ring-2 focus:ring-lime-400">
-                                <option value="IPNU">IPNU (Pelajar Putra)</option>
-                                <option value="IPPNU">IPPNU (Pelajar Putri)</option>
-                                <option value="Ansor">GP Ansor / Banser</option>
-                                <option value="Fatayat">Fatayat NU</option>
-                                <option value="Muslimat">Muslimat NU</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase mb-1 text-green-100">No. WhatsApp</label>
-                            <input type="text" name="phone" placeholder="08xxxxxxxxxx" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white placeholder-green-200/50 outline-none focus:ring-2 focus:ring-lime-400">
-                        </div>
-                        <button type="submit" class="w-full bg-lime-400 hover:bg-lime-300 text-gray-900 font-black py-3.5 sm:py-4 rounded-xl transition font-linktree text-xs sm:text-sm mt-2">
-                            Kirim Formulir Pendaftaran
-                        </button>
-                    </form>
+              <form action="{{ route('member.register') }}" method="POST" autocomplete="off" class="space-y-3.5 sm:space-y-4">
+                    @csrf
+                    <div>
+                        <label class="block text-xs font-bold uppercase mb-1 text-green-100">Nama Lengkap</label>
+                        <input type="text" name="name" required placeholder="Sesuai KTP / KK" autocomplete="off" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white placeholder-green-200/50 outline-none focus:ring-2 focus:ring-lime-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase mb-1 text-green-100">Email Akun</label>
+                        <input type="email" name="email" required placeholder="email@domain.com" autocomplete="new-email" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white placeholder-green-200/50 outline-none focus:ring-2 focus:ring-lime-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase mb-1 text-green-100">Pilihan Banom</label>
+                        <select name="banom" required class="w-full bg-green-950 border border-white/20 rounded-xl px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white outline-none focus:ring-2 focus:ring-lime-400">
+                            <option value="IPNU">IPNU (Pelajar Putra)</option>
+                            <option value="IPPNU">IPPNU (Pelajar Putri)</option>
+                            <option value="Ansor">GP Ansor / Banser</option>
+                            <option value="Fatayat">Fatayat NU</option>
+                            <option value="Muslimat">Muslimat NU</option>
+                            <option value="NU">Nahdlatul Ulama</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase mb-1 text-green-100">No. WhatsApp</label>
+                        <input type="text" name="phone" placeholder="08xxxxxxxxxx" autocomplete="off" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white placeholder-green-200/50 outline-none focus:ring-2 focus:ring-lime-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase mb-1 text-green-100">Password</label>
+                        <input type="password" name="password" required placeholder="Minimal 8 karakter" autocomplete="new-password" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white placeholder-green-200/50 outline-none focus:ring-2 focus:ring-lime-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase mb-1 text-green-100">Konfirmasi Password</label>
+                        <input type="password" name="password_confirmation" required placeholder="Ulangi password" autocomplete="new-password" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white placeholder-green-200/50 outline-none focus:ring-2 focus:ring-lime-400">
+                    </div>
+                    <button type="submit" class="w-full bg-lime-400 hover:bg-lime-300 text-gray-900 font-black py-3.5 sm:py-4 rounded-xl transition font-linktree text-xs sm:text-sm mt-2">
+                        Kirim Formulir Pendaftaran
+                    </button>
+                </form>
                 </div>
 
                 <div class="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-white/10 text-center text-[11px] text-green-200/70">
-                    Pendaftaran akan diverifikasi/di-ACC terlebih dahulu oleh Pengurus Admin.
+                    Pendaftaran akan diverifikasi/di-ACC terlebih dahulu oleh Pengurus Admin agar NIA diterbitkan.
                 </div>
             </div>
 
@@ -444,27 +515,7 @@
             { tag: 'Kaderisasi', title: 'Pelatihan Banser & Ansor', sub: 'Siap Menjaga Ulama & NKRI' }
         ];
         const slides = document.querySelectorAll('.slide-item');
-        const agendaCard = document.getElementById('agendaCard');
         let currentSlide = 0;
-
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.classList.toggle('opacity-100', i === index);
-                slide.classList.toggle('opacity-0', i !== index);
-            });
-            agendaCard.style.opacity = 0;
-            setTimeout(() => {
-                document.getElementById('agendaTag').textContent = slideData[index].tag;
-                document.getElementById('agendaTitle').textContent = slideData[index].title;
-                document.getElementById('agendaSub').textContent = slideData[index].sub;
-                agendaCard.style.opacity = 1;
-            }, 300);
-        }
-
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % slides.length;
-            showSlide(currentSlide);
-        }, 3500);
 
         // DATA DUMMY STRUKTUR (level 1 = puncak, level 2 = tengah, level 3 = dasar)
         const structures = {

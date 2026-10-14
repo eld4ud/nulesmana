@@ -9,23 +9,26 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
-{
-    Schema::create('news', function (Blueprint $table) {
-        $table->id();
-        $table->string('title');
-        $table->text('content');
-        $table->string('image')->nullable();
-        $table->date('event_date')->nullable();
-        $table->timestamps();
-    });
-}
+    public function up(): void
+    {
+        // Cek dulu apakah tabel news sudah ada, jika belum baru buat
+        if (!Schema::hasTable('news')) {
+            Schema::create('news', function (Blueprint $table) {
+                $table->id();
+                $table->string('title');
+                $table->text('content');
+                $table->string('image')->nullable();
+                $table->date('event_date')->nullable();
+                $table->timestamps();
+            });
+        }
+    }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('news');
     }
 };

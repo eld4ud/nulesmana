@@ -24,18 +24,37 @@ Route::get('/news/{id}', [PublicController::class, 'showNews'])->whereNumber('id
 Route::post('/register-member', [PublicController::class, 'registerMember'])->name('member.register');
 Route::post('/send-feedback', [PublicController::class, 'sendFeedback'])->name('feedback.send');
 
-// Redirect otomatis jika ada view yang masih memanggil route('dashboard')
-Route::get('/dashboard', function () {
-    return redirect()->route('admin.dashboard');
-})->name('dashboard');
+
+// =====================================================================
+// 2. ROUTE LOGIN & AKUN ANGGOTA (/login-anggota dan /akun/*)
+// =====================================================================
+require __DIR__.'/member.php';
 
 
 // =====================================================================
-// 2. DASHBOARD ADMIN (wajib login) - semua URL diawali /admin
+// 3. PINTU MASUK SETELAH LOGIN (Breeze mengarahkan ke route "dashboard")
+//    Admin ke dashboard admin, anggota ke /akun.
+//    Route profil lama dibiarkan dulu sampai diganti menu Data Saya / Pengaturan.
 // =====================================================================
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'approved.member'])->group(function () {
+    Route::get('/dashboard', function () {
+        return auth()->user()->role === 'admin'
+            ? redirect()->route('admin.dashboard')
+            : redirect()->route('member.dashboard');
+    })->name('dashboard');
 
-    // Overview dashboard
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+// =====================================================================
+// 4. DASHBOARD ADMIN (wajib login & rolenya admin) - semua URL diawali /admin
+// =====================================================================
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+
+    // Overview dashboard admin
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Modul: Kelola Anggota Banom (ACC & CRUD)
@@ -45,7 +64,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::put('/members/{id}', [AdminDashboardController::class, 'updateMember'])->name('members.update');
     Route::delete('/members/{id}', [AdminDashboardController::class, 'destroyMember'])->name('members.destroy');
 
-    // Modul: Kelola Berita & Kegiatan (admin yang menambah/menghapus berita)
+    // Modul: Kelola Berita & Kegiatan
     Route::get('/news', [AdminDashboardController::class, 'newsIndex'])->name('news.index');
     Route::post('/news', [AdminDashboardController::class, 'storeNews'])->name('news.store');
     Route::delete('/news/{id}', [AdminDashboardController::class, 'destroyNews'])->name('news.destroy');
@@ -55,7 +74,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/infaq', [AdminDashboardController::class, 'storeInfaq'])->name('infaq.store');
     Route::delete('/infaq/{id}', [AdminDashboardController::class, 'destroyInfaq'])->name('infaq.destroy');
 
-    // Profile
+    // Profile Admin
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

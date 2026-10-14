@@ -9,18 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up()
-{
-    Schema::create('members', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-        $table->enum('banom', ['IPNU', 'IPPNU', 'Ansor', 'Banser', 'Fatayat', 'Muslimat', 'NU']);
-        $table->string('phone')->nullable();
-        $table->text('address')->nullable();
-        $table->timestamps();
-    });
-}
+    public function up(): void
+    {
+        if (!Schema::hasTable('members')) {
+            Schema::create('members', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+                $table->string('name');
+                $table->string('nia', 30)->nullable()->unique();
+                $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+                $table->enum('banom', ['IPNU', 'IPPNU', 'Ansor', 'Banser', 'Fatayat', 'Muslimat', 'NU']);
+                $table->string('phone')->nullable();
+                $table->text('address')->nullable();
+                $table->timestamps();
+            });
+        }
+    }
 
     /**
      * Reverse the migrations.

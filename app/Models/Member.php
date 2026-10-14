@@ -10,10 +10,17 @@ class Member extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'name',
+        'nia',
+        'status',
         'banom',
         'phone',
         'address',
-        'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

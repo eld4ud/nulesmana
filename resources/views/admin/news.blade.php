@@ -1,115 +1,296 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-bold text-xl text-gray-800 leading-tight">
-            Panel Admin - Kelola Berita & Rundown Kegiatan
-        </h2>
-    </x-slot>
 
-    <div class="py-12 bg-gray-100 min-h-screen">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
-            
-            <!-- NOTIFIKASI -->
+<x-app-layout>
+    <div class="min-h-screen bg-[#f4f7f2] px-4 py-8 sm:px-8">
+
+        <div class="mx-auto max-w-7xl">
+
+            {{-- HEADER --}}
+            <div class="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                <div>
+                    <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-green-800">
+                        Panel Pengurus
+                    </p>
+                    <h1 class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                        Kelola Berita
+                    </h1>
+                    <p class="mt-2 text-sm text-gray-500">
+                        Buat publikasi dan kelola informasi kegiatan warga.
+                    </p>
+                </div>
+
+                <a href="{{ route('home') }}"
+                   target="_blank"
+                   class="inline-flex items-center justify-center gap-2 rounded-xl border border-green-200 bg-white px-5 py-3 text-sm font-bold text-green-900 transition hover:bg-green-50">
+                    <i class="ph ph-arrow-square-out text-lg"></i>
+                    Lihat Website
+                </a>
+            </div>
+
+            {{-- NOTIFIKASI --}}
             @if(session('success'))
-                <div class="bg-green-900 text-white px-6 py-4 rounded-2xl font-bold shadow flex items-center justify-between text-xs">
-                    <span><i class="ph ph-check-circle text-base align-middle mr-2"></i> {{ session('success') }}</span>
-                    <button onclick="this.parentElement.remove()" class="text-white/80">✕</button>
+                <div class="mb-6 flex items-center gap-3 rounded-2xl border border-green-200 bg-green-50 p-4 text-sm font-semibold text-green-900">
+                    <i class="ph ph-check-circle text-2xl"></i>
+                    <span>{{ session('success') }}</span>
                 </div>
             @endif
 
-            @if ($errors->any())
-                <div class="bg-red-600 text-white px-6 py-4 rounded-2xl font-bold shadow text-xs">
-                    <ul class="list-disc pl-4">
-                        @foreach ($errors->all() as $error)
+            @if(session('error'))
+                <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">
+                    <p class="mb-2 font-extrabold">Berita belum bisa disimpan.</p>
+                    <ul class="list-inside list-disc space-y-1">
+                        @foreach($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
             @endif
 
-            <!-- FORM INPUT BERITA & RUNDOWN -->
-            <div class="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
-                <h3 class="text-lg font-black text-gray-900 mb-6 flex items-center gap-2">
-                    <i class="ph ph-note-pencil text-green-800 text-xl"></i> Tambah Berita & Rundown Baru
-                </h3>
+            <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-5">
 
-                <form action="{{ route('admin.news.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
-                    @csrf
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase mb-2">Judul Berita / Agenda</label>
-                            <input type="text" name="title" required placeholder="Contoh: Pengajian Akbar Lailatul Ijtima" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-xs font-semibold outline-none focus:ring-2 focus:ring-green-600">
+                {{-- FORM --}}
+                <section class="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm sm:p-8 lg:col-span-2">
+                    <div class="mb-7 flex items-center gap-4">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 text-2xl text-green-900">
+                            <i class="ph ph-pencil-line"></i>
                         </div>
+
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase mb-2">Tanggal Pelaksanaan / Agenda</label>
-                            <input type="date" name="event_date" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-xs font-semibold outline-none focus:ring-2 focus:ring-green-600">
+                            <h2 class="text-xl font-extrabold text-gray-900">
+                                Tambah Publikasi
+                            </h2>
+                            <p class="mt-1 text-xs text-gray-500">
+                                Isi informasi berita di bawah.
+                            </p>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-2">Isi Konten Berita</label>
-                        <textarea name="content" rows="4" required placeholder="Tuliskan deskripsi lengkap berita atau kegiatan..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-xs font-semibold outline-none focus:ring-2 focus:ring-green-600"></textarea>
+                    <form action="{{ route('admin.news.store') }}"
+                          method="POST"
+                          enctype="multipart/form-data"
+                          class="space-y-5">
+                        @csrf
+
+                        <div>
+                            <label for="title" class="mb-2 block text-sm font-bold text-gray-700">
+                                Judul berita
+                            </label>
+
+                            <input
+                                id="title"
+                                type="text"
+                                name="title"
+                                value="{{ old('title') }}"
+                                maxlength="255"
+                                required
+                                placeholder="Contoh: Pengajian Rutin Warga"
+                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-green-700 focus:ring-2 focus:ring-green-100"
+                            >
+                            @error('title')
+                                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="event_date" class="mb-2 block text-sm font-bold text-gray-700">
+                                Tanggal kegiatan
+                            </label>
+
+                            <input
+                                id="event_date"
+                                type="date"
+                                name="event_date"
+                                value="{{ old('event_date') }}"
+                                required
+                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-100"
+                            >
+                            @error('event_date')
+                                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="content" class="mb-2 block text-sm font-bold text-gray-700">
+                                Isi berita
+                            </label>
+
+                            <textarea
+                                id="content"
+                                name="content"
+                                rows="8"
+                                required
+                                placeholder="Tuliskan informasi kegiatan, waktu, tempat, dan isi berita secara lengkap..."
+                                class="w-full resize-y rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-6 text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-green-700 focus:ring-2 focus:ring-green-100"
+                            >{{ old('content') }}</textarea>
+                            @error('content')
+                                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="image" class="mb-2 block text-sm font-bold text-gray-700">
+                                Foto sampul
+                            </label>
+
+                            <label for="image"
+                                   class="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-green-200 bg-green-50/50 px-5 py-7 text-center transition hover:bg-green-50">
+                                <i class="ph ph-image text-4xl text-green-800"></i>
+                                <span class="mt-3 text-sm font-bold text-gray-800">
+                                    Pilih foto berita
+                                </span>
+                                <span class="mt-1 text-xs text-gray-500">
+                                    JPG, JPEG, PNG, atau WEBP. Maksimal 2 MB.
+                                </span>
+                                <span id="imageName" class="mt-2 break-all text-xs font-semibold text-green-800"></span>
+                            </label>
+
+                            <input
+                                id="image"
+                                type="file"
+                                name="image"
+                                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                                class="sr-only"
+                            >
+                            @error('image')
+                                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                            @enderror
+
+                            <img id="imagePreview"
+                                 alt="Pratinjau foto berita"
+                                 class="mt-4 hidden max-h-56 w-full rounded-xl object-cover">
+                        </div>
+
+                        <button type="submit"
+                                class="flex w-full items-center justify-center gap-2 rounded-xl bg-green-900 px-5 py-4 text-sm font-extrabold text-white shadow-sm transition hover:bg-green-800 focus:ring-4 focus:ring-green-100">
+                            <i class="ph ph-paper-plane-tilt text-lg"></i>
+                            Publikasikan Berita
+                        </button>
+
+                        <p class="text-center text-xs leading-5 text-gray-400">
+                            Berita akan ditampilkan di website setelah berhasil disimpan.
+                        </p>
+                    </form>
+                </section>
+
+                {{-- DAFTAR BERITA --}}
+                <section class="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm lg:col-span-3">
+
+                    <div class="flex flex-col gap-3 border-b border-gray-100 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-7">
+                        <div>
+                            <h2 class="text-xl font-extrabold text-gray-900">
+                                Daftar Berita
+                            </h2>
+                            <p class="mt-1 text-xs text-gray-500">
+                                Semua publikasi yang sudah tersimpan.
+                            </p>
+                        </div>
+
+                        <span class="w-fit rounded-full bg-green-100 px-4 py-2 text-xs font-extrabold text-green-900">
+                            {{ $publishedNews->count() }} berita
+                        </span>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-2">Rundown Acara (Susunan Waktu & Acara)</label>
-                        <textarea name="rundown" rows="5" placeholder="19.30 - Pembukaan oleh MC&#10;20.00 - Pembacaan Tahlil & Doa&#10;21.00 - Mauidhoh Hasanah" class="w-full bg-stone-900 text-lime-400 font-mono border border-gray-200 rounded-xl px-4 py-3 text-xs outline-none focus:ring-2 focus:ring-green-600"></textarea>
-                        <p class="text-[10px] text-gray-400 mt-1">Gunakan Enter untuk memisahkan setiap baris rundown.</p>
-                    </div>
+                    <div class="divide-y divide-gray-100">
+                        @forelse($publishedNews as $news)
+                            <article class="flex flex-col gap-4 p-5 transition hover:bg-gray-50 sm:flex-row sm:items-start sm:p-6">
 
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-2">Foto Sampul / Banner Berita</label>
-                        <input type="file" name="image" class="w-full text-xs text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-green-50 file:text-green-800 hover:file:bg-green-100">
-                    </div>
+                                @if($news->image)
+                                    <img
+                                        src="{{ \Illuminate\Support\Facades\Storage::url($news->image) }}"
+                                        alt="{{ $news->title }}"
+                                        class="h-28 w-full rounded-xl bg-gray-100 object-cover sm:w-32"
+                                    >
+                                @else
+                                    <div class="flex h-28 w-full items-center justify-center rounded-xl bg-green-50 text-4xl text-green-800 sm:w-32">
+                                        <i class="ph ph-newspaper"></i>
+                                    </div>
+                                @endif
 
-                    <button type="submit" class="w-full bg-gray-900 hover:bg-green-800 text-white font-black py-4 rounded-xl transition text-xs shadow-lg">
-                        Publikasikan Berita & Rundown ke Website Publik
-                    </button>
-                </form>
-            </div>
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-xs font-semibold text-green-800">
+                                        {{ $news->event_date
+                                            ? \Carbon\Carbon::parse($news->event_date)->translatedFormat('d F Y')
+                                            : 'Tanggal tidak tersedia' }}
+                                    </p>
 
-            <!-- TABEL DAFTAR BERITA -->
-            <div class="bg-white rounded-3xl p-8 shadow-xl border border-gray-100">
-                <h3 class="text-lg font-black text-gray-900 mb-6">Daftar Berita & Rundown Terpublikasi</h3>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 text-xs">
-                        <thead class="bg-gray-50 text-gray-500 uppercase tracking-wider">
-                            <tr>
-                                <th class="px-6 py-3 text-left">Judul</th>
-                                <th class="px-6 py-3 text-left">Tanggal</th>
-                                <th class="px-6 py-3 text-left">Rundown</th>
-                                <th class="px-6 py-3 text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200 text-gray-700">
-                            @forelse($newsList ?? [] as $news)
-                                <tr>
-                                    <td class="px-6 py-4 font-bold text-gray-900">{{ $news->title }}</td>
-                                    <td class="px-6 py-4">{{ $news->event_date ? \Carbon\Carbon::parse($news->event_date)->translatedFormat('d M Y') : '-' }}</td>
-                                    <td class="px-6 py-4">
-                                        @if($news->rundown)
-                                            <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2.5 py-1 rounded-full">Ada Rundown</span>
-                                        @else
-                                            <span class="bg-gray-100 text-gray-500 text-[10px] font-bold px-2.5 py-1 rounded-full">Tidak Ada</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 text-center">
-                                        <form action="{{ route('admin.news.destroy', $news->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus berita ini?')">
+                                    <h3 class="mt-2 break-words text-base font-extrabold text-gray-900">
+                                        {{ $news->title }}
+                                    </h3>
+
+                                    <p class="mt-2 text-sm leading-6 text-gray-500">
+                                        {{ \Illuminate\Support\Str::limit($news->content, 120) }}
+                                    </p>
+
+                                    <div class="mt-4 flex flex-wrap items-center gap-3">
+                                        <a href="{{ route('public.news.show', $news->id) }}"
+                                           target="_blank"
+                                           class="inline-flex items-center gap-1 text-xs font-bold text-green-900 hover:underline">
+                                            Lihat berita
+                                            <i class="ph ph-arrow-up-right"></i>
+                                        </a>
+
+                                        <form action="{{ route('admin.news.destroy', $news->id) }}"
+                                              method="POST"
+                                              onsubmit="return confirm('Yakin ingin menghapus berita ini?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 bg-red-50 hover:bg-red-100 font-bold px-3 py-1.5 rounded-lg transition">Hapus</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="4" class="px-6 py-8 text-center text-gray-400">Belum ada berita yang diposting.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
 
+                                            <button type="submit"
+                                                    class="inline-flex items-center gap-1 rounded-lg bg-red-50 px-3 py-2 text-xs font-bold text-red-700 transition hover:bg-red-100">
+                                                <i class="ph ph-trash"></i>
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </article>
+                        @empty
+                            <div class="px-6 py-16 text-center">
+                                <i class="ph ph-newspaper text-5xl text-gray-300"></i>
+                                <h3 class="mt-4 font-extrabold text-gray-800">
+                                    Belum ada berita
+                                </h3>
+                                <p class="mt-2 text-sm text-gray-500">
+                                    Berita yang kamu publikasikan akan muncul di sini.
+                                </p>
+                            </div>
+                        @endforelse
+                    </div>
+
+                </section>
+            </div>
         </div>
     </div>
+
+    <script>
+        const imageInput = document.getElementById('image');
+        const imageName = document.getElementById('imageName');
+        const imagePreview = document.getElementById('imagePreview');
+
+        imageInput.addEventListener('change', function () {
+            const file = this.files[0];
+
+            if (!file) {
+                imageName.textContent = '';
+                imagePreview.classList.add('hidden');
+                imagePreview.removeAttribute('src');
+                return;
+            }
+
+            imageName.textContent = file.name;
+
+            if (!file.type.startsWith('image/')) {
+                imagePreview.classList.add('hidden');
+                return;
+            }
+
+            imagePreview.src = URL.createObjectURL(file);
+            imagePreview.classList.remove('hidden');
+        });
+    </script>
 </x-app-layout>

@@ -5,9 +5,28 @@
         </h2>
 
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __("Update your account's profile information, email address, and view your membership NIA.") }}
         </p>
     </header>
+
+    <!-- Informasi NIA & Status Keanggotaan (Integrated) -->
+    <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg space-y-3">
+        <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Status Keanggotaan</span>
+            <span class="px-2.5 py-1 text-xs font-bold rounded-full 
+                {{ auth()->user()->status === 'approved' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' }}">
+                {{ strtoupper(auth()->user()->status) }}
+            </span>
+        </div>
+
+        <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Nomor Induk Anggota (NIA)</label>
+            <div class="p-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md font-mono text-lg font-bold text-gray-900 dark:text-gray-100 shadow-sm">
+                {{ auth()->user()->nia ?? 'Belum diterbitkan (Menunggu Verifikasi Admin)' }}
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Gunakan NIA ini pada halaman publik untuk validasi dan cetak kartu.</p>
+        </div>
+    </div>
 
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
         @csrf
