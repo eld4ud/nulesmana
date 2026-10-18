@@ -1,4 +1,3 @@
-
 @extends('layouts.public')
 
 @section('title', $news->title . ' - Nulesmana')
@@ -8,81 +7,61 @@
     $tanggal = $news->event_date
         ? \Carbon\Carbon::parse($news->event_date)->translatedFormat('d F Y')
         : ($news->created_at?->translatedFormat('d F Y') ?? '-');
-
-    $gambar = $news->image
-        ? \Illuminate\Support\Facades\Storage::url($news->image)
-        : null;
+    $gambar = $news->image ? \Illuminate\Support\Facades\Storage::url($news->image) : null;
 @endphp
 
-<div class="min-h-screen bg-white text-neutral-950">
-    <article class="max-w-4xl mx-auto px-5 sm:px-8 py-10 sm:py-16">
+<div class="min-h-screen bg-[#F5F4F0] text-[#183C2F]">
+    <header class="border-b border-[#183C2F]/20">
+        <div class="mx-auto flex w-full max-w-[1600px] flex-wrap items-center justify-between gap-4 px-5 py-7 sm:px-8 lg:px-12">
+            <a href="{{ route('home') }}" class="font-display text-3xl sm:text-4xl">NULESMANA<span class="text-[#769681]">.</span></a>
+            <a href="{{ route('public.news.index') }}" class="inline-flex items-center gap-2 text-xs font-bold transition hover:opacity-60"><i class="ph ph-arrow-left text-base"></i> Semua berita & agenda</a>
+        </div>
+    </header>
 
-        {{-- Navigasi kembali --}}
-        <div class="flex items-center justify-between gap-4 mb-10">
-            <a href="{{ route('public.news.index') }}"
-               class="inline-flex items-center gap-2 text-sm font-semibold text-neutral-600 hover:text-black transition">
-                <i class="ph ph-arrow-left text-lg"></i>
-                Semua berita
-            </a>
-
-            <span class="text-xs font-bold uppercase tracking-[0.2em] text-neutral-400">
-                Nulesmana / Berita
-            </span>
+    <article>
+        <div class="mx-auto w-full max-w-[1100px] px-5 pt-12 pb-8 sm:px-8 sm:pt-16 lg:pt-20">
+            <div class="mb-6 flex flex-wrap items-center gap-3 text-[11px] font-bold uppercase tracking-[0.17em]">
+                <span class="bg-[#183C2F] px-3 py-2 text-white">{{ $news->event_date ? 'Agenda' : 'Berita' }}</span>
+                <span class="text-[#648371]">{{ $tanggal }}</span>
+            </div>
+            <h1 class="max-w-[1050px] text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">{{ $news->title }}</h1>
+            <div class="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[#183C2F]/20 pt-5 text-xs text-[#51665B]">
+                <span>Publikasi Pengurus Ranting NU Lesmana</span>
+                <span>Jurnal Warga / {{ $news->event_date ? 'Agenda' : 'Berita' }}</span>
+            </div>
         </div>
 
-        {{-- Informasi artikel --}}
-        <header class="border-b border-neutral-200 pb-8">
-            <div class="flex flex-wrap items-center gap-3 mb-5">
-                <span class="px-3 py-1 bg-neutral-950 text-white text-[10px] font-bold uppercase tracking-widest">
-                    {{ $news->event_date ? 'Agenda' : 'Berita' }}
-                </span>
-
-                <span class="text-xs text-neutral-500">
-                    {{ $tanggal }}
-                </span>
-            </div>
-
-            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1]">
-                {{ $news->title }}
-            </h1>
-
-            <p class="mt-5 text-sm text-neutral-500">
-                Dipublikasikan oleh Pengurus Ranting NU Pasiraman Lor
-            </p>
-        </header>
-
-        {{-- Gambar utama --}}
+        {{-- Satu gambar utama, tanpa galeri tambahan. --}}
         @if($gambar)
-            <figure class="mt-8 mb-10">
-                <img
-                    src="{{ $gambar }}"
-                    alt="{{ $news->title }}"
-                    class="w-full max-h-[560px] object-cover"
-                >
-                <figcaption class="mt-3 text-xs text-neutral-500">
-                    Dokumentasi kegiatan Ranting NU Pasiraman Lor.
-                </figcaption>
+            <figure class="mx-auto w-full max-w-[1500px] px-5 sm:px-8 lg:px-12">
+                <div class="overflow-hidden bg-[#DFE6DD]">
+                    <img src="{{ $gambar }}" alt="{{ $news->title }}" class="block max-h-[780px] w-full object-contain" fetchpriority="high">
+                </div>
+                <figcaption class="mt-3 text-xs text-[#648371]">Dokumentasi publikasi NU Lesmana.</figcaption>
             </figure>
         @endif
 
-        {{-- Isi berita --}}
-        <div class="max-w-3xl mx-auto">
-            <div class="text-base sm:text-lg leading-8 text-neutral-700 whitespace-pre-line break-words">
-                {{ $news->content }}
+        <div class="mx-auto w-full max-w-[850px] px-5 pt-10 pb-20 sm:px-8 sm:pt-14 lg:pb-28">
+            <div class="mb-8 flex items-center gap-3 border-b border-[#183C2F]/20 pb-5">
+                <span class="h-2 w-2 rounded-full bg-[#183C2F]"></span>
+                <span class="text-[10px] font-bold uppercase tracking-[0.25em]">Isi lengkap publikasi</span>
             </div>
 
-            <div class="mt-12 pt-6 border-t border-neutral-200 flex flex-wrap justify-between items-center gap-4">
-                <span class="text-xs text-neutral-500">
-                    {{ $news->created_at?->diffForHumans() ?? '' }}
-                </span>
+            {{-- Gunakan escaping Blade: konten lengkap tetap aman dan paragraf asli dipertahankan. --}}
+            <div class="whitespace-pre-line break-words text-base leading-[1.95] text-[#354F43] sm:text-lg">{{ $news->content }}</div>
 
-                <a href="{{ route('public.news.index') }}"
-                   class="inline-flex items-center gap-2 text-sm font-bold hover:underline underline-offset-4">
-                    Baca berita lainnya
-                    <i class="ph ph-arrow-up-right text-lg"></i>
-                </a>
+            <div class="mt-16 flex flex-wrap items-center justify-between gap-5 border-t border-[#183C2F]/20 pt-7">
+                <span class="text-xs text-[#648371]">{{ $news->created_at?->diffForHumans() ?? '' }}</span>
+                <a href="{{ route('public.news.index') }}" class="inline-flex items-center gap-2 rounded-full bg-[#183C2F] px-6 py-3 text-xs font-bold text-white transition hover:bg-[#285B46]">Baca berita lainnya <i class="ph ph-arrow-up-right text-base"></i></a>
             </div>
         </div>
     </article>
+
+    <footer class="bg-[#183C2F] text-white">
+        <div class="mx-auto flex w-full max-w-[1600px] flex-wrap items-center justify-between gap-5 px-5 py-9 sm:px-8 lg:px-12">
+            <div><p class="font-display text-4xl">NULESMANA.</p><p class="mt-1 text-xs text-white/65">Portal berita dan agenda warga.</p></div>
+            <a href="{{ route('home') }}" class="text-xs font-bold hover:underline">Kembali ke beranda <i class="ph ph-arrow-up-right"></i></a>
+        </div>
+    </footer>
 </div>
 @endsection

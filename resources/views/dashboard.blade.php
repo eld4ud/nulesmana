@@ -51,7 +51,7 @@
                     </a>
                     <a href="{{ route('bio') }}" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:text-nugreen-800 hover:bg-gray-50 rounded-2xl font-medium transition">
                         <i class="ph ph-house text-xl"></i>
-                        Halaman Bio (Linktree)
+                        Halaman Bio
                     </a>
                 </nav>
             </div>

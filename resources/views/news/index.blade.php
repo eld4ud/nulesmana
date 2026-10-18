@@ -1,299 +1,142 @@
-
 @extends('layouts.public')
 
-@section('title', 'Berita - Nulesmana')
+@section('title', 'Berita & Agenda - Nulesmana')
 
 @section('content')
 @php
     $items = collect($newsList->items())->values();
-
-    $imgOf = fn($n) => $n->image
-        ? \Illuminate\Support\Facades\Storage::url($n->image)
-        : null;
-
-    $dateOf = fn($n) => (
-        $n->event_date
-            ? \Carbon\Carbon::parse($n->event_date)
-            : $n->created_at
-    )?->translatedFormat('d M Y') ?? '-';
-
+    $imgOf = fn($n) => $n->image ? \Illuminate\Support\Facades\Storage::url($n->image) : null;
+    $dateOf = fn($n) => ($n->event_date ? \Carbon\Carbon::parse($n->event_date) : $n->created_at)?->translatedFormat('d M Y') ?? '-';
     $tagOf = fn($n) => $n->event_date ? 'Agenda' : 'Berita';
+    $featured = $items->first();
+    $secondary = $items->slice(1, 4);
+    $remaining = $items->slice(5);
 @endphp
 
-<div class="min-h-screen bg-white text-neutral-950">
-
-    {{-- HEADER BERITA --}}
-    <header class="border-b border-neutral-200">
-        <div class="max-w-[1440px] mx-auto px-5 lg:px-10">
-            <div class="flex items-center justify-between py-5 border-b border-neutral-200">
-                <a href="{{ url('/') }}"
-                   class="text-2xl sm:text-3xl font-black tracking-tighter">
-                    ■ NEWS<span class="text-neutral-400">.</span>
+<div class="min-h-screen bg-[#F5F4F0] text-[#183C2F]">
+    {{-- Header tunggal, tidak ada navbar tambahan atau ruang kosong tinggi. --}}
+    <header class="border-b border-[#183C2F]/20">
+        <div class="mx-auto max-w-[1600px] px-5 pt-7 pb-5 sm:px-8 lg:px-12 lg:pt-9">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <a href="{{ route('home') }}" class="font-display text-3xl tracking-wide sm:text-4xl" aria-label="Beranda Nulesmana">NULESMANA<span class="text-[#769681]">.</span></a>
+                <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-xs font-bold transition hover:opacity-60">
+                    <i class="ph ph-arrow-left text-base"></i> Kembali ke beranda
                 </a>
-
-                <nav class="hidden md:flex items-center gap-7 text-xs font-bold">
-                    <a href="{{ url('/news') }}" class="hover:text-neutral-500">Berita</a>
-                    <a href="{{ url('/news') }}" class="hover:text-neutral-500">Agenda</a>
-                    <a href="{{ url('/') }}" class="hover:text-neutral-500">Beranda</a>
-                </nav>
             </div>
-
-            <div class="flex items-center justify-between gap-4 py-3 text-[10px] sm:text-xs">
-                <span class="font-bold uppercase tracking-[0.16em]">
-                    Nulesmana / Portal Warga
-                </span>
-                <span class="text-neutral-500">
-                    Ranting NU Pasiraman Lor
-                </span>
+            <div class="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#183C2F]/20 pt-3 text-[10px] font-bold uppercase tracking-[0.17em]">
+                <span>Jurnal Warga / Berita & Agenda</span>
+                <span class="text-[#668573]">Portal Ranting NU Lesmana</span>
             </div>
         </div>
     </header>
 
-    <main class="max-w-[1440px] mx-auto px-5 lg:px-10">
-
-        {{-- JUDUL HALAMAN --}}
-        <section class="py-8 sm:py-10">
-            <div class="flex items-end justify-between gap-5">
+    <main class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
+        <section class="py-9 sm:py-12 lg:py-14">
+            <div class="flex flex-wrap items-end justify-between gap-5">
                 <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-neutral-500 mb-3">
-                        Informasi dan kabar terbaru
-                    </p>
-                    <h1 class="text-4xl sm:text-6xl font-black tracking-[-0.06em] leading-none">
-                        Latest Stories<span class="text-neutral-400">.</span>
-                    </h1>
-                    <p class="mt-4 text-sm text-neutral-600 max-w-xl leading-6">
-                        Liputan kegiatan, pengajian, agenda, dan cerita warga
-                        Ranting NU Pasiraman Lor.
-                    </p>
+                    <p class="mb-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[#648371]">Cerita, informasi, dan kegiatan warga</p>
+                    <h1 class="font-display text-[clamp(4.8rem,11vw,10.5rem)] leading-[0.82] tracking-[0.005em]">BERITA <span class="text-[#769681]">&</span><br>AGENDA<span class="text-[#769681]">.</span></h1>
+                    <p class="mt-6 max-w-2xl text-sm leading-7 text-[#51665B] sm:text-base">Liputan kegiatan, pengajian, agenda, dan cerita terbaru dari warga Ranting NU Lesmana.</p>
                 </div>
-
-                <span class="hidden sm:block text-xs text-neutral-500 whitespace-nowrap">
-                    {{ $newsList->total() }} publikasi
-                </span>
+                <span class="mb-1 text-xs font-bold uppercase tracking-wider">{{ $newsList->total() }} publikasi</span>
             </div>
         </section>
 
         @if($items->isEmpty())
-
-            <section class="py-24 text-center border-y border-neutral-200">
-                <i class="ph ph-newspaper text-5xl text-neutral-400"></i>
-                <h2 class="text-xl font-bold mt-4">Belum ada berita</h2>
-                <p class="text-sm text-neutral-500 mt-2">
-                    Publikasi terbaru akan muncul di sini.
-                </p>
+            <section class="border-y border-[#183C2F]/20 py-24 text-center">
+                <i class="ph ph-newspaper text-5xl text-[#769681]"></i>
+                <h2 class="font-display mt-5 text-4xl">BELUM ADA PUBLIKASI.</h2>
+                <p class="mt-2 text-sm text-[#51665B]">Berita dan agenda terbaru akan muncul di sini setelah dipublikasikan.</p>
             </section>
-
         @else
-
-            @php
-                $featured = $items->first();
-                $secondary = $items->slice(1, 4);
-                $remaining = $items->slice(5);
-            @endphp
-
-            {{-- EDITORIAL GRID --}}
-            <section class="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-8 pb-12">
-
-                {{-- BERITA UTAMA --}}
-                <article class="lg:col-span-7 min-w-0">
-                    <a href="{{ url('/news/' . $featured->id) }}"
-                       class="group block">
-
-                        <div class="aspect-[16/10] bg-neutral-100 overflow-hidden">
+            <section class="grid grid-cols-1 gap-8 border-t border-[#183C2F]/20 pt-8 pb-14 lg:grid-cols-12 lg:gap-10">
+                <article class="min-w-0 lg:col-span-8">
+                    <a href="{{ route('public.news.show', $featured->id) }}" class="group block">
+                        <div class="relative aspect-[16/10] overflow-hidden rounded-sm bg-[#DFE6DD] sm:aspect-[16/9]">
                             @if($imgOf($featured))
-                                <img
-                                    src="{{ $imgOf($featured) }}"
-                                    alt="{{ $featured->title }}"
-                                    class="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500"
-                                >
+                                <img src="{{ $imgOf($featured) }}" alt="{{ $featured->title }}" class="h-full w-full object-cover transition duration-700 group-hover:scale-[1.035]">
                             @else
-                                <div class="w-full h-full flex items-center justify-center">
-                                    <i class="ph ph-image text-5xl text-neutral-300"></i>
-                                </div>
+                                <div class="flex h-full w-full items-center justify-center"><i class="ph ph-image text-6xl text-[#93A99B]"></i></div>
                             @endif
+                            <span class="absolute left-4 top-4 bg-[#183C2F] px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-white">Publikasi utama</span>
                         </div>
-
-                        <div class="pt-5">
-                            <div class="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.15em]">
-                                <span class="text-neutral-900">{{ $tagOf($featured) }}</span>
-                                <span class="w-1 h-1 bg-neutral-400 rounded-full"></span>
-                                <span class="text-neutral-500">{{ $dateOf($featured) }}</span>
-                            </div>
-
-                            <h2 class="mt-3 text-3xl sm:text-4xl xl:text-5xl font-black leading-[1.08] tracking-[-0.045em] group-hover:text-neutral-500 transition">
-                                {{ $featured->title }}
-                            </h2>
-
-                            <p class="mt-4 text-sm leading-7 text-neutral-600 max-w-2xl">
-                                {{ \Illuminate\Support\Str::limit(strip_tags($featured->content), 230) }}
-                            </p>
-
-                            <span class="inline-flex items-center gap-2 mt-5 text-xs font-bold">
-                                Baca selengkapnya
-                                <i class="ph ph-arrow-up-right text-base"></i>
-                            </span>
+                        <div class="mt-6 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.16em]">
+                            <span>{{ $tagOf($featured) }}</span><span class="h-1 w-1 rounded-full bg-[#769681]"></span><span class="text-[#648371]">{{ $dateOf($featured) }}</span>
                         </div>
+                        <h2 class="mt-3 text-3xl font-extrabold leading-tight tracking-tight transition group-hover:text-[#668573] sm:text-5xl">{{ $featured->title }}</h2>
+                        <p class="mt-4 max-w-3xl text-sm leading-7 text-[#51665B]">{{ \Illuminate\Support\Str::limit(strip_tags($featured->content), 240) }}</p>
+                        <span class="mt-5 inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide">Baca artikel lengkap <i class="ph ph-arrow-up-right text-lg transition group-hover:translate-x-1 group-hover:-translate-y-1"></i></span>
                     </a>
                 </article>
 
-                {{-- BERITA SAMPING --}}
-                <aside class="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-neutral-200 pt-6 lg:pt-0 lg:pl-7">
-
-                    <div class="flex items-center justify-between pb-4 border-b border-neutral-200">
-                        <h2 class="text-sm font-black uppercase tracking-wider">
-                            Top Stories
-                        </h2>
-                        <i class="ph ph-list text-lg"></i>
+                <aside class="min-w-0 border-t border-[#183C2F]/20 pt-7 lg:col-span-4 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
+                    <div class="flex items-center justify-between border-b border-[#183C2F]/20 pb-4">
+                        <h2 class="font-display text-3xl">KABAR LAINNYA</h2><i class="ph ph-list text-xl"></i>
                     </div>
-
-                    @if($secondary->isNotEmpty())
-                        <div class="divide-y divide-neutral-200">
-                            @foreach($secondary as $item)
-                                <article class="py-5 first:pt-5">
-                                    <a href="{{ url('/news/' . $item->id) }}"
-                                       class="group grid grid-cols-[112px_minmax(0,1fr)] sm:grid-cols-[135px_minmax(0,1fr)] gap-4">
-
-                                        <div class="aspect-[4/3] bg-neutral-100 overflow-hidden">
-                                            @if($imgOf($item))
-                                                <img
-                                                    src="{{ $imgOf($item) }}"
-                                                    alt="{{ $item->title }}"
-                                                    loading="lazy"
-                                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                                                >
-                                            @else
-                                                <div class="w-full h-full flex items-center justify-center">
-                                                    <i class="ph ph-image text-3xl text-neutral-300"></i>
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        <div class="min-w-0">
-                                            <p class="text-[10px] font-bold uppercase tracking-[0.13em] text-neutral-500">
-                                                {{ $tagOf($item) }}
-                                            </p>
-
-                                            <h3 class="mt-2 text-sm sm:text-base font-bold leading-snug group-hover:text-neutral-500 transition">
-                                                {{ $item->title }}
-                                            </h3>
-
-                                            <p class="mt-2 text-[10px] text-neutral-500">
-                                                {{ $dateOf($item) }}
-                                            </p>
-                                        </div>
-                                    </a>
-                                </article>
-                            @endforeach
-                        </div>
-                    @else
-                        <p class="py-6 text-sm text-neutral-500">
-                            Belum ada publikasi lainnya.
-                        </p>
-                    @endif
-
-                    {{-- IDENTITAS PORTAL --}}
-                    <div class="mt-5 border border-neutral-200 p-5">
-                        <p class="text-lg font-black tracking-tight">
-                            NULESMANA<span class="text-neutral-400">.</span>
-                        </p>
-                        <p class="text-xs leading-6 text-neutral-600 mt-2">
-                            Portal informasi dan dokumentasi warga
-                            Ranting NU Pasiraman Lor.
-                        </p>
-                        <a href="{{ url('/') }}"
-                           class="inline-flex items-center gap-2 text-xs font-bold mt-4 hover:underline">
-                            Kunjungi beranda
-                            <i class="ph ph-arrow-up-right"></i>
-                        </a>
+                    @forelse($secondary as $item)
+                        <article class="border-b border-[#183C2F]/15 py-5">
+                            <a href="{{ route('public.news.show', $item->id) }}" class="group grid grid-cols-[105px_minmax(0,1fr)] gap-4 sm:grid-cols-[145px_minmax(0,1fr)] lg:grid-cols-[100px_minmax(0,1fr)] xl:grid-cols-[140px_minmax(0,1fr)]">
+                                <div class="aspect-[4/3] overflow-hidden bg-[#DFE6DD]">
+                                    @if($imgOf($item))
+                                        <img src="{{ $imgOf($item) }}" alt="{{ $item->title }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+                                    @else
+                                        <div class="flex h-full items-center justify-center"><i class="ph ph-image text-3xl text-[#93A99B]"></i></div>
+                                    @endif
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-[10px] font-bold uppercase tracking-widest text-[#648371]">{{ $tagOf($item) }} · {{ $dateOf($item) }}</p>
+                                    <h3 class="mt-2 text-sm font-extrabold leading-snug transition group-hover:text-[#668573] sm:text-base">{{ $item->title }}</h3>
+                                </div>
+                            </a>
+                        </article>
+                    @empty
+                        <p class="py-6 text-sm text-[#51665B]">Belum ada publikasi lainnya.</p>
+                    @endforelse
+                    <div class="mt-7 bg-[#183C2F] p-6 text-white">
+                        <p class="font-display text-4xl">NULESMANA.</p>
+                        <p class="mt-2 text-xs leading-6 text-white/75">Ruang informasi dan dokumentasi kegiatan warga Ranting NU Lesmana.</p>
+                        <a href="{{ route('home') }}" class="mt-5 inline-flex items-center gap-2 text-xs font-bold">Kunjungi beranda <i class="ph ph-arrow-up-right"></i></a>
                     </div>
                 </aside>
             </section>
 
-            {{-- PUBLIKASI LAINNYA --}}
             @if($remaining->isNotEmpty())
-                <section class="border-t border-neutral-300 pt-8 pb-12">
-                    <div class="flex items-end justify-between gap-4 mb-7">
-                        <div>
-                            <p class="text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-bold">
-                                Jelajahi lebih lanjut
-                            </p>
-                            <h2 class="text-2xl sm:text-3xl font-black tracking-tight mt-2">
-                                Latest Stories
-                            </h2>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-9">
+                <section class="border-t border-[#183C2F]/20 py-10 sm:py-14">
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-[#648371]">Jelajahi lebih lanjut</p>
+                    <h2 class="font-display mt-2 mb-8 text-5xl sm:text-6xl">PUBLIKASI LAINNYA.</h2>
+                    <div class="grid grid-cols-1 gap-x-7 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         @foreach($remaining as $item)
-                            <article class="group min-w-0">
-                                <a href="{{ url('/news/' . $item->id) }}"
-                                   class="block">
-
-                                    <div class="aspect-[16/10] bg-neutral-100 overflow-hidden">
+                            <article>
+                                <a href="{{ route('public.news.show', $item->id) }}" class="group block">
+                                    <div class="aspect-[16/10] overflow-hidden bg-[#DFE6DD]">
                                         @if($imgOf($item))
-                                            <img
-                                                src="{{ $imgOf($item) }}"
-                                                alt="{{ $item->title }}"
-                                                loading="lazy"
-                                                class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                                            >
+                                            <img src="{{ $imgOf($item) }}" alt="{{ $item->title }}" loading="lazy" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
                                         @else
-                                            <div class="w-full h-full flex items-center justify-center">
-                                                <i class="ph ph-image text-4xl text-neutral-300"></i>
-                                            </div>
+                                            <div class="flex h-full items-center justify-center"><i class="ph ph-image text-4xl text-[#93A99B]"></i></div>
                                         @endif
                                     </div>
-
-                                    <p class="mt-4 text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-500">
-                                        {{ $tagOf($item) }} · {{ $dateOf($item) }}
-                                    </p>
-
-                                    <h3 class="mt-2 text-lg font-bold leading-snug group-hover:text-neutral-500 transition">
-                                        {{ $item->title }}
-                                    </h3>
-
-                                    <p class="mt-2 text-sm leading-6 text-neutral-600">
-                                        {{ \Illuminate\Support\Str::limit(strip_tags($item->content), 110) }}
-                                    </p>
+                                    <p class="mt-4 text-[10px] font-bold uppercase tracking-widest text-[#648371]">{{ $tagOf($item) }} · {{ $dateOf($item) }}</p>
+                                    <h3 class="mt-2 text-lg font-extrabold leading-snug transition group-hover:text-[#668573]">{{ $item->title }}</h3>
+                                    <p class="mt-2 text-sm leading-6 text-[#51665B]">{{ \Illuminate\Support\Str::limit(strip_tags($item->content), 120) }}</p>
                                 </a>
                             </article>
                         @endforeach
                     </div>
                 </section>
             @endif
-
-            {{-- PAGINATION --}}
             @if($newsList->hasPages())
-                <div class="border-t border-neutral-200 py-7">
-                    {{ $newsList->links() }}
-                </div>
+                <div class="border-t border-[#183C2F]/20 py-8">{{ $newsList->links() }}</div>
             @endif
-
         @endif
     </main>
 
-    {{-- FOOTER --}}
-    <footer class="bg-neutral-950 text-white mt-6">
-        <div class="max-w-[1440px] mx-auto px-5 lg:px-10 py-9">
-            <div class="flex flex-col sm:flex-row justify-between gap-5">
-                <div>
-                    <p class="text-xl font-black tracking-tight">
-                        NULESMANA<span class="text-neutral-400">.</span>
-                    </p>
-                    <p class="text-xs text-neutral-400 mt-2">
-                        Portal Resmi Warga Ranting NU Pasiraman Lor
-                    </p>
-                </div>
-
-                <a href="{{ url('/') }}"
-                   class="text-xs text-neutral-300 hover:text-white">
-                    ← Kembali ke beranda
-                </a>
+    <footer class="mt-12 bg-[#183C2F] text-white">
+        <div class="mx-auto max-w-[1600px] px-5 py-10 sm:px-8 lg:px-12">
+            <div class="flex flex-wrap items-start justify-between gap-6">
+                <div><p class="font-display text-4xl">NULESMANA.</p><p class="mt-2 text-xs text-white/65">Portal berita dan agenda warga Ranting NU Lesmana.</p></div>
+                <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-xs font-bold"><i class="ph ph-arrow-left"></i> Kembali ke beranda</a>
             </div>
-
-            <div class="border-t border-neutral-800 mt-7 pt-5 text-[10px] text-neutral-500">
-                © {{ date('Y') }} Nulesmana. Seluruh hak cipta dilindungi.
-            </div>
+            <p class="mt-8 border-t border-white/20 pt-5 text-[11px] text-white/55">© {{ date('Y') }} Nulesmana. Seluruh hak cipta dilindungi.</p>
         </div>
     </footer>
 </div>

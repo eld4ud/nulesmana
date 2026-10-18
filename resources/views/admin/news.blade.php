@@ -1,62 +1,14 @@
-
-<x-app-layout>
-    <div class="min-h-screen bg-[#f4f7f2] px-4 py-8 sm:px-8">
-
-        <div class="mx-auto max-w-7xl">
-
-            {{-- HEADER --}}
-            <div class="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                <div>
-                    <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-green-800">
-                        Panel Pengurus
-                    </p>
-                    <h1 class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                        Kelola Berita
-                    </h1>
-                    <p class="mt-2 text-sm text-gray-500">
-                        Buat publikasi dan kelola informasi kegiatan warga.
-                    </p>
-                </div>
-
-                <a href="{{ route('home') }}"
-                   target="_blank"
-                   class="inline-flex items-center justify-center gap-2 rounded-xl border border-green-200 bg-white px-5 py-3 text-sm font-bold text-green-900 transition hover:bg-green-50">
-                    <i class="ph ph-arrow-square-out text-lg"></i>
-                    Lihat Website
-                </a>
-            </div>
-
-            {{-- NOTIFIKASI --}}
-            @if(session('success'))
-                <div class="mb-6 flex items-center gap-3 rounded-2xl border border-green-200 bg-green-50 p-4 text-sm font-semibold text-green-900">
-                    <i class="ph ph-check-circle text-2xl"></i>
-                    <span>{{ session('success') }}</span>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            @if($errors->any())
-                <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">
-                    <p class="mb-2 font-extrabold">Berita belum bisa disimpan.</p>
-                    <ul class="list-inside list-disc space-y-1">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
+@extends('layouts.admin')
+@section('title', 'Kelola Berita')
+@section('heading', 'Kelola Berita')
+@section('subtitle', 'Buat publikasi dan kelola informasi kegiatan warga')
+@section('content')
             <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-5">
 
                 {{-- FORM --}}
                 <section class="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm sm:p-8 lg:col-span-2">
                     <div class="mb-7 flex items-center gap-4">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 text-2xl text-green-900">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#eaeae8] text-2xl text-[#181818]">
                             <i class="ph ph-pencil-line"></i>
                         </div>
 
@@ -89,7 +41,7 @@
                                 maxlength="255"
                                 required
                                 placeholder="Contoh: Pengajian Rutin Warga"
-                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-green-700 focus:ring-2 focus:ring-green-100"
+                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#292929] focus:ring-2 focus:ring-[#e5e5e2]"
                             >
                             @error('title')
                                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -107,7 +59,7 @@
                                 name="event_date"
                                 value="{{ old('event_date') }}"
                                 required
-                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-green-700 focus:ring-2 focus:ring-green-100"
+                                class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-[#292929] focus:ring-2 focus:ring-[#e5e5e2]"
                             >
                             @error('event_date')
                                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -125,7 +77,7 @@
                                 rows="8"
                                 required
                                 placeholder="Tuliskan informasi kegiatan, waktu, tempat, dan isi berita secara lengkap..."
-                                class="w-full resize-y rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-6 text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-green-700 focus:ring-2 focus:ring-green-100"
+                                class="w-full resize-y rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-6 text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#292929] focus:ring-2 focus:ring-[#e5e5e2]"
                             >{{ old('content') }}</textarea>
                             @error('content')
                                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -138,15 +90,15 @@
                             </label>
 
                             <label for="image"
-                                   class="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-green-200 bg-green-50/50 px-5 py-7 text-center transition hover:bg-green-50">
-                                <i class="ph ph-image text-4xl text-green-800"></i>
+                                   class="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#d5d5d1] bg-[#f4f4f2]/50 px-5 py-7 text-center transition hover:bg-[#ededeb]">
+                                <i class="ph ph-image text-4xl text-[#292929]"></i>
                                 <span class="mt-3 text-sm font-bold text-gray-800">
                                     Pilih foto berita
                                 </span>
                                 <span class="mt-1 text-xs text-gray-500">
                                     JPG, JPEG, PNG, atau WEBP. Maksimal 2 MB.
                                 </span>
-                                <span id="imageName" class="mt-2 break-all text-xs font-semibold text-green-800"></span>
+                                <span id="imageName" class="mt-2 break-all text-xs font-semibold text-[#292929]"></span>
                             </label>
 
                             <input
@@ -166,7 +118,7 @@
                         </div>
 
                         <button type="submit"
-                                class="flex w-full items-center justify-center gap-2 rounded-xl bg-green-900 px-5 py-4 text-sm font-extrabold text-white shadow-sm transition hover:bg-green-800 focus:ring-4 focus:ring-green-100">
+                                class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#181818] px-5 py-4 text-sm font-extrabold text-white shadow-sm transition hover:bg-[#303030] focus:ring-4 focus:ring-[#e5e5e2]">
                             <i class="ph ph-paper-plane-tilt text-lg"></i>
                             Publikasikan Berita
                         </button>
@@ -190,7 +142,7 @@
                             </p>
                         </div>
 
-                        <span class="w-fit rounded-full bg-green-100 px-4 py-2 text-xs font-extrabold text-green-900">
+                        <span class="w-fit rounded-full bg-[#eaeae8] px-4 py-2 text-xs font-extrabold text-[#181818]">
                             {{ $publishedNews->count() }} berita
                         </span>
                     </div>
@@ -206,13 +158,13 @@
                                         class="h-28 w-full rounded-xl bg-gray-100 object-cover sm:w-32"
                                     >
                                 @else
-                                    <div class="flex h-28 w-full items-center justify-center rounded-xl bg-green-50 text-4xl text-green-800 sm:w-32">
+                                    <div class="flex h-28 w-full items-center justify-center rounded-xl bg-[#f4f4f2] text-4xl text-[#292929] sm:w-32">
                                         <i class="ph ph-newspaper"></i>
                                     </div>
                                 @endif
 
                                 <div class="min-w-0 flex-1">
-                                    <p class="text-xs font-semibold text-green-800">
+                                    <p class="text-xs font-semibold text-[#292929]">
                                         {{ $news->event_date
                                             ? \Carbon\Carbon::parse($news->event_date)->translatedFormat('d F Y')
                                             : 'Tanggal tidak tersedia' }}
@@ -229,7 +181,7 @@
                                     <div class="mt-4 flex flex-wrap items-center gap-3">
                                         <a href="{{ route('public.news.show', $news->id) }}"
                                            target="_blank"
-                                           class="inline-flex items-center gap-1 text-xs font-bold text-green-900 hover:underline">
+                                           class="inline-flex items-center gap-1 text-xs font-bold text-[#181818] hover:underline">
                                             Lihat berita
                                             <i class="ph ph-arrow-up-right"></i>
                                         </a>
@@ -264,9 +216,9 @@
 
                 </section>
             </div>
-        </div>
-    </div>
 
+@endsection
+@push('scripts')
     <script>
         const imageInput = document.getElementById('image');
         const imageName = document.getElementById('imageName');
@@ -293,4 +245,5 @@
             imagePreview.classList.remove('hidden');
         });
     </script>
-</x-app-layout>
+
+@endpush

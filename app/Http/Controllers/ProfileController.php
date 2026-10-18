@@ -6,13 +6,15 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Satu halaman profil untuk admin dan anggota.
+     * Form/warna ditentukan oleh resources/views/profile/edit.blade.php.
      */
     public function edit(Request $request): View
     {
@@ -22,23 +24,37 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Update nama/email akun. Nama anggota disinkronkan ke tabel members.
+     * NIA, role, banom, dan status sama sekali tidak diubah di sini.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        DB::transaction(function () use ($user, $validated): void {
+            $user->fill($validated);
 
-        $request->user()->save();
+            if ($user->isDirty('email')) {
+                $user->email_verified_at = null;
+            }
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+            $user->save();
+
+            if ($user->role === 'member' && array_key_exists('name', $validated)) {
+                $user->member()->update(['name' => $user->name]);
+            }
+        });
+
+        // Admin kembali ke /admin/profile, bukan /profile bawaan Breeze.
+        return Redirect::route(
+            $user->role === 'admin' ? 'admin.profile.edit' : 'profile.edit'
+        )->with('status', 'profile-updated');
     }
 
     /**
-     * Delete the user's account.
+     * Fitur penghapusan akun asli tetap dipertahankan untuk kompatibilitas.
+     * Tidak ada tombol hapus akun pada desain profil admin.
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -49,7 +65,6 @@ class ProfileController extends Controller
         $user = $request->user();
 
         Auth::logout();
-
         $user->delete();
 
         $request->session()->invalidate();

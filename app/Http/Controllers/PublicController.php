@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\FeedbackMail;
 use App\Models\Member;
 use App\Models\News;
-use App\Mail\FeedbackMail;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rules\Password;
 
 class PublicController extends Controller
 {
@@ -24,20 +27,35 @@ class PublicController extends Controller
 
     public function registerMember(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'banom' => 'required|string',
-            'phone' => 'nullable|string|max:20',
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['required', 'string', 'max:20'],
+            'address' => ['required', 'string', 'max:2000'],
+            'banom' => ['required', 'in:IPNU,IPPNU,Ansor,Fatayat,Muslimat,NU'],
+            'password' => ['required', 'confirmed', Password::min(8)],
         ]);
 
-        Member::create([
-            'name' => $request->name,
-            'banom' => $request->banom,
-            'phone' => $request->phone,
-            'status' => 'pending',
-        ]);
+        DB::transaction(function () use ($validated) {
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => $validated['password'],
+                'role' => 'member',
+                'status' => 'pending',
+            ]);
 
-        return back()->with('success', 'Pendaftaran berhasil! Tunggu verifikasi/ACC dari Pengurus Admin.');
+            Member::create([
+                'user_id' => $user->id,
+                'name' => $validated['name'],
+                'phone' => $validated['phone'],
+                'address' => $validated['address'],
+                'banom' => $validated['banom'],
+                'status' => 'pending',
+            ]);
+        });
+
+        return redirect()->route('member.login')->with('success', 'Pendaftaran berhasil. Tunggu verifikasi pengurus sebelum masuk ke akun.');
     }
 
     public function sendFeedback(Request $request)

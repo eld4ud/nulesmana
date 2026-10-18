@@ -1,74 +1,240 @@
+
 @extends('layouts.member')
 
-@section('title', 'Profil Ranting')
+@section('title', 'Profil Ranting NU Lesmana')
 
 @section('content')
-<div class="max-w-6xl mx-auto space-y-6 sm:space-y-8">
+<div class="mx-auto max-w-6xl space-y-8 pb-10">
 
-    <!-- Judul -->
-    <div class="text-center">
-        <span class="bg-green-900 text-lime-400 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-wider inline-block">Tentang Kami</span>
-        <h1 class="font-display text-5xl sm:text-7xl leading-[0.95] text-gray-900 mt-3">PROFIL RANTING NU LESMANA</h1>
-        <p class="text-sm sm:text-base font-semibold text-gray-800 mt-2 max-w-2xl mx-auto leading-relaxed">
-            Pengurus Ranting Nahdlatul Ulama Lesmana mengelola kegiatan majelis, agenda keagamaan, dan keanggotaan
-            lima Badan Otonom. Portal ini menjadi pusat informasi dan layanan bagi warga.
-        </p>
-    </div>
+    {{-- HERO PROFIL --}}
+    <section class="relative overflow-hidden rounded-[2rem] bg-[#183C2F] px-6 py-12 text-[#F5F4F0] sm:px-12 sm:py-16">
 
-    <!-- Banom -->
-    <div class="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 lg:p-12 shadow-2xl border border-gray-100">
-        <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-6">
-            <h2 class="font-display text-4xl sm:text-5xl text-gray-900">LIMA BADAN OTONOM</h2>
-            <p class="text-xs sm:text-sm font-semibold text-gray-600">{{ $total }} anggota terverifikasi</p>
+        <div class="relative z-10 max-w-3xl">
+            <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em]">
+                <span class="h-2 w-2 rounded-full bg-[#B9D3BF]"></span>
+                Tentang Kami
+            </div>
+
+            <h1 class="font-display text-5xl leading-[0.95] sm:text-7xl">
+                PROFIL RANTING
+                <span class="block text-[#B9D3BF]">
+                    NU LESMANA
+                </span>
+            </h1>
+
+            <p class="mt-7 max-w-2xl text-sm leading-8 text-[#E1E9E2] sm:text-base">
+                Pengurus Ranting Nahdlatul Ulama Lesmana mengelola
+                kegiatan majelis, agenda keagamaan, dan keanggotaan
+                lima Badan Otonom. Portal ini menjadi pusat informasi
+                dan layanan digital bagi warga.
+            </p>
+
+            <div class="mt-9 flex flex-wrap gap-3">
+                <a
+                    href="{{ route('home') }}"
+                    class="inline-flex items-center gap-2 rounded-xl bg-[#F5F4F0] px-6 py-3 text-sm font-bold text-[#183C2F]"
+                >
+                    <i class="ph ph-arrow-left text-lg"></i>
+                    Website Utama
+                </a>
+
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div class="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full border border-white/10"></div>
+        <div class="pointer-events-none absolute -bottom-48 right-12 h-96 w-96 rounded-full border border-white/10"></div>
+    </section>
+
+    {{-- STATISTIK --}}
+    <section class="grid gap-4 sm:grid-cols-2">
+        <div class="rounded-[1.75rem] border border-[#E1E6DF] bg-white p-7">
+            <p class="text-xs font-bold uppercase tracking-widest text-[#728276]">
+                Anggota Terverifikasi
+            </p>
+
+            <p class="mt-4 font-display text-6xl text-[#183C2F]">
+                {{ number_format($total, 0, ',', '.') }}
+            </p>
+
+            <p class="mt-2 text-sm text-gray-600">
+                Total anggota yang telah diverifikasi pengurus.
+            </p>
+        </div>
+
+        <div class="rounded-[1.75rem] bg-[#E6EDE6] p-7">
+            <p class="text-xs font-bold uppercase tracking-widest text-[#486653]">
+                Organisasi
+            </p>
+
+            <p class="mt-4 font-display text-6xl text-[#183C2F]">
+                05
+            </p>
+
+            <p class="mt-2 text-sm text-[#486653]">
+                Badan Otonom dalam lingkungan Ranting NU Lesmana.
+            </p>
+        </div>
+    </section>
+
+    {{-- LIMA BADAN OTONOM --}}
+    <section class="rounded-[2rem] border border-[#E1E6DF] bg-white p-6 sm:p-10">
+
+        <div class="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+                <p class="mb-3 text-xs font-bold uppercase tracking-widest text-[#607C69]">
+                    Organisasi Kami
+                </p>
+
+                <h2 class="font-display text-4xl text-[#183C2F] sm:text-5xl">
+                    LIMA BADAN OTONOM
+                </h2>
+            </div>
+
+            <p class="text-sm text-gray-500">
+                {{ number_format($total, 0, ',', '.') }} anggota terverifikasi
+            </p>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
             @foreach ($banoms as [$name, $desc, $icon, $count])
-                <div class="rounded-2xl border border-gray-200 bg-gradient-to-br from-lime-100 to-white p-5 flex items-center gap-4">
-                    <div class="w-12 h-12 shrink-0 rounded-xl bg-green-900 text-lime-400 flex items-center justify-center text-2xl"><i class="ph {{ $icon }}"></i></div>
-                    <div class="min-w-0 flex-1">
-                        <h3 class="font-black text-base leading-tight">{{ $name }}</h3>
-                        <p class="text-[11px] sm:text-xs text-gray-600 font-semibold">{{ $desc }}</p>
+                <div class="rounded-2xl border border-[#E2E8E1] bg-[#F8F9F6] p-6">
+
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#183C2F] text-2xl text-white">
+                            <i class="ph {{ $icon }}"></i>
+                        </div>
+
+                        <span class="font-display text-4xl text-[#183C2F]">
+                            {{ $count }}
+                        </span>
                     </div>
-                    <p class="font-display text-4xl text-green-900 leading-none">{{ $count }}</p>
+
+                    <h3 class="mt-6 text-lg font-black text-[#183C2F]">
+                        {{ $name }}
+                    </h3>
+
+                    <p class="mt-2 text-sm leading-6 text-gray-600">
+                        {{ $desc }}
+                    </p>
                 </div>
             @endforeach
 
-            <a href="{{ route('home') }}#struktur-banom" class="rounded-2xl bg-green-900 text-white p-5 flex items-center justify-between gap-3 hover:bg-green-800 transition">
-                <div>
-                    <h3 class="font-black text-base">Struktur Organisasi</h3>
-                    <p class="text-[11px] sm:text-xs text-green-200 font-semibold">Lihat susunan pengurus tiap banom</p>
+            <a
+                href="{{ route('home') }}#struktur-banom"
+                class="flex flex-col justify-between rounded-2xl bg-[#183C2F] p-6 text-white"
+            >
+                <i class="ph ph-sitemap text-3xl text-[#C4D7C8]"></i>
+
+                <div class="mt-8">
+                    <h3 class="text-lg font-black">
+                        Struktur Organisasi
+                    </h3>
+
+                    <p class="mt-2 text-sm leading-6 text-[#D7E4D9]">
+                        Lihat susunan pengurus dan informasi
+                        masing-masing badan otonom.
+                    </p>
+
+                    <span class="mt-5 inline-flex items-center gap-2 text-sm font-bold">
+                        Lihat Struktur
+                        <i class="ph ph-arrow-up-right"></i>
+                    </span>
                 </div>
-                <i class="ph ph-arrow-up-right text-2xl text-lime-400"></i>
             </a>
         </div>
-    </div>
+    </section>
 
-    <!-- Layanan -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-        @foreach ([
-            ['Berita & Agenda', 'Liputan majelis, pengajian rutin, dan kegiatan sosial warga.', 'ph-newspaper', route('home').'#berita'],
-            ['Kartu Anggota (KIA)', 'Kartu identitas digital dengan NIA dan kode QR verifikasi.', 'ph-identification-card', route('kia.info')],
-            ['Kotak Saran', 'Sampaikan kritik dan masukan langsung ke pengurus ranting.', 'ph-chat-circle-text', route('home').'#saran'],
-        ] as [$title, $text, $icon, $href])
-            <a href="{{ $href }}" class="group bg-white rounded-[2rem] p-6 sm:p-8 shadow-2xl border border-gray-100 hover:shadow-lg transition block">
-                <div class="w-12 h-12 border-2 border-green-900 text-green-900 rounded-xl flex items-center justify-center text-2xl group-hover:bg-green-900 group-hover:text-lime-400 transition"><i class="ph {{ $icon }}"></i></div>
-                <h3 class="font-black text-base mt-3">{{ $title }}</h3>
-                <p class="text-xs sm:text-sm text-gray-700 font-semibold mt-1">{{ $text }}</p>
-            </a>
-        @endforeach
-    </div>
+    {{-- LAYANAN DIGITAL --}}
+    <section>
+        <div class="mb-6">
+            <p class="mb-3 text-xs font-bold uppercase tracking-widest text-[#607C69]">
+                Portal Digital
+            </p>
 
-    <!-- Ajakan -->
-    <div class="bg-gray-900 text-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left">
-        <div>
-            <h2 class="font-display text-4xl sm:text-5xl">GABUNG BERSAMA KAMI</h2>
-            <p class="text-xs sm:text-sm text-gray-300 font-semibold mt-1">Daftar online, lalu NIA terbit setelah diverifikasi pengurus.</p>
+            <h2 class="font-display text-4xl text-[#183C2F] sm:text-5xl">
+                LAYANAN KAMI
+            </h2>
+
+            <p class="mt-3 text-sm text-gray-600">
+                Informasi dan layanan anggota dalam satu portal.
+            </p>
         </div>
-        <a href="{{ route('member.signup') }}" class="bg-lime-400 hover:bg-lime-300 text-gray-900 text-xs sm:text-sm font-black px-7 py-3.5 rounded-full transition whitespace-nowrap flex items-center gap-2">
-            <i class="ph ph-user-plus text-lg"></i> Daftar Sekarang
+
+        <div class="grid gap-4 sm:grid-cols-3">
+
+            @foreach ([
+                [
+                    'Berita & Agenda',
+                    'Liputan majelis, pengajian rutin, dan kegiatan sosial warga.',
+                    'ph-newspaper',
+                    route('home') . '#berita'
+                ],
+                [
+                    'Kartu Anggota (KIA)',
+                    'Pengecekan identitas dan status keanggotaan melalui NIA.',
+                    'ph-identification-card',
+                    route('kia.cek')
+                ],
+                [
+                    'Kotak Saran',
+                    'Sampaikan kritik dan masukan kepada pengurus ranting.',
+                    'ph-chat-circle-text',
+                    route('home') . '#saran'
+                ]
+            ] as [$title, $description, $icon, $href])
+
+                <a
+                    href="{{ $href }}"
+                    class="group rounded-[1.75rem] border border-[#E1E6DF] bg-white p-7"
+                >
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#E6EDE6] text-2xl text-[#183C2F]">
+                        <i class="ph {{ $icon }}"></i>
+                    </div>
+
+                    <h3 class="mt-7 text-lg font-black text-[#183C2F]">
+                        {{ $title }}
+                    </h3>
+
+                    <p class="mt-3 text-sm leading-7 text-gray-600">
+                        {{ $description }}
+                    </p>
+
+                    <span class="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#183C2F]">
+                        Selengkapnya
+                        <i class="ph ph-arrow-up-right"></i>
+                    </span>
+                </a>
+            @endforeach
+        </div>
+    </section>
+
+    {{-- AJAKAN BERGABUNG --}}
+    <section class="flex flex-col items-start justify-between gap-6 rounded-[2rem] bg-[#183C2F] p-8 text-white sm:flex-row sm:items-center sm:p-12">
+
+        <div class="max-w-xl">
+            <p class="mb-3 text-xs font-bold uppercase tracking-widest text-[#B9D3BF]">
+                Keanggotaan
+            </p>
+
+            <h2 class="font-display text-4xl sm:text-5xl">
+                GABUNG BERSAMA KAMI
+            </h2>
+
+            <p class="mt-4 text-sm leading-7 text-[#D7E4D9]">
+                Daftar secara online dan ikuti proses verifikasi
+                pengurus untuk memperoleh Nomor Induk Anggota.
+            </p>
+        </div>
+
+        <a
+            href="{{ route('member.signup') }}"
+            class="inline-flex shrink-0 items-center gap-2 rounded-xl bg-[#F5F4F0] px-7 py-4 text-sm font-black text-[#183C2F]"
+        >
+            <i class="ph ph-user-plus text-lg"></i>
+            Daftar Sekarang
         </a>
-    </div>
+    </section>
 
 </div>
 @endsection
