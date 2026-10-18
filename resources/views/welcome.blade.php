@@ -9,162 +9,268 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Skeleton styles: inline so they render before the large page styles/scripts. -->
+
     <style>
+
         #nu-skeleton {
+
             position: fixed;
+
             inset: 0;
+
             z-index: 99999;
+
             overflow: hidden;
+
             background: #F5F4F0;
+
             pointer-events: auto;
+
             font-family: 'DM Sans', system-ui, sans-serif;
+
             opacity: 1;
+
             visibility: visible;
+
             transition: opacity 260ms ease, visibility 260ms ease;
+
         }
 
         #nu-skeleton.is-hidden {
+
             opacity: 0;
+
             visibility: hidden;
+
             pointer-events: none;
+
         }
 
         #nu-skeleton .nu-sk-wrap {
+
             max-width: 1280px;
+
             margin: 0 auto;
+
             padding: 24px 24px 50px;
+
         }
 
         #nu-skeleton .nu-sk-nav {
+
             height: 68px;
+
             display: flex;
+
             align-items: center;
+
             justify-content: space-between;
+
             gap: 22px;
+
             padding: 0 28px;
+
             border: 1px solid #E7EBE5;
+
             border-radius: 999px;
+
             background: #FFFFFF;
+
         }
 
         #nu-skeleton .nu-sk-links {
+
             display: flex;
+
             align-items: center;
+
             gap: 18px;
+
         }
 
         #nu-skeleton .nu-sk-line,
+
         #nu-skeleton .nu-sk-block,
+
         #nu-skeleton .nu-sk-button {
+
             display: block;
+
             background: #DFE6DE;
+
             border-radius: 8px;
+
         }
 
         #nu-skeleton .nu-sk-line {
+
             height: 12px;
+
         }
 
         #nu-skeleton .nu-sk-hero {
+
             display: grid;
+
             grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
             gap: 40px;
+
             align-items: center;
+
             margin-top: 52px;
+
         }
 
         #nu-skeleton .nu-sk-copy {
+
             display: flex;
+
             flex-direction: column;
+
             gap: 18px;
+
             min-width: 0;
+
         }
 
         #nu-skeleton .nu-sk-title {
+
             height: 72px;
+
             background: #C6D4C9;
+
             border-radius: 11px;
+
         }
 
         #nu-skeleton .nu-sk-actions {
+
             display: grid;
+
             grid-template-columns: repeat(2, minmax(0, 1fr));
+
             gap: 12px;
+
             max-width: 450px;
+
             margin-top: 12px;
+
         }
 
         #nu-skeleton .nu-sk-button {
+
             height: 52px;
+
             border-radius: 10px;
+
         }
 
         #nu-skeleton .nu-sk-button:first-child {
+
             background: #183C2F;
+
         }
 
         #nu-skeleton .nu-sk-photo {
+
             height: min(510px, 52vw);
+
             border-radius: 26px;
+
             background: #CCD9CE;
+
         }
 
         #nu-skeleton .nu-sk-pulse {
+
             animation: nu-sk-pulse 1.5s ease-in-out infinite;
+
         }
 
         @keyframes nu-sk-pulse {
+
             0%, 100% { opacity: 1; }
+
             50% { opacity: .60; }
+
         }
 
         @media (max-width: 767px) {
+
             #nu-skeleton .nu-sk-wrap {
+
                 padding: 16px 16px 36px;
+
             }
 
             #nu-skeleton .nu-sk-nav {
+
                 height: 60px;
+
                 padding: 0 19px;
+
             }
 
             #nu-skeleton .nu-sk-links {
+
                 display: none;
+
             }
 
             #nu-skeleton .nu-sk-hero {
+
                 grid-template-columns: 1fr;
+
                 gap: 30px;
+
                 margin-top: 36px;
+
             }
 
             #nu-skeleton .nu-sk-copy {
+
                 gap: 14px;
+
             }
 
             #nu-skeleton .nu-sk-title {
+
                 height: 50px;
+
             }
 
             #nu-skeleton .nu-sk-button {
+
                 height: 48px;
+
             }
 
             #nu-skeleton .nu-sk-photo {
+
                 height: 245px;
+
             }
+
         }
 
         @media (prefers-reduced-motion: reduce) {
-            #nu-skeleton,
-            #nu-skeleton .nu-sk-pulse {
-                animation: none;
-                transition: none;
-            }
-        }
-    </style>
-    <noscript><style>#nu-skeleton { display: none !important; }</style></noscript>
 
+            #nu-skeleton,
+
+            #nu-skeleton .nu-sk-pulse {
+
+                animation: none;
+
+                transition: none;
+
+            }
+
+        }
+
+    </style>
+
+    <noscript><style>#nu-skeleton { display: none !important; }</style></noscript>
 
     <title>Ranting NU Lesmana - Portal Resmi Warga</title>
 
@@ -205,73 +311,127 @@
         .rating-picker input:focus-visible + label { outline: 2px solid #183C2F; border-radius: 5px; }
 
         /* Tipografi dan tampilan formulir landing page */
+
         #form-ulasan,
+
         .landing-form {
+
             font-family: 'DM Sans', sans-serif;
+
         }
 
         #form-ulasan label,
+
         .landing-form label {
+
             font-family: 'DM Sans', sans-serif;
+
             font-weight: 700;
+
             letter-spacing: 0;
+
         }
 
         #form-ulasan input:not([type="radio"]),
+
         #form-ulasan textarea,
+
         #form-ulasan select,
+
         .landing-form input:not([type="radio"]),
+
         .landing-form textarea,
+
         .landing-form select {
+
             width: 100%;
+
             background: #F8F9F6;
+
             border: 1px solid #DDE4DA;
+
             border-radius: 12px;
+
             color: #183C2F;
+
             font-family: 'DM Sans', sans-serif;
+
             font-size: 14px;
+
             font-weight: 500;
+
             line-height: 1.6;
+
             padding: 14px 16px;
+
             transition: border-color .18s ease, box-shadow .18s ease;
+
         }
 
         #form-ulasan input::placeholder,
+
         #form-ulasan textarea::placeholder,
+
         .landing-form input::placeholder,
+
         .landing-form textarea::placeholder {
+
             color: #8D9A8F;
+
             opacity: 1;
+
         }
 
         #form-ulasan input:focus,
+
         #form-ulasan textarea:focus,
+
         #form-ulasan select:focus,
+
         .landing-form input:focus,
+
         .landing-form textarea:focus,
+
         .landing-form select:focus {
+
             outline: none;
+
             border-color: #183C2F;
+
             box-shadow: 0 0 0 3px rgba(24, 60, 47, .10);
+
         }
 
         #form-ulasan input[readonly] {
+
             background: #EDF0E9;
+
             color: #55675A;
+
             cursor: not-allowed;
+
         }
 
         #form-ulasan .rating-picker input[type="radio"] {
+
             position: absolute;
+
             width: 1px;
+
             height: 1px;
+
             opacity: 0;
+
         }
 
         #form-ulasan button[type="submit"] {
+
             font-family: 'DM Sans', sans-serif;
+
             font-weight: 700;
+
             letter-spacing: 0;
+
         }
 
     </style>
@@ -281,38 +441,64 @@
 <body class="bg-[#f6f7f3] text-gray-900 min-h-screen relative overflow-x-hidden selection:bg-[#203d2e] selection:text-white">
 
     <!-- Skeleton overlay for the homepage. All elements are decorative placeholders. -->
+
     <div id="nu-skeleton" role="status" aria-label="Memuat halaman NU Lesmana">
+
         <div class="nu-sk-wrap" aria-hidden="true">
+
             <div class="nu-sk-nav">
+
                 <span class="nu-sk-line nu-sk-pulse" style="width: 100px;"></span>
+
                 <div class="nu-sk-links">
+
                     <span class="nu-sk-line nu-sk-pulse" style="width: 85px;"></span>
+
                     <span class="nu-sk-line nu-sk-pulse" style="width: 108px;"></span>
+
                     <span class="nu-sk-line nu-sk-pulse" style="width: 75px;"></span>
+
                 </div>
+
                 <span class="nu-sk-line nu-sk-pulse" style="width: 88px;"></span>
+
             </div>
 
             <div class="nu-sk-hero">
+
                 <div class="nu-sk-copy">
+
                     <span class="nu-sk-line nu-sk-pulse" style="width: 58%;"></span>
+
                     <span class="nu-sk-title nu-sk-pulse"></span>
+
                     <span class="nu-sk-title nu-sk-pulse" style="width: 78%;"></span>
+
                     <span class="nu-sk-line nu-sk-pulse" style="width: 92%; margin-top: 12px;"></span>
+
                     <span class="nu-sk-line nu-sk-pulse" style="width: 67%;"></span>
+
                     <div class="nu-sk-actions">
+
                         <span class="nu-sk-button nu-sk-pulse"></span>
+
                         <span class="nu-sk-button nu-sk-pulse"></span>
+
                         <span class="nu-sk-button nu-sk-pulse"></span>
+
                         <span class="nu-sk-button nu-sk-pulse"></span>
+
                     </div>
+
                 </div>
 
                 <div class="nu-sk-photo nu-sk-pulse"></div>
-            </div>
-        </div>
-    </div>
 
+            </div>
+
+        </div>
+
+    </div>
 
     <!-- NAVBAR + MENU MOBILE (komponen: resources/views/components/site-navbar.blade.php) -->
 
@@ -377,12 +563,19 @@
                     </a>
 
                     <a
+
                         href="{{ auth()->check() && auth()->user()->role === 'member' && auth()->user()->status === 'approved' ? route('member.kia') : route('member.signup') }}"
+
                         class="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-bold"
+
                         style="background-color: #183C2F; color: #FFFFFF;"
+
                     >
+
                         <i class="ph ph-identification-card text-xl"></i>
+
                         <span>Cek KIA</span>
+
                     </a>
 
                     @auth
@@ -414,40 +607,65 @@
             </div>
 
             <!-- FOTO KH. HASYIM ASY'ARI: satu fokus visual, tanpa ornamen -->
-            <div class="w-full lg:w-1/2">
-                <figure class="relative mx-auto max-w-[35rem] overflow-hidden rounded-[1.65rem] bg-[#15392B] lg:ml-auto lg:mr-0">
-                    <div class="relative h-[350px] sm:h-[460px] lg:h-[510px]">
-                        {{-- Sumber foto dipertahankan dari hero versi sebelumnya. --}}
-                        
-                        <img
-                            src="{{ asset('image/mbah_hasyim.webp') }}"
-                            alt="KH Hasyim Asy'ari"
-                            class="absolute inset-0 w-full h-full object-cover object-center"
-                            fetchpriority="high"
-                            decoding="async"
-                        >
 
+            <div class="w-full lg:w-1/2">
+
+                <figure class="relative mx-auto max-w-[35rem] overflow-hidden rounded-[1.65rem] bg-[#15392B] lg:ml-auto lg:mr-0">
+
+                    <div class="relative h-[350px] sm:h-[460px] lg:h-[510px]">
+
+                        {{-- Sumber foto dipertahankan dari hero versi sebelumnya. --}}
+
+                        <img
+
+                            src="{{ asset('image/mbah_hasyim.webp') }}"
+
+                            alt="KH Hasyim Asy'ari"
+
+                            class="absolute inset-0 w-full h-full object-cover object-center"
+
+                            fetchpriority="high"
+
+                            decoding="async"
+
+                        >
 
                         <div class="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#0C2219]/95 via-[#0C2219]/50 to-transparent"></div>
 
                         <figcaption class="absolute bottom-0 left-0 right-0 px-6 pb-7 pt-12 text-white sm:px-8 sm:pb-8">
+
                             <p class="text-[10px] font-bold uppercase tracking-[.2em] text-white/70">
+
                                 Tokoh Pendiri Nahdlatul Ulama
+
                             </p>
+
                             <p class="font-display mt-2 text-[2.3rem] leading-none sm:text-5xl">
+
                                 KH. HASYIM ASY'ARI
+
                             </p>
+
                         </figcaption>
+
                     </div>
+
                 </figure>
 
                 <div class="mx-auto mt-3 flex max-w-[35rem] items-center justify-between gap-3 px-1 text-xs text-[#5D6F61] lg:ml-auto lg:mr-0">
+
                     <span class="inline-flex items-center gap-2 font-semibold">
+
                         <i class="ph ph-users-three text-lg text-[#183C2F]" aria-hidden="true"></i>
+
                         {{ ($ipnuCount ?? 0) + ($ippnuCount ?? 0) + ($ansorCount ?? 0) + ($fatayatCount ?? 0) }} kader terverifikasi
+
                     </span>
+
                     <span class="font-semibold">5 Badan Otonom</span>
+
                 </div>
+
             </div>
 
         </div>
@@ -455,205 +673,401 @@
     </main>
 
     <!-- BENEFITS / CARA KERJA -->
+
     <section id="manfaat" class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+
         <div data-reveal class="text-center mb-12">
+
             <p class="text-[11px] font-bold tracking-[.22em] uppercase text-[#6d8274] mb-3">Portal digital warga</p>
+
             <h2 class="text-4xl sm:text-6xl font-semibold tracking-[-.06em] text-[#183C2F]">Satu portal, lebih mudah.</h2>
+
             <p class="text-sm text-[#657268] mt-4 max-w-xl mx-auto">Dari pendaftaran anggota sampai informasi kegiatan, semua tersedia dalam satu tempat.</p>
+
         </div>
+
         <div class="grid md:grid-cols-3 gap-3">
+
             @foreach([
+
                 ['01', 'Daftar anggota.', 'Buat akun dan ikuti proses verifikasi keanggotaan.', 'ph-user-plus'],
+
                 ['02', 'Akses layanan.', 'Lihat informasi akun dan layanan kartu anggota digital.', 'ph-identification-card'],
+
                 ['03', 'Ikuti kegiatan.', 'Temukan berita dan agenda terbaru warga NU Lesmana.', 'ph-newspaper']
+
             ] as [$number, $heading, $description, $icon])
+
                 <div data-reveal class="group min-h-[300px] bg-[#eeefeb] rounded-[22px] p-7 sm:p-9 flex flex-col border border-[#e2e6de] hover:bg-[#e7ebe5] transition-colors duration-300">
+
                     <span class="text-xs font-bold text-[#76917e]">{{ $number }}</span>
+
                     <h3 class="mt-6 text-3xl sm:text-4xl font-medium tracking-[-.06em] text-[#183C2F] leading-tight">{{ $heading }}</h3>
+
                     <p class="mt-3 text-sm text-[#66746a] leading-6">{{ $description }}</p>
+
                     <div class="mt-auto pt-9 flex justify-end">
+
                         <span class="w-16 h-16 rounded-2xl bg-white border border-[#dbe2d9] flex items-center justify-center text-[#183C2F]">
+
                             <i class="ph {{ $icon }} text-3xl" aria-hidden="true"></i>
+
                         </span>
+
                     </div>
+
                 </div>
+
             @endforeach
+
         </div>
+
         <div class="mt-8 text-center">
+
             <a href="{{ route('member.signup') }}" class="inline-flex items-center gap-3 rounded-full bg-[#183C2F] text-white px-7 py-3 text-xs font-bold hover:bg-[#29523f] transition">
+
                 Mulai daftar <i class="ph ph-arrow-up-right text-base" aria-hidden="true"></i>
+
             </a>
+
         </div>
+
     </section>
 
     <!-- GALERI COVERFLOW: mouse wheel, drag, touch, dan putaran tanpa akhir -->
+
     @php
+
         $galleryNews = collect($publishedNews ?? [])->filter(fn ($item) => filled($item->image))->take(8)->values();
+
     @endphp
+
     <section id="galeri" class="py-16 sm:py-24 scroll-mt-28 overflow-hidden">
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
             <div data-reveal class="text-center mb-8 sm:mb-12">
+
                 <p class="text-[11px] font-bold tracking-[.22em] uppercase text-[#6d8274] mb-3">Dokumentasi kegiatan</p>
+
                 <h2 class="text-4xl sm:text-6xl font-semibold tracking-[-.06em] text-[#183C2F]">Cerita dari Lesmana.</h2>
+
                 <p class="text-sm text-[#657268] mt-4">Geser dengan mouse, scroll, atau sentuh untuk melihat momen lainnya.</p>
+
             </div>
+
         </div>
+
         @if($galleryNews->isNotEmpty())
+
             <div class="nulesmana-coverflow relative mx-auto max-w-[1440px] select-none"
+
                  data-coverflow tabindex="0" role="region"
+
                  aria-label="Galeri dokumentasi kegiatan NU Lesmana">
+
                 <div class="coverflow-stage relative h-[255px] sm:h-[340px] lg:h-[415px] overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y">
+
                     @foreach($galleryNews as $photo)
+
                         <a class="coverflow-slide absolute top-1/2 left-1/2 block w-[280px] h-[158px] sm:w-[400px] sm:h-[225px] lg:w-[520px] lg:h-[293px] rounded-[20px] overflow-hidden bg-[#e4e8e1] shadow-lg outline-offset-4 focus-visible:outline-2 focus-visible:outline-[#183C2F]"
+
                            href="{{ route('public.news.show', $photo->id) }}"
+
                            aria-label="Baca berita: {{ $photo->title }}" draggable="false">
+
                             <img src="{{ \Illuminate\Support\Facades\Storage::url($photo->image) }}"
+
                                  alt="{{ $photo->title }}" loading="lazy" draggable="false"
+
                                  class="w-full h-full object-cover pointer-events-none">
+
                             <div class="absolute inset-x-0 bottom-0 pt-20 pb-5 px-5 bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
+
                                 <p class="text-white text-sm sm:text-base font-semibold leading-snug line-clamp-2">{{ $photo->title }}</p>
+
                             </div>
+
                         </a>
+
                     @endforeach
+
                 </div>
+
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 mt-3 flex items-center justify-between gap-4">
+
                     <div class="flex items-center gap-3">
+
                         <span class="coverflow-current text-sm font-semibold text-[#183C2F] tabular-nums">01</span>
+
                         <span class="w-9 h-px bg-[#b8c7ba]"></span>
+
                         <span class="text-sm text-[#758779] tabular-nums">{{ str_pad((string)$galleryNews->count(), 2, '0', STR_PAD_LEFT) }}</span>
+
                     </div>
+
                     <div class="flex gap-2">
+
                         <button type="button" class="coverflow-prev w-11 h-11 rounded-full border border-[#b9c9bd] text-[#183C2F] hover:bg-[#183C2F] hover:text-white transition" aria-label="Foto sebelumnya"><i class="ph ph-arrow-left text-lg"></i></button>
+
                         <button type="button" class="coverflow-next w-11 h-11 rounded-full border border-[#b9c9bd] text-[#183C2F] hover:bg-[#183C2F] hover:text-white transition" aria-label="Foto berikutnya"><i class="ph ph-arrow-right text-lg"></i></button>
+
                     </div>
+
                 </div>
+
             </div>
+
             <div class="max-w-7xl mx-auto px-4 sm:px-6 mt-6 text-right">
+
                 <a href="{{ route('public.news.index') }}" class="text-xs font-bold text-[#183C2F] inline-flex items-center gap-2 hover:underline">Lihat semua berita <i class="ph ph-arrow-up-right"></i></a>
+
             </div>
+
         @else
+
             <div class="max-w-7xl mx-auto px-4 sm:px-6">
+
                 <div class="rounded-2xl bg-[#eeefeb] border border-[#dfe5dc] px-6 py-14 text-center">
+
                     <p class="text-sm text-[#637569]">Dokumentasi muncul setelah berita dengan foto dipublikasikan.</p>
+
                 </div>
+
             </div>
+
         @endif
+
     </section>
+
     <style>
+
         .coverflow-slide {
+
             transform-origin: center center;
+
             transition: transform 650ms cubic-bezier(.2,.8,.2,1), opacity 550ms ease, filter 550ms ease;
+
             will-change: transform, opacity;
+
             backface-visibility: hidden;
+
         }
+
         .coverflow-stage { perspective: 1400px; }
+
         @media (prefers-reduced-motion: reduce) {
+
             .coverflow-slide { transition-duration: 0.01ms; }
+
         }
+
     </style>
+
     <script>
+
     document.addEventListener('DOMContentLoaded', () => {
+
         document.querySelectorAll('[data-coverflow]').forEach(carousel => {
+
             const stage = carousel.querySelector('.coverflow-stage');
+
             const slides = Array.from(carousel.querySelectorAll('.coverflow-slide'));
+
             const current = carousel.querySelector('.coverflow-current');
+
             const count = slides.length;
+
             if (!count) return;
+
             let index = 0;
+
             let startX = null;
+
             let startY = null;
+
             let lastWheel = 0;
+
             let dragging = false;
+
             let suppressClick = false;
 
             const render = () => {
+
                 const mobile = window.innerWidth < 640;
+
                 const spacing = mobile ? 150 : window.innerWidth < 1024 ? 230 : 320;
+
                 slides.forEach((slide, i) => {
+
                     // Posisi melingkar: foto setelah urutan terakhir kembali ke awal.
+
                     let distance = (i - index + count) % count;
+
                     if (distance > count / 2) distance -= count;
+
                     // Untuk jumlah genap, kartu di sisi belakang tetap konsisten.
+
                     const abs = Math.abs(distance);
+
                     const visible = abs <= (mobile ? 2 : 3);
+
                     const x = distance * spacing;
+
                     const rotate = distance === 0 ? 0 : (distance < 0 ? 23 : -23);
+
                     const scale = distance === 0 ? 1 : Math.max(.64, 1 - abs * .13);
+
                     slide.style.transform = `translate(-50%, -50%) translateX(${x}px) rotateY(${rotate}deg) scale(${scale})`;
+
                     slide.style.opacity = visible ? String(Math.max(.3, 1 - abs * .24)) : '0';
+
                     slide.style.filter = distance === 0 ? 'saturate(1)' : 'saturate(.55)';
+
                     slide.style.zIndex = String(100 - abs);
+
                     slide.style.pointerEvents = visible ? 'auto' : 'none';
+
                     slide.tabIndex = visible ? 0 : -1;
+
                     slide.setAttribute('aria-hidden', visible ? 'false' : 'true');
+
                 });
+
                 current.textContent = String(index + 1).padStart(2, '0');
+
             };
+
             const move = step => {
+
                 if (count <= 1) return;
+
                 index = (index + step + count) % count;
+
                 render();
+
             };
+
             carousel.querySelector('.coverflow-prev').addEventListener('click', () => move(-1));
+
             carousel.querySelector('.coverflow-next').addEventListener('click', () => move(1));
+
             carousel.addEventListener('keydown', event => {
+
                 if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+
                     event.preventDefault();
+
                     move(event.key === 'ArrowRight' ? 1 : -1);
+
                 }
+
             });
+
             stage.addEventListener('wheel', event => {
+
                 if (count <= 1) return;
+
                 // Scroll vertikal di atas galeri menggerakkan carousel.
+
                 // Trackpad/mouse yang mengirim banyak event dibatasi per langkah.
+
                 const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+
                 if (Math.abs(delta) < 3) return;
+
                 event.preventDefault();
+
                 const now = performance.now();
+
                 if (now - lastWheel < 390) return;
+
                 lastWheel = now;
+
                 move(delta > 0 ? 1 : -1);
+
             }, { passive: false });
+
             stage.addEventListener('pointerdown', event => {
+
                 if (event.pointerType === 'mouse' && event.button !== 0) return;
+
                 startX = event.clientX;
+
                 startY = event.clientY;
+
                 dragging = false;
+
             });
+
             stage.addEventListener('pointermove', event => {
+
                 if (startX === null) return;
+
                 if (Math.abs(event.clientX - startX) > 12) dragging = true;
+
             });
+
             stage.addEventListener('pointerup', event => {
+
                 if (startX === null) return;
+
                 const dx = event.clientX - startX;
+
                 const dy = event.clientY - startY;
+
                 if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
+
                     move(dx < 0 ? 1 : -1);
+
                     suppressClick = true;
+
                     setTimeout(() => { suppressClick = false; }, 100);
+
                 }
+
                 startX = null;
+
                 startY = null;
+
                 dragging = false;
+
             });
+
             stage.addEventListener('pointercancel', () => { startX = null; startY = null; dragging = false; });
+
             stage.addEventListener('click', event => {
+
                 if (suppressClick) { event.preventDefault(); event.stopPropagation(); return; }
+
                 const slide = event.target.closest('.coverflow-slide');
+
                 if (!slide) return;
+
                 const target = slides.indexOf(slide);
+
                 if (target !== index) {
+
                     event.preventDefault();
+
                     // Klik foto samping memindahkan fokus, klik foto tengah membuka berita.
+
                     const forward = (target - index + count) % count;
+
                     move(forward <= count / 2 ? forward : forward - count);
+
                 }
+
             }, true);
+
             window.addEventListener('resize', render, { passive: true });
+
             render();
+
         });
+
     });
+
     </script>
 
 <!-- ULASAN DAN ASPIRASI WARGA -->
@@ -800,96 +1214,66 @@
 
     @endphp
 
-    <!-- DAFTAR ULASAN -->
-
-    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5 mb-12">
-
+    <!-- DAFTAR ULASAN: compact editorial cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 items-start gap-4 sm:gap-5 mb-12">
         @forelse($publicReviews as $review)
+            @php
+                $reviewName = trim($review->name ?: 'Anonim');
+                $reviewInitial = mb_strtoupper(mb_substr($reviewName, 0, 1));
+                $reviewRating = max(1, min(5, (int) $review->rating));
+            @endphp
 
-            <article data-reveal="up"
-
-                     class="review-card {{ $loop->iteration % 3 === 2 ? 'bg-[#183C2F] text-white border-[#183C2F]' : 'bg-white text-[#183C2F] border-[#e0e5dc]' }} border rounded-2xl p-6 sm:p-7 transition-all duration-300 hover:-translate-y-1">
-
-                <!-- BINTANG -->
-
-                <div class="flex items-center gap-1 text-[#b77b18] mb-5"
-
-                     aria-label="{{ $review->rating }} dari 5 bintang">
-
-                    @for($star = 1; $star <= 5; $star++)
-
-                        <i class="ph {{ $star <= $review->rating ? 'ph-star-fill' : 'ph-star' }} text-lg"></i>
-
-                    @endfor
-
-                </div>
-
-                <!-- PESAN -->
-
-                <p class="text-sm leading-7 whitespace-pre-line break-words">
-
-                    {{ $review->message }}
-
-                </p>
-
-                <!-- IDENTITAS -->
-
-                <div class="border-t border-current/15 mt-6 pt-5 flex justify-between items-center gap-3">
-
-                    <div>
-
-                        <p class="font-extrabold text-sm">
-
-                            {{ $review->name ?: 'Anonim' }}
-
-                        </p>
-
-                        <p class="text-[11px] opacity-60 mt-1">
-
-                            {{ $review->created_at?->diffForHumans() }}
-
-                        </p>
-
+            <article
+                data-reveal="up"
+                class="review-card self-start rounded-[22px] border border-[#DFE5DC] bg-white p-5 sm:p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+            >
+                <!-- Profil pengulas -->
+                <div class="flex items-center gap-3">
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#183C2F] text-base font-bold text-white"
+                         aria-hidden="true">
+                        {{ $reviewInitial }}
                     </div>
 
-                    @if($review->is_verified_member)
+                    <div class="min-w-0 flex-1">
+                        <h3 class="truncate text-sm font-extrabold text-[#183C2F]">
+                            {{ $reviewName }}
+                        </h3>
+                        <p class="mt-0.5 text-[11px] font-medium text-[#718075]">
+                            {{ $review->is_verified_member ? 'Anggota terverifikasi' : 'Pengunjung' }}
+                        </p>
+                    </div>
 
-                        <span class="text-[10px] font-bold text-[#183C2F] bg-[#e6eee5] px-3 py-1.5 rounded-full">
-
-                            Anggota terverifikasi
-
-                        </span>
-
-                    @endif
-
+                    <i class="ph ph-quotes text-2xl text-[#B5C3B7]" aria-hidden="true"></i>
                 </div>
 
+                <!-- Rating terlihat jelas meskipun ikon eksternal gagal dimuat -->
+                <div class="mt-5 flex items-center gap-1" role="img"
+                     aria-label="{{ $reviewRating }} dari 5 bintang">
+                    @for($star = 1; $star <= 5; $star++)
+                        <span class="text-[20px] leading-none {{ $star <= $reviewRating ? 'text-[#C18A2F]' : 'text-[#D5DCD3]' }}"
+                              aria-hidden="true">★</span>
+                    @endfor
+                </div>
+
+                <!-- Isi ulasan -->
+                <p class="mt-4 text-sm leading-7 text-[#30463A] whitespace-pre-line break-words">{{ $review->message }}</p>
+
+                <!-- Waktu dan kategori -->
+                <div class="mt-5 flex items-center justify-between gap-3 border-t border-[#E5EAE2] pt-4">
+                    <span class="text-[10px] font-bold uppercase tracking-[.14em] text-[#718075]">Suara Warga</span>
+                    <time datetime="{{ $review->created_at?->toIso8601String() }}"
+                          class="shrink-0 text-[11px] text-[#718075]">
+                        {{ $review->created_at?->diffForHumans() }}
+                    </time>
+                </div>
             </article>
-
         @empty
-
-            <div data-reveal="up"
-
-                 class="md:col-span-2 xl:col-span-3 bg-white rounded-2xl border border-[#e0e5dc] p-10 text-center">
-
-                <i class="ph ph-chat-circle-dots text-4xl text-[#183C2F]"></i>
-
-                <p class="font-bold text-lg mt-3">
-
-                    Belum ada ulasan warga
-
-                </p>
-
-                <p class="text-sm text-gray-500 mt-2">
-
-                    Jadilah orang pertama yang berbagi pengalaman.
-
-                </p>
-
+            <div data-reveal="up" class="md:col-span-2 xl:col-span-3 rounded-2xl border border-[#DFE5DC] bg-white p-10 text-center">
+                <i class="ph ph-chat-circle-dots text-4xl text-[#183C2F]" aria-hidden="true"></i>
+                <p class="mt-3 text-lg font-bold text-[#183C2F]">Belum ada ulasan warga</p>
+                <p class="mt-2 text-sm text-gray-500">Jadilah orang pertama yang berbagi pengalaman.</p>
             </div>
-
         @endforelse
-
     </div>
 
     <!-- FORM ULASAN -->
@@ -1143,27 +1527,49 @@
 </style>
 
     <!-- FAQ -->
+
     <section id="faq" class="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24 scroll-mt-28">
+
         <div data-reveal class="text-center mb-12">
+
             <p class="text-[11px] font-bold tracking-[.22em] uppercase text-[#6d8274] mb-3">Pusat informasi</p>
+
             <h2 class="text-4xl sm:text-6xl font-semibold tracking-[-.06em] text-[#183C2F]">Pertanyaan umum.</h2>
+
             <p class="text-sm text-[#657268] mt-4">Informasi singkat seputar layanan Nulesmana.</p>
+
         </div>
+
         @foreach([
+
             ['Apa itu Nulesmana?', 'Nulesmana adalah portal informasi kegiatan, organisasi, dan layanan keanggotaan warga NU Lesmana.'],
+
             ['Bagaimana cara mendaftar menjadi anggota?', 'Pilih Daftar Anggota, isi data yang diminta, kemudian ikuti proses verifikasi dari pengurus.'],
+
             ['Bagaimana cara mengakses kartu anggota?', 'Masuk ke akun anggota dan buka layanan kartu digital yang tersedia sesuai status akunmu.'],
+
             ['Di mana saya bisa membaca berita dan agenda?', 'Buka halaman Berita & Agenda melalui menu navigasi website.'],
+
             ['Bagaimana cara mengirim ulasan atau saran?', 'Isi formulir Suara Warga di halaman ini, pilih penilaian, lalu kirim pesanmu.']
+
         ] as [$question, $answer])
+
             <details data-reveal class="group border-b border-[#d7ded5] py-5">
+
                 <summary class="cursor-pointer list-none flex items-center justify-between gap-5 text-[#183C2F] font-semibold text-base sm:text-lg [&::-webkit-details-marker]:hidden">
+
                     <span>{{ $question }}</span>
+
                     <i class="ph ph-plus text-xl group-open:rotate-45 transition-transform" aria-hidden="true"></i>
+
                 </summary>
+
                 <p class="text-sm text-[#607065] leading-7 max-w-3xl pt-4">{{ $answer }}</p>
+
             </details>
+
         @endforeach
+
     </section>
 
     <!-- FOOTER EDITORIAL -->
@@ -1269,64 +1675,96 @@
     <script src="{{ asset('js/nulesmana-animations.js') }}" defer></script>
 
     <script>
+
         (function () {
+
             const skeleton = document.getElementById('nu-skeleton');
 
             if (!skeleton) {
+
                 return;
+
             }
 
             let dismissed = false;
 
             function hideSkeleton() {
+
                 if (dismissed) {
+
                     return;
+
                 }
 
                 dismissed = true;
+
                 skeleton.classList.add('is-hidden');
 
                 window.setTimeout(function () {
+
                     skeleton.remove();
+
                 }, 350);
+
             }
 
             function whenLayoutReady() {
+
                 window.requestAnimationFrame(function () {
+
                     window.requestAnimationFrame(hideSkeleton);
+
                 });
+
             }
 
             function waitForHeroImage() {
+
                 const heroImage = document.getElementById('nu-hero-image');
 
                 if (!heroImage || heroImage.complete) {
+
                     whenLayoutReady();
+
                     return;
+
                 }
 
                 heroImage.addEventListener('load', whenLayoutReady, { once: true });
+
                 heroImage.addEventListener('error', whenLayoutReady, { once: true });
+
             }
 
             if (document.readyState === 'loading') {
+
                 document.addEventListener('DOMContentLoaded', waitForHeroImage, { once: true });
+
             } else {
+
                 waitForHeroImage();
+
             }
 
             // External images/fonts should never keep the overlay on screen indefinitely.
+
             window.setTimeout(whenLayoutReady, 5500);
 
             // Restored pages from the back/forward cache must be usable immediately.
-            window.addEventListener('pageshow', function (event) {
-                if (event.persisted) {
-                    hideSkeleton();
-                }
-            });
-        })();
-    </script>
 
+            window.addEventListener('pageshow', function (event) {
+
+                if (event.persisted) {
+
+                    hideSkeleton();
+
+                }
+
+            });
+
+        })();
+
+    </script>
 
 </body>
 

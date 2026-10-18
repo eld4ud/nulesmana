@@ -37,7 +37,7 @@ class ReviewController extends Controller
         ]);
 
         return redirect()
-            ->route('home', [], false)
+            ->route('home')
             ->with('success', 'Ulasan berhasil dikirim!');
     }
 }

@@ -1,247 +1,250 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Struktur Organisasi | NU Lesmana</title>
+    <title>Struktur Badan Otonom | NU Lesmana</title>
+    <meta name="description" content="Susunan kepengurusan Badan Otonom NU Lesmana dan statistik anggota terverifikasi.">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- Mempertahankan utilitas Tailwind yang dipakai komponen navbar Nulesmana. --}}
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: #F5F4F0;
-            color: #17251E;
+        :root {
+            --forest: #183C2F;
+            --forest-dark: #102B21;
+            --ivory: #F5F4F0;
+            --ink: #17231E;
+            --muted: #63736A;
+            --line: #DCE3DC;
+            --card: #FFFFFF;
         }
 
-        .font-display {
-            font-family: 'Bebas Neue', sans-serif;
-            letter-spacing: .015em;
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; background: var(--ivory); color: var(--ink); font-family: 'DM Sans', sans-serif; }
+        .struktur-wrap { width: min(1190px, calc(100% - 40px)); margin-inline: auto; }
+        .display-type { font-family: 'Bebas Neue', Impact, sans-serif; font-weight: 400; letter-spacing: .015em; }
+        .eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #5F7466; }
+
+        .hero { padding: 158px 0 50px; border-bottom: 1px solid var(--line); }
+        .hero-layout { display: grid; grid-template-columns: minmax(0, 1fr) 280px; align-items: end; gap: 35px; }
+        .hero h1 { max-width: 850px; margin: 17px 0 14px; font-size: clamp(66px, 9vw, 122px); line-height: .89; color: var(--forest); }
+        .hero-description { max-width: 570px; margin: 0; color: var(--muted); line-height: 1.8; font-size: 14px; }
+        .hero-aside { border-left: 1px solid #CBD7CB; padding-left: 25px; }
+        .hero-aside strong { display: block; font: 400 82px/.95 'Bebas Neue', sans-serif; color: var(--forest); }
+        .hero-aside small { display: block; max-width: 170px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+        .directory { padding: 42px 0 85px; }
+        .directory-header { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 23px; }
+        .directory-header h2 { font: 400 43px/1 'Bebas Neue', sans-serif; color: var(--forest); margin: 9px 0 0; }
+        .directory-header .note { color: var(--muted); font-size: 12px; text-align: right; }
+        .tabs { display: flex; gap: 7px; overflow-x: auto; padding: 0 0 14px; scrollbar-width: thin; }
+        .tab { flex: 0 0 auto; appearance: none; border: 1px solid #D2DED4; background: transparent; border-radius: 100px; padding: 12px 19px; color: #41574A; font: 700 12px 'DM Sans', sans-serif; cursor: pointer; transition: background .15s, color .15s, border-color .15s; }
+        .tab:hover { border-color: var(--forest); }
+        .tab[aria-selected="true"] { background: var(--forest); color: #FFFFFF; border-color: var(--forest); }
+        .tab:focus-visible { outline: 3px solid #86B09A; outline-offset: 3px; }
+
+        .panel { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 35px; }
+        .panel[hidden] { display: none !important; }
+        .panel-intro { display: flex; align-items: center; justify-content: space-between; gap: 25px; padding-bottom: 27px; border-bottom: 1px solid var(--line); }
+        .panel-num { display: block; font: 400 14px 'Bebas Neue', sans-serif; letter-spacing: .1em; color: var(--muted); }
+        .panel-title { margin: 6px 0 6px; font-size: clamp(24px, 3.5vw, 35px); letter-spacing: -.045em; color: var(--forest); }
+        .panel-subtitle { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+        .member-count { flex: 0 0 auto; display: flex; flex-direction: column; align-items: end; gap: 2px; }
+        .member-count strong { font: 400 56px/1 'Bebas Neue', sans-serif; color: var(--forest); }
+        .member-count small { font-size: 10px; font-weight: 700; color: var(--muted); }
+
+        .tree { padding: 32px 0 5px; }
+        .tree-section + .tree-section { margin-top: 22px; }
+        .tree-step { display: flex; align-items: center; gap: 12px; margin: 0 auto 16px; width: min(940px, 100%); }
+        .tree-step span { flex: none; color: #829286; font-size: 10px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+        .tree-step::after { content: ''; height: 1px; flex: 1; background: #E4E9E4; }
+        .tree-grid { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: 13px; max-width: min(100%, calc(var(--cols) * 312px)); margin-inline: auto; }
+        .person-card { min-width: 0; min-height: 174px; background: #F8F9F6; border: 1px solid #DFE7DE; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; align-items: start; }
+        .person-card.lead { background: var(--forest); color: #FFFFFF; border-color: var(--forest); }
+        .person-head { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 22px; }
+        .person-number { font: 400 28px/1 'Bebas Neue', sans-serif; opacity: .7; }
+        .person-symbol { width: 30px; height: 30px; border: 1px solid currentColor; border-radius: 50%; display: grid; place-items: center; opacity: .42; font-size: 15px; }
+        .person-role { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; font-weight: 800; opacity: .67; }
+        .person-name { display: block; margin-top: 8px; font-size: 16px; font-weight: 800; line-height: 1.4; overflow-wrap: anywhere; }
+        .person-meta { display: inline-block; margin-top: 9px; font-size: 10px; line-height: 1.6; opacity: .7; }
+        .demo-tag { display: inline-flex; border-radius: 4px; font-size: 9px; letter-spacing: .04em; font-weight: 800; border: 1px solid currentColor; padding: 3px 6px; margin-top: 12px; opacity: .7; }
+        .empty { text-align: center; padding: 55px 25px; color: var(--muted); font-size: 13px; }
+        .panel-footer { margin-top: 29px; border-top: 1px solid var(--line); padding-top: 20px; font-size: 11px; line-height: 1.8; color: var(--muted); }
+        .bottom-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 25px; }
+        .back-link { text-decoration: none; color: var(--forest); font-size: 12px; font-weight: 800; }
+        .back-link:hover { text-decoration: underline; }
+        .small-mark { font-size: 10px; color: var(--muted); }
+        @media (max-width: 850px) {
+            .hero-layout { grid-template-columns: minmax(0, 1fr); }
+            .hero-aside { display: none; }
         }
-
-        .banom-tabs {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            padding-bottom: 6px;
+        @media (max-width: 680px) {
+            .struktur-wrap { width: min(100% - 28px, 1190px); }
+            .hero { padding: 130px 0 34px; }
+            .hero h1 { font-size: clamp(57px, 13vw, 85px); }
+            .directory { padding-top: 28px; }
+            .panel { padding: 20px 16px; border-radius: 15px; }
+            .panel-intro { align-items: flex-start; }
+            .member-count strong { font-size: 45px; }
+            .tree-grid { grid-template-columns: 1fr; max-width: 420px; }
+            .person-card { min-height: 147px; }
+            .directory-header h2 { font-size: 37px; }
+            .directory-header .note { display: none; }
         }
-
-        .banom-tabs::-webkit-scrollbar { display: none; }
-
-        .banom-tab {
-            flex-shrink: 0;
-            border-radius: 100px;
-            border: 1px solid #D5DED5;
-            padding: 11px 17px;
-            font-size: 12px;
-            font-weight: 800;
-            color: #365545;
-            background: #FFFFFF;
-        }
-
-        .banom-tab[aria-selected="true"] {
-            background: #183C2F;
-            border-color: #183C2F;
-            color: #FFFFFF;
-        }
-
-        .org-row {
-            position: relative;
-            display: grid;
-            grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
-            gap: 16px;
-            justify-content: center;
-            margin: 24px auto 0;
-            max-width: min(100%, calc(var(--columns) * 280px));
-        }
-
-        .org-row + .org-row {
-            border-top: 1px solid #E0E7DF;
-            padding-top: 24px;
-        }
-
-        .org-position {
-            border-radius: 16px;
-            border: 1px solid #DCE5DC;
-            background: #F8FAF7;
-            padding: 22px;
-            min-width: 0;
-        }
-
-        .org-position.lead {
-            border-color: #183C2F;
-            background: #183C2F;
-            color: white;
-        }
-
-        .org-position .role {
-            display: block;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: .09em;
-            font-weight: 800;
-            opacity: .7;
-        }
-
-        .org-position .person {
-            display: block;
-            margin-top: 12px;
-            font-weight: 800;
-            font-size: 16px;
-            overflow-wrap: anywhere;
-        }
-
-        .org-position .description {
-            display: block;
-            margin-top: 7px;
-            font-size: 12px;
-            line-height: 1.7;
-            opacity: .75;
-        }
-
-        [hidden] { display: none !important; }
-
-        @media (max-width: 700px) {
-            .org-row {
-                grid-template-columns: minmax(0, 1fr);
-                max-width: 480px;
-            }
-        }
+        @media (prefers-reduced-motion: reduce) { .tab { transition: none; } }
     </style>
 </head>
-
-<body class="min-h-screen overflow-x-hidden">
+<body>
     <x-site-navbar />
 
-    <main class="mx-auto max-w-7xl px-4 pb-24 pt-36 sm:px-6">
-        <header class="max-w-3xl">
-            <p class="text-xs font-bold uppercase tracking-[.18em] text-[#547360]">
-                PRNU Lesmana / Badan Otonom
-            </p>
-
-            <h1 class="font-display mt-4 text-6xl leading-none text-[#183C2F] sm:text-8xl">
-                STRUKTUR ORGANISASI.
-            </h1>
-
-            <p class="mt-4 max-w-2xl text-sm leading-7 text-[#647569] sm:text-base">
-                Susunan pengurus yang telah ditetapkan dan jumlah anggota
-                terverifikasi pada masing-masing Badan Otonom NU Lesmana.
-            </p>
-        </header>
-
-        <section id="struktur-banom" class="mt-12 rounded-3xl border border-[#E1E8E0] bg-white p-5 sm:p-9">
-            <div class="flex flex-wrap items-end justify-between gap-4 border-b border-[#E7EBE5] pb-7">
-                <div>
-                    <p class="text-xs font-bold uppercase tracking-[.15em] text-[#647569]">Data Organisasi</p>
-                    <h2 class="font-display mt-2 text-4xl text-[#183C2F] sm:text-5xl">LIMA BADAN OTONOM</h2>
-                </div>
-                <p class="text-sm font-semibold text-[#647569]">
-                    {{ collect($banoms)->sum('count') }} anggota terverifikasi
+    <header class="hero">
+        <div class="struktur-wrap hero-layout">
+            <div>
+                <div class="eyebrow">PRNU LESMANA <span aria-hidden="true">/</span> BADAN OTONOM</div>
+                <h1 class="display-type">STRUKTUR<br>ORGANISASI.</h1>
+                <p class="hero-description">
+                    Susunan kepengurusan lima Badan Otonom NU Lesmana.
+                    Data pengurus dikelola melalui dashboard admin, sedangkan jumlah anggota
+                    terverifikasi dihitung dari pendaftaran yang telah disetujui.
                 </p>
             </div>
-
-            <div class="banom-tabs my-7" role="tablist" aria-label="Pilih Badan Otonom">
-                @foreach ($banoms as $key => $banom)
-                    <button
-                        type="button"
-                        class="banom-tab"
-                        id="tab-{{ strtolower($key) }}"
-                        role="tab"
-                        aria-controls="panel-{{ strtolower($key) }}"
-                        aria-selected="{{ $loop->first ? 'true' : 'false' }}"
-                        tabindex="{{ $loop->first ? '0' : '-1' }}"
-                        data-banom-tab="{{ strtolower($key) }}"
-                    >
-                        {{ $banom['label'] }}
-                    </button>
-                @endforeach
+            <div class="hero-aside" aria-label="Lima badan otonom">
+                <strong>05</strong>
+                <small>Badan Otonom dalam satu direktori kepengurusan.</small>
             </div>
+        </div>
+    </header>
 
+    <main id="struktur-banom" class="struktur-wrap directory">
+        <div class="directory-header">
+            <div>
+                <div class="eyebrow">DIREKTORI PENGURUS</div>
+                <h2>KENALI SUSUNANNYA.</h2>
+            </div>
+            <div class="note">Pilih salah satu Banom untuk melihat struktur.</div>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Pilih Badan Otonom">
             @foreach ($banoms as $key => $banom)
-                <section
-                    id="panel-{{ strtolower($key) }}"
-                    role="tabpanel"
-                    aria-labelledby="tab-{{ strtolower($key) }}"
-                    data-banom-panel="{{ strtolower($key) }}"
-                    @if (!$loop->first) hidden @endif
-                >
-                    <div class="flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-[#EDF2EC] px-6 py-5">
-                        <div>
-                            <h3 class="text-lg font-extrabold text-[#183C2F]">{{ $banom['label'] }}</h3>
-                            <p class="mt-1 text-xs text-[#65776A]">Anggota yang sudah disetujui pengurus</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-3xl font-extrabold text-[#183C2F]">{{ $banom['count'] }}</p>
-                            <p class="text-[11px] text-[#65776A]">Anggota terverifikasi</p>
-                        </div>
-                    </div>
-
-                    @if ($banom['positions']->isEmpty())
-                        <div class="py-16 text-center">
-                            <i class="ph ph-users-three text-4xl text-[#183C2F]" aria-hidden="true"></i>
-                            <p class="mt-4 text-sm font-bold text-[#183C2F]">Struktur kepengurusan belum dipublikasikan</p>
-                            <p class="mt-2 text-xs text-[#728173]">Pengurus akan melengkapi susunan jabatan melalui panel admin.</p>
-                        </div>
-                    @else
-                        @foreach ($banom['positions']->groupBy('level') as $level => $group)
-                            <div class="org-row" style="--columns: {{ min(3, $group->count()) }};">
-                                @foreach ($group as $position)
-                                    <article class="org-position {{ (int) $level === 1 ? 'lead' : '' }}">
-                                        <i class="ph ph-user-circle text-2xl" aria-hidden="true"></i>
-                                        <span class="role mt-3">{{ $position->role }}</span>
-                                        <span class="person">{{ $position->member_name ?: $position->person_name }}</span>
-                                        @if ($position->description)
-                                            <span class="description">{{ $position->description }}</span>
-                                        @endif
-                                    </article>
-                                @endforeach
-                            </div>
-                        @endforeach
-                    @endif
-                </section>
+                <button
+                    type="button"
+                    id="tab-{{ strtolower($key) }}"
+                    role="tab"
+                    class="tab"
+                    aria-selected="{{ $loop->first ? 'true' : 'false' }}"
+                    aria-controls="panel-{{ strtolower($key) }}"
+                    tabindex="{{ $loop->first ? '0' : '-1' }}"
+                    data-tab="{{ strtolower($key) }}"
+                >{{ $banom['label'] }}</button>
             @endforeach
+        </div>
 
-            <p class="mt-10 border-t border-[#E7EBE5] pt-6 text-xs leading-6 text-[#718073]">
-                Jumlah anggota otomatis mengikuti persetujuan (ACC) dan perubahan data Banom.
-                Nama anggota biasa tidak ditampilkan di halaman publik; hanya jabatan pengurus
-                yang dipublikasikan oleh admin.
-            </p>
-        </section>
+        @foreach ($banoms as $key => $banom)
+            <section
+                id="panel-{{ strtolower($key) }}"
+                class="panel"
+                role="tabpanel"
+                aria-labelledby="tab-{{ strtolower($key) }}"
+                data-panel="{{ strtolower($key) }}"
+                @if (!$loop->first) hidden @endif
+            >
+                <div class="panel-intro">
+                    <div>
+                        <span class="panel-num">0{{ $loop->iteration }} / 05</span>
+                        <h3 class="panel-title">{{ $banom['label'] }}</h3>
+                        <p class="panel-subtitle">Susunan jabatan yang ditampilkan untuk publik.</p>
+                    </div>
+                    <div class="member-count">
+                        <strong>{{ $banom['count'] }}</strong>
+                        <small>ANGGOTA ACC</small>
+                    </div>
+                </div>
 
-        <a href="{{ route('home') }}" class="mt-8 inline-flex items-center gap-2 text-sm font-bold text-[#183C2F]">
-            <i class="ph ph-arrow-left"></i> Kembali ke Beranda
-        </a>
+                @if ($banom['positions']->isEmpty())
+                    <div class="empty">Belum ada pengurus yang dipublikasikan untuk Banom ini.</div>
+                @else
+                    <div class="tree">
+                        @foreach ($banom['positions']->groupBy('level') as $level => $group)
+                            <section class="tree-section" aria-label="Tingkat organisasi {{ $level }}">
+                                <div class="tree-step">
+                                    <span>
+                                        {{ (int) $level === 1 ? 'Pimpinan' : ((int) $level === 2 ? 'Pengurus harian' : 'Bidang & program') }}
+                                    </span>
+                                </div>
+                                <div class="tree-grid" style="--cols: {{ min(3, $group->count()) }};">
+                                    @foreach ($group as $position)
+                                        @php
+                                            $isExample = $position->member_id === null
+                                                && str_starts_with((string) $position->person_name, 'Contoh ');
+                                        @endphp
+                                        <article class="person-card {{ (int) $level === 1 ? 'lead' : '' }}">
+                                            <div class="person-head">
+                                                <span class="person-number">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                                                <span class="person-symbol" aria-hidden="true">✦</span>
+                                            </div>
+                                            <span class="person-role">{{ $position->role }}</span>
+                                            <strong class="person-name">{{ $position->member_name ?: ($position->person_name ?: 'Belum ditentukan') }}</strong>
+                                            @if ($isExample)
+                                                <span class="demo-tag">DATA CONTOH</span>
+                                            @elseif ($position->description && !str_starts_with((string) $position->description, 'Data contoh'))
+                                                <span class="person-meta">{{ $position->description }}</span>
+                                            @endif
+                                        </article>
+                                    @endforeach
+                                </div>
+                            </section>
+                        @endforeach
+                    </div>
+                @endif
+
+                <p class="panel-footer">
+                    Data berlabel <strong>DATA CONTOH</strong> adalah placeholder untuk kebutuhan tampilan,
+                    bukan penetapan pengurus resmi. Admin dapat menggantinya kapan saja.
+                    Jumlah anggota ACC dihitung terpisah dari struktur jabatan.
+                </p>
+            </section>
+        @endforeach
+
+        <div class="bottom-nav">
+            <a class="back-link" href="{{ route('home') }}">← Kembali ke beranda</a>
+            <span class="small-mark">NU LESMANA / ORGANISASI</span>
+        </div>
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const tabs = Array.from(document.querySelectorAll('[data-banom-tab]'));
-            const panels = Array.from(document.querySelectorAll('[data-banom-panel]'));
+            const tabs = [...document.querySelectorAll('[data-tab]')];
+            const panels = [...document.querySelectorAll('[data-panel]')];
 
-            function activate(key) {
+            function showBanom(key, focus = false) {
                 tabs.forEach(tab => {
-                    const active = tab.dataset.banomTab === key;
-                    tab.setAttribute('aria-selected', active ? 'true' : 'false');
-                    tab.tabIndex = active ? 0 : -1;
+                    const selected = tab.dataset.tab === key;
+                    tab.setAttribute('aria-selected', selected ? 'true' : 'false');
+                    tab.tabIndex = selected ? 0 : -1;
+                    if (selected && focus) tab.focus();
                 });
-
                 panels.forEach(panel => {
-                    panel.hidden = panel.dataset.banomPanel !== key;
+                    panel.hidden = panel.dataset.panel !== key;
                 });
             }
 
             tabs.forEach((tab, index) => {
-                tab.addEventListener('click', () => activate(tab.dataset.banomTab));
+                tab.addEventListener('click', () => showBanom(tab.dataset.tab));
                 tab.addEventListener('keydown', event => {
-                    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+                    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
                     event.preventDefault();
-                    const next = (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
-                    tabs[next].focus();
-                    activate(tabs[next].dataset.banomTab);
+                    let next = index;
+                    if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+                    if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+                    if (event.key === 'Home') next = 0;
+                    if (event.key === 'End') next = tabs.length - 1;
+                    showBanom(tabs[next].dataset.tab, true);
                 });
             });
         });
