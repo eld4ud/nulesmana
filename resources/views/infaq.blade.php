@@ -1,163 +1,162 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transparansi Kas Infaq - NU Pasiraman Lor</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f4f7f6; }
-    </style>
-</head>
-<body class="text-gray-900 min-h-screen flex flex-col">
-
-    <!-- HEADER / NAVBAR -->
-    <header class="bg-white border-b border-gray-100 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-green-800 rounded-full flex items-center justify-center text-white font-bold">
-                    <i class="ph ph-globe-hemisphere-west text-2xl"></i>
-                </div>
-                <div>
-                    <h1 class="font-extrabold text-lg text-gray-900 leading-tight">Transparansi Kas Infaq</h1>
-                    <p class="text-xs text-gray-400">Ranting NU Pasiraman Lor</p>
-                </div>
-            </div>
-
-            <a href="{{ route('dashboard') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold px-5 py-2.5 rounded-full transition flex items-center gap-2">
-                <i class="ph ph-arrow-left text-base"></i> Kembali ke Dashboard
-            </a>
+@extends('layouts.member')
+@section('title', 'Infaq Anggota')
+@section('content')
+@php
+    $namaAnggota = auth()->user()?->name ?? 'Anggota';
+@endphp
+<style>
+    .nia-funds{--ink:#183C2F;--muted:#617269;--line:#D8DED6;--paper:#F5F4F0;--white:#fff;color:var(--ink);font-family:'DM Sans',sans-serif;max-width:1140px;margin:0 auto}
+    .nia-funds *{box-sizing:border-box}
+    .nia-funds button,.nia-funds input{font:inherit}
+    .nia-funds .eyebrow{font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#6C8372}
+    .nia-funds .headline{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(56px,8vw,100px);font-weight:400;letter-spacing:.01em;line-height:.9;margin:14px 0 18px}
+    .nia-funds .intro{color:var(--muted);font-size:14px;line-height:1.8;max-width:560px;margin:0}
+    .nia-funds .rule{border-color:var(--line)}
+    .nia-funds .intro-bar{padding:10px 0 38px;border-bottom:1px solid var(--line);display:flex;align-items:end;justify-content:space-between;gap:24px}
+    .nia-funds .outline-link{display:inline-flex;align-items:center;gap:9px;color:var(--ink);font-size:12px;font-weight:800;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:4px;white-space:nowrap}
+    .nia-funds .preview-tag{display:inline-flex;gap:7px;align-items:center;background:#E7ECE5;border:1px solid #BFCBBF;padding:7px 11px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .nia-funds .workarea{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(275px,1fr);gap:45px;padding:32px 0 50px;align-items:start}
+    .nia-funds .subhead{margin:0 0 9px;font-size:23px;font-weight:800;letter-spacing:-.035em}
+    .nia-funds .description{color:var(--muted);font-size:12px;line-height:1.75;margin:0}
+    .nia-funds .section-head{padding-bottom:19px;border-bottom:1px solid var(--line)}
+    .nia-funds .section{margin-top:26px}
+    .nia-funds .field-title{display:block;margin-bottom:13px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .nia-funds .amounts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .nia-funds .choice{position:relative;display:block;cursor:pointer;min-width:0}
+    .nia-funds .choice input{position:absolute;opacity:0;pointer-events:none}
+    .nia-funds .choice-face{display:flex;align-items:center;justify-content:center;min-height:58px;padding:10px 7px;background:#fff;border:1px solid #D0D9D0;color:#183C2F;font-size:13px;font-weight:800;transition:border-color .15s,background .15s}
+    .nia-funds .choice input:checked+.choice-face{background:#183C2F;border-color:#183C2F;color:#fff}
+    .nia-funds .choice input:focus-visible+.choice-face{outline:3px solid #829E87;outline-offset:3px}
+    .nia-funds .custom-amount{margin-top:12px;display:none}
+    .nia-funds .custom-amount.active{display:block}
+    .nia-funds .custom-amount input{width:100%;padding:13px 15px;background:#fff;border:1px solid #BFCBBF;border-radius:0;outline:none;font-size:14px;color:#183C2F}
+    .nia-funds .custom-amount input:focus{border-color:#183C2F;box-shadow:0 0 0 2px #BFCFBF}
+    .nia-funds .methods{display:grid;grid-template-columns:1fr;gap:9px}
+    .nia-funds .method{display:flex;align-items:center;gap:13px;padding:14px 15px;border:1px solid #D0D9D0;background:#fff;cursor:pointer;transition:border-color .15s,background .15s}
+    .nia-funds .method:has(input:checked){border-color:#183C2F;background:#F0F4EE}
+    .nia-funds .method input{accent-color:#183C2F;flex-shrink:0}
+    .nia-funds .method-icon{display:grid;place-items:center;width:44px;height:38px;background:#E8EEE7;color:#183C2F;font-size:11px;font-weight:900;letter-spacing:.04em;flex-shrink:0}
+    .nia-funds .method-name{display:block;font-size:13px;font-weight:800}
+    .nia-funds .method-note{display:block;font-size:11px;color:#718076;margin-top:3px;line-height:1.4}
+    .nia-funds .preview-button{margin-top:25px;display:flex;align-items:center;justify-content:space-between;width:100%;background:#183C2F;border:1px solid #183C2F;color:#fff;padding:16px 19px;cursor:pointer;text-align:left;font-size:12px;font-weight:800}
+    .nia-funds .preview-button:hover{background:#27513C}
+    .nia-funds .feedback{display:none;color:#9A3D32;margin:10px 0 0;font-size:12px;font-weight:700}
+    .nia-funds .feedback.show{display:block}
+    .nia-funds .preview-result{margin-top:17px;border:1px solid #AFC4B0;background:#E9F0E8;padding:20px;display:none}
+    .nia-funds .preview-result.show{display:block}
+    .nia-funds .preview-result strong{font-size:15px;display:block;margin:8px 0}
+    .nia-funds .preview-result p{font-size:12px;line-height:1.7;color:#4B6555;margin:0}
+    .nia-funds .sidebar{border-left:1px solid var(--line);padding-left:32px;min-width:0}
+    .nia-funds .side-card{padding-bottom:23px;margin-bottom:24px;border-bottom:1px solid var(--line)}
+    .nia-funds .side-label{font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#728679;margin:0 0 11px}
+    .nia-funds .side-value{font-size:27px;font-weight:800;letter-spacing:-.045em;margin:0 0 10px}
+    .nia-funds .side-caption{font-size:12px;color:var(--muted);line-height:1.75;margin:0}
+    .nia-funds .side-notice{background:#E8EDE5;padding:20px;margin-top:28px}
+    .nia-funds .side-notice b{display:block;font-size:12px;margin-bottom:10px}
+    .nia-funds .side-notice p{color:#52685B;font-size:12px;line-height:1.75;margin:0}
+    .nia-funds .history{border-top:1px solid var(--line);padding:31px 0 70px}
+    .nia-funds .history-top{display:flex;gap:20px;justify-content:space-between;align-items:center}
+    .nia-funds .history-empty{margin-top:20px;padding:30px 24px;border:1px dashed #BFC9BE;background:#FBFBF8;text-align:center}
+    .nia-funds .history-empty svg{color:#7F9686;margin:0 auto 13px}
+    .nia-funds .history-empty b{font-size:13px;display:block}
+    .nia-funds .history-empty p{color:var(--muted);font-size:12px;line-height:1.75;margin:8px auto 0;max-width:480px}
+    @media(max-width:850px){.nia-funds .workarea{grid-template-columns:1fr;gap:20px}.nia-funds .sidebar{border-left:0;border-top:1px solid var(--line);padding:30px 0 0}.nia-funds .intro-bar{align-items:start;flex-direction:column}}
+    @media(max-width:510px){.nia-funds .amounts{grid-template-columns:repeat(2,minmax(0,1fr))}.nia-funds .headline{font-size:65px}.nia-funds .history-top{align-items:start;flex-direction:column}.nia-funds .side-value{font-size:25px}}
+    @media(prefers-reduced-motion:reduce){.nia-funds *{transition:none!important;animation:none!important}}
+</style>
+<div class="nia-funds" id="nia-funds">
+    <header class="intro-bar">
+        <div>
+            <div class="eyebrow">PORTAL ANGGOTA / LAYANAN KEUANGAN</div>
+            <h1 class="headline">INFAQ ANGGOTA.</h1>
+            <p class="intro">Ruang kontribusi sukarela untuk mendukung kegiatan dan program NU Lesmana. Pilih nominal dan metode untuk melihat alur pembayaran yang direncanakan.</p>
         </div>
+        <a href="{{ route('member.dashboard') }}" class="outline-link"><span aria-hidden="true">←</span> Dashboard anggota</a>
     </header>
-
-    <!-- CONTENT CONTAINER -->
-    <main class="max-w-6xl mx-auto w-full px-6 py-10 flex-1">
-        
-        <!-- TOP SUMMARY CARDS -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <!-- Total Saldo -->
-            <div class="bg-green-900 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden flex flex-col justify-between h-48">
-                <div class="flex justify-between items-center z-10">
-                    <span class="text-xs font-bold uppercase tracking-wider text-green-200">Total Saldo Kas Current</span>
-                    <span class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center"><i class="ph ph-wallet text-lg"></i></span>
-                </div>
-                <div class="z-10">
-                    <h2 class="text-4xl font-black mb-1">Rp {{ number_format($totalInfaq ?? 0, 0, ',', '.') }}</h2>
-                    <p class="text-xs text-green-100"><i class="ph ph-shield-check"></i> Audit Transparan & Real-time</p>
-                </div>
+    <div class="workarea">
+        <section aria-labelledby="infaq-form-heading">
+            <div class="section-head">
+                <div class="preview-tag"><span aria-hidden="true">●</span> Pratinjau fitur</div>
+                <h2 class="subhead" id="infaq-form-heading" style="margin-top:16px">Rencanakan kontribusi</h2>
+                <p class="description">Form ini belum terhubung dengan layanan pembayaran. Tidak ada dana yang ditagih, dipindahkan, atau dicatat saat kamu mencobanya.</p>
             </div>
-
-            <!-- Infaq Masuk -->
-            <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col justify-between h-48">
-                <div class="flex justify-between items-center">
-                    <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Pemasukan Kas</span>
-                    <span class="w-8 h-8 rounded-full bg-green-50 text-green-600 flex items-center justify-center"><i class="ph ph-arrow-down-left text-lg"></i></span>
+            <form id="nia-infaq-form" novalidate>
+                <div class="section">
+                    <span class="field-title">01 / Nominal infaq</span>
+                    <div class="amounts" role="group" aria-label="Pilihan nominal infaq">
+                        <label class="choice"><input type="radio" name="nia_nominal" value="5000"><span class="choice-face">Rp5.000</span></label>
+                        <label class="choice"><input type="radio" name="nia_nominal" value="10000" checked><span class="choice-face">Rp10.000</span></label>
+                        <label class="choice"><input type="radio" name="nia_nominal" value="20000"><span class="choice-face">Rp20.000</span></label>
+                        <label class="choice"><input type="radio" name="nia_nominal" value="50000"><span class="choice-face">Rp50.000</span></label>
+                        <label class="choice"><input type="radio" name="nia_nominal" value="100000"><span class="choice-face">Rp100.000</span></label>
+                        <label class="choice"><input type="radio" name="nia_nominal" value="lainnya"><span class="choice-face">Lainnya</span></label>
+                    </div>
+                    <div id="nia-custom-amount" class="custom-amount">
+                        <label class="field-title" for="nia-other-amount" style="margin-top:15px">Nominal lainnya (rupiah)</label>
+                        <input id="nia-other-amount" type="number" min="1000" max="100000000" step="1000" inputmode="numeric" placeholder="Contoh: 15000">
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-3xl font-extrabold text-green-600 mb-1">Rp {{ number_format($infaqMasuk ?? 0, 0, ',', '.') }}</h2>
-                    <p class="text-xs text-gray-400">Total akumulasi dana infaq masuk</p>
+                <div class="section">
+                    <span class="field-title">02 / Metode pembayaran</span>
+                    <div class="methods" role="group" aria-label="Pilihan metode pembayaran">
+                        <label class="method"><input type="radio" name="nia_method" value="QRIS" checked><span class="method-icon">QR</span><span><span class="method-name">QRIS</span><span class="method-note">Scan melalui aplikasi bank atau dompet digital yang mendukung QRIS</span></span></label>
+                        <label class="method"><input type="radio" name="nia_method" value="E-wallet"><span class="method-icon">EW</span><span><span class="method-name">E-wallet</span><span class="method-note">Opsi dompet digital melalui penyedia pembayaran resmi</span></span></label>
+                        <label class="method"><input type="radio" name="nia_method" value="Transfer bank"><span class="method-icon">VA</span><span><span class="method-name">Transfer bank</span><span class="method-note">Rencana pembayaran melalui virtual account</span></span></label>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Infaq Keluar / Penyaluran -->
-            <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col justify-between h-48">
-                <div class="flex justify-between items-center">
-                    <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Penyaluran / Pengeluaran</span>
-                    <span class="w-8 h-8 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center"><i class="ph ph-arrow-up-right text-lg"></i></span>
+                <button type="submit" class="preview-button">Lihat ringkasan pilihan <span aria-hidden="true">↗</span></button>
+                <p id="nia-infaq-error" class="feedback" role="alert"></p>
+                <div id="nia-infaq-result" class="preview-result" role="status" aria-live="polite">
+                    <div class="eyebrow">SIMULASI / BUKAN TAGIHAN</div>
+                    <strong id="nia-infaq-summary">—</strong>
+                    <p>Metode ini masih berupa konsep. QR, nomor virtual account, ataupun tautan pembayaran asli belum diterbitkan. Infaq baru akan diproses setelah integrasi resmi tersedia.</p>
                 </div>
-                <div>
-                    <h2 class="text-3xl font-extrabold text-orange-600 mb-1">Rp {{ number_format($infaqKeluar ?? 0, 0, ',', '.') }}</h2>
-                    <p class="text-xs text-gray-400">Digunakan untuk kegiatan & sosial ranting</p>
-                </div>
-            </div>
+            </form>
+        </section>
+        <aside class="sidebar" aria-label="Informasi dan transparansi">
+            <section class="side-card"><p class="side-label">Anggota</p><h3 class="side-value">{{ $namaAnggota }}</h3><p class="side-caption">Akun anggota terverifikasi. Infaq tetap bersifat sukarela dan tidak memengaruhi status KIA.</p></section>
+            <section class="side-card"><p class="side-label">Saldo kas organisasi</p><h3 class="side-value">Belum ditampilkan</h3><p class="side-caption">Ringkasan keuangan akan muncul setelah pengurus menentukan data yang dapat dipublikasikan.</p></section>
+            <section class="side-card"><p class="side-label">Riwayat pribadi</p><h3 class="side-value">Belum terhubung</h3><p class="side-caption">Kelak hanya transaksi yang dikaitkan dan diverifikasi ke akunmu yang akan tampil di sini.</p></section>
+            <section class="side-notice"><b>Tentang keamanan pembayaran</b><p>Versi ini tidak meminta PIN, OTP, maupun data rekening. Pada versi pembayaran asli, status transaksi harus dikonfirmasi server oleh penyedia pembayaran, bukan dari tombol di browser.</p></section>
+        </aside>
+    </div>
+    <section class="history" aria-labelledby="nia-history-heading">
+        <div class="history-top"><div><div class="eyebrow">ARSIP PRIBADI</div><h2 id="nia-history-heading" class="subhead" style="margin-top:10px">Riwayat infaq saya</h2></div><span class="preview-tag">Belum terhubung ke transaksi</span></div>
+        <div class="history-empty">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
+            <b>Belum ada riwayat yang dapat ditampilkan</b>
+            <p>Catatan kas admin saat ini belum otomatis terkait dengan akun anggota. Agar akurat, riwayat akan ditampilkan setelah ada sistem transaksi dan verifikasi pembayaran.</p>
         </div>
-
-        <!-- MAIN GRID: TABLE REKAP & INFO PENYALURAN -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            <!-- LIST TRANSAKSI INFAQ -->
-            <div class="lg:col-span-8 bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h3 class="text-xl font-extrabold text-gray-900">Riwayat Transaksi Kas</h3>
-                        <p class="text-xs text-gray-400 font-medium mt-1">*Nama donatur/pemberi infaq disamarkan sebagai "Hamba Allah" untuk menjaga niat ikhlas.</p>
-                    </div>
-                </div>
-
-                <div class="space-y-3">
-                    @forelse($infaqTransactions ?? [] as $transaction)
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-gray-100/80 transition">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold {{ $transaction->type == 'masuk' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700' }}">
-                                    <i class="ph {{ $transaction->type == 'masuk' ? 'ph-arrow-down-left' : 'ph-arrow-up-right' }} text-xl"></i>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-sm text-gray-900">
-                                        {{ $transaction->type == 'masuk' ? 'Hamba Allah' : ($transaction->description ?? 'Pengeluaran Kas') }}
-                                    </p>
-                                    <p class="text-xs text-gray-400">
-                                        {{ $transaction->created_at ? $transaction->created_at->translatedFormat('d F Y • H:i') : '-' }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-extrabold text-base {{ $transaction->type == 'masuk' ? 'text-green-600' : 'text-orange-600' }}">
-                                    {{ $transaction->type == 'masuk' ? '+' : '-' }} Rp {{ number_format($transaction->amount, 0, ',', '.') }}
-                                </p>
-                                <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded {{ $transaction->type == 'masuk' ? 'bg-green-50 text-green-700' : 'bg-orange-50 text-orange-700' }}">
-                                    {{ $transaction->type }}
-                                </span>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="text-center py-16 text-gray-400">
-                            <i class="ph ph-receipt text-5xl mb-2 inline-block"></i>
-                            <p class="text-sm italic">Belum ada transaksi infaq yang dicatat.</p>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-
-            <!-- SIDEBAR INFO INFAQ & SALURKAN -->
-            <div class="lg:col-span-4 space-y-6">
-                <!-- Card Salurkan Infaq -->
-                <div class="bg-gradient-to-br from-green-900 via-green-800 to-black text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
-                    <h3 class="text-xl font-black mb-2">Ingin Berinfaq?</h3>
-                    <p class="text-xs text-green-200 leading-relaxed mb-6">
-                        Salurkan infaq terbaik Anda untuk pembangunan fasilitas majelis, kegiatan rutin santri, dan santunan anak yatim Ranting NU Pasiraman Lor.
-                    </p>
-
-                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 mb-4 border border-white/10">
-                        <p class="text-[10px] text-green-300 font-bold uppercase tracking-wider mb-1">Rekening Kas NU</p>
-                        <p class="text-lg font-black tracking-wide">1234-5678-9012</p>
-                        <p class="text-xs text-gray-300 mt-1">Bank BSI a.n PRNU Pasiraman Lor</p>
-                    </div>
-
-                    <div class="text-center">
-                        <p class="text-xs font-semibold text-green-200">Konfirmasi Infaq via WA Bendahara:</p>
-                        <a href="https://wa.me/6281234567890" target="_blank" class="inline-flex items-center gap-2 mt-3 bg-white text-green-900 font-extrabold px-6 py-3 rounded-full text-xs hover:bg-gray-100 transition shadow-lg">
-                            <i class="ph ph-whatsapp-logo text-lg"></i> Konfirmasi Infaq
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Card Catatan Amanah -->
-                <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
-                    <h4 class="font-bold text-sm text-gray-900 mb-2 flex items-center gap-2">
-                        <i class="ph ph-info text-green-700 text-lg"></i> Transparansi Publik
-                    </h4>
-                    <p class="text-xs text-gray-500 leading-relaxed">
-                        Seluruh pengeluaran dana infaq selalu melewati rapat pengurus harian dan dipertanggungjawabkan pada Lailatul Ijtima' rutin setiap bulannya.
-                    </p>
-                </div>
-            </div>
-
-        </div>
-
-    </main>
-
-</body>
-</html>
+    </section>
+</div>
+<script>
+(function(){
+    const root=document.getElementById('nia-funds');
+    if(!root)return;
+    const form=root.querySelector('#nia-infaq-form');
+    const otherWrap=root.querySelector('#nia-custom-amount');
+    const otherInput=root.querySelector('#nia-other-amount');
+    const error=root.querySelector('#nia-infaq-error');
+    const result=root.querySelector('#nia-infaq-result');
+    const summary=root.querySelector('#nia-infaq-summary');
+    const rupiah=new Intl.NumberFormat('id-ID');
+    const chosenNominal=()=>form.querySelector('input[name="nia_nominal"]:checked')?.value||'';
+    const chosenMethod=()=>form.querySelector('input[name="nia_method"]:checked')?.value||'';
+    const hideResult=()=>{result.classList.remove('show');error.classList.remove('show');error.textContent='';};
+    const updateAmount=()=>{const custom=chosenNominal()==='lainnya';otherWrap.classList.toggle('active',custom);otherInput.required=custom;hideResult();};
+    form.querySelectorAll('input[name="nia_nominal"]').forEach(input=>input.addEventListener('change',updateAmount));
+    form.querySelectorAll('input[name="nia_method"]').forEach(input=>input.addEventListener('change',hideResult));
+    otherInput.addEventListener('input',hideResult);
+    form.addEventListener('submit',event=>{
+        event.preventDefault();
+        const nominal=chosenNominal()==='lainnya'?Number(otherInput.value):Number(chosenNominal());
+        if(!Number.isSafeInteger(nominal)||nominal<1000||nominal>100000000){error.textContent='Masukkan nominal dari Rp1.000 sampai Rp100.000.000.';error.classList.add('show');result.classList.remove('show');if(chosenNominal()==='lainnya')otherInput.focus();return;}
+        const metode=chosenMethod();
+        summary.textContent='Rp'+rupiah.format(nominal)+' · '+metode;
+        error.classList.remove('show');result.classList.add('show');
+        result.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'});
+    });
+    updateAmount();
+})();
+</script>
+@endsection

@@ -1,303 +1,1245 @@
+
 @extends('layouts.admin')
+
 @section('title', 'Kelola Anggota')
 @section('heading', 'Kelola Anggota')
-@section('subtitle', 'Verifikasi data anggota, kelola foto, dan cetak kartu')
+@section('subtitle', 'Verifikasi pendaftaran, lihat foto anggota, dan cetak KIA digital.')
+
 @section('content')
-<div class="space-y-8">
-            @if(isset($pendingMembers) && count($pendingMembers) > 0)
-                <div class="bg-[#f4f4f2]/50 border border-[#e5e5e2] rounded-3xl p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-sm font-medium text-[#242424] flex items-center gap-2">
-                            <i class="ph ph-clock-counter-clockwise text-lg text-[#555555]"></i>
-                            Antrean Membutuhkan ACC ({{ count($pendingMembers) }})
-                        </h3>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        @foreach($pendingMembers as $m)
-                            <div class="bg-white p-4 rounded-2xl border border-[#e5e5e2] shadow-sm flex items-center justify-between gap-3">
-                                <div class="flex items-center gap-3">
-                                    <img src="{{ $m->photo ? asset('storage/'.$m->photo) : 'https://ui-avatars.com/api/?name='.urlencode($m->name).'&background=166534&color=fff' }}" 
-                                         class="w-11 h-11 rounded-2xl object-cover border border-[#e5e5e2]">
-                                    <div>
-                                        <h4 class="font-normal text-xs text-gray-900">{{ $m->name }}</h4>
-                                        <span class="inline-block mt-0.5 text-[10px] font-normal text-[#454545] bg-[#e5e5e2]/70 px-2.5 py-0.5 rounded-full">
-                                            {{ $m->banom }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col gap-1.5">
-                                    <form action="{{ route('admin.members.approve', $m->id) }}" method="POST">
-                                        @csrf @method('PATCH')
-                                        <button type="submit" class="bg-[#252525] hover:bg-[#111111] text-white text-[11px] font-normal px-3 py-1 rounded-xl transition w-full">ACC</button>
-                                    </form>
-                                    <form action="{{ route('admin.members.reject', $m->id) }}" method="POST">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="bg-gray-50 hover:bg-red-50 hover:text-red-600 text-gray-500 text-[11px] font-normal px-3 py-1 rounded-xl transition w-full">Tolak</button>
-                                    </form>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
 
-            <div>
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h3 class="text-base font-medium text-gray-800">Daftar Anggota Resmi ({{ isset($approvedMembers) ? count($approvedMembers) : 0 }})</h3>
-                        <p class="text-xs font-light text-gray-400">Klik salah satu kartu untuk membuka KTA & Opsi Cetak/Edit Foto.</p>
+@php
+    $pendingMembers = $pendingMembers ?? collect();
+    $approvedMembers = $approvedMembers ?? collect();
+
+    $cardData = $approvedMembers->map(fn ($member) => [
+        'id' => (int) $member->id,
+        'name' => (string) $member->name,
+        'nia' => (string) ($member->nia ?: 'Belum tersedia'),
+        'banom' => (string) $member->banom,
+        'gender' => (string) ($member->gender ?: 'Belum diisi'),
+        'photo' => $member->photo
+            ? \Illuminate\Support\Facades\Storage::disk('public')->url($member->photo)
+            : '',
+    ])->values();
+@endphp
+
+<style>
+    .members-page {
+        color: #183C2F;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .members-page [hidden],
+    .member-overlay[hidden],
+    .member-overlay [hidden] {
+        display: none !important;
+    }
+
+    .members-panel {
+        background: white;
+        border: 1px solid #E0E7DD;
+        border-radius: 23px;
+        padding: 24px;
+        margin-bottom: 22px;
+    }
+
+    .members-heading {
+        font-size: 19px;
+        font-weight: 800;
+        margin-bottom: 5px;
+    }
+
+    .members-description {
+        color: #748477;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+    .members-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 13px;
+        background: #183C2F;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        object-fit: cover;
+        flex-shrink: 0;
+        font-size: 17px;
+        font-weight: 800;
+    }
+
+    .members-pending {
+        background: #F9FAF7;
+        border: 1px solid #E4EBE1;
+        border-radius: 17px;
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .members-name {
+        font-size: 13px;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+    }
+
+    .members-meta {
+        font-size: 11px;
+        color: #748477;
+        margin-top: 4px;
+        line-height: 1.6;
+    }
+
+    .members-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 800;
+        border: 1px solid #DDE5DA;
+        background: white;
+        color: #183C2F;
+        cursor: pointer;
+    }
+
+    .members-button.primary {
+        background: #183C2F;
+        border-color: #183C2F;
+        color: white;
+    }
+
+    .members-button.danger {
+        color: #AD4040;
+        background: #FFF1F0;
+        border-color: #F1D5D1;
+    }
+
+    .members-button:hover {
+        filter: brightness(.96);
+    }
+
+    .members-card {
+        background: #FFFFFF;
+        border: 1px solid #E0E7DE;
+        border-radius: 20px;
+        padding: 19px;
+        text-align: left;
+        width: 100%;
+        cursor: pointer;
+        transition: transform .2s, box-shadow .2s;
+    }
+
+    .members-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(24,60,47,.07);
+    }
+
+    /* MODAL */
+    .member-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(8,22,15,.78);
+        backdrop-filter: blur(6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 15px;
+        overflow-y: auto;
+    }
+
+    .member-modal {
+        width: min(100%, 680px);
+        margin: auto;
+        position: relative;
+    }
+
+    .member-close {
+        position: absolute;
+        top: -45px;
+        right: 0;
+        width: 37px;
+        height: 37px;
+        background: rgba(255,255,255,.18);
+        color: white;
+        border-radius: 50%;
+        font-size: 23px;
+        border: 0;
+        cursor: pointer;
+    }
+
+    /* FLIP CARD */
+    .member-card-scene {
+        perspective: 1400px;
+        width: 100%;
+        aspect-ratio: 1.586;
+    }
+
+    .member-card-inner {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform .8s cubic-bezier(.2,.75,.2,1);
+    }
+
+    .member-card-inner.flipped {
+        transform: rotateY(180deg);
+    }
+
+    .member-card-face {
+        position: absolute;
+        inset: 0;
+        padding: 5%;
+        background: #EDF5ED;
+        color: #183C2F;
+        border-radius: 20px;
+        border: 1px solid #CDDFCE;
+        box-shadow: 0 22px 60px rgba(0,0,0,.25);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .member-card-face::before {
+        content: '';
+        position: absolute;
+        inset: 7px;
+        border: 1px solid rgba(175,138,65,.48);
+        border-radius: 14px;
+        pointer-events: none;
+    }
+
+    .member-card-face::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-radial-gradient(
+            circle at 82% 88%,
+            transparent 0 12px,
+            rgba(68,117,80,.09) 13px 14px
+        );
+        opacity: .6;
+        pointer-events: none;
+    }
+
+    .member-card-back {
+        transform: rotateY(180deg);
+    }
+
+    .member-card-top {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #C5D5C8;
+        padding-bottom: 3%;
+    }
+
+    .member-card-title {
+        font: bold clamp(17px, 3vw, 27px) Georgia, serif;
+    }
+
+    .member-card-subtitle {
+        font-size: clamp(8px, 1.2vw, 11px);
+        color: #547260;
+        margin-top: 3px;
+    }
+
+    .member-card-main {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 5%;
+        margin: auto 0;
+        min-height: 0;
+    }
+
+    .member-card-photo {
+        width: 24%;
+        aspect-ratio: 3 / 4;
+        border: 1px solid #B3CAB8;
+        border-radius: 8px;
+        object-fit: cover;
+        flex-shrink: 0;
+        background: #DDEBDF;
+    }
+
+    .member-card-placeholder {
+        width: 24%;
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: #D8E8DA;
+        border: 1px solid #B3CAB8;
+        font-size: clamp(25px, 5vw, 52px);
+        font-weight: 800;
+        color: #83A08A;
+    }
+
+    .member-card-details {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .member-card-key {
+        font-size: clamp(7px, 1vw, 10px);
+        font-weight: 800;
+        color: #748D7A;
+        margin-top: 9px;
+    }
+
+    .member-card-value {
+        font-size: clamp(10px, 1.65vw, 17px);
+        font-weight: 800;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    .member-card-bottom {
+        position: relative;
+        z-index: 1;
+        margin-top: auto;
+        padding-top: 3%;
+        border-top: 1px solid #C5D5C8;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        color: #64816B;
+        font-size: clamp(8px, 1vw, 10px);
+        font-weight: 800;
+    }
+
+    .member-card-gold {
+        position: absolute;
+        inset: auto 0 0;
+        height: 5px;
+        background: linear-gradient(
+            90deg,
+            #A8854A,
+            #DCC58A,
+            #A8854A
+        );
+    }
+
+    .member-card-instructions {
+        position: relative;
+        z-index: 1;
+        margin: auto 0;
+        font-size: clamp(9px, 1.5vw, 13px);
+        line-height: 1.7;
+    }
+
+    .member-card-instructions p {
+        margin-top: 8px;
+    }
+
+    .member-modal-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        align-items: center;
+        margin-top: 19px;
+    }
+
+    /* EDIT FOTO */
+    .member-photo-dialog {
+        background: white;
+        color: #183C2F;
+        border-radius: 20px;
+        padding: 25px;
+        width: min(100%, 430px);
+        margin: auto;
+    }
+
+    .member-photo-dialog label {
+        display: block;
+        font-size: 12px;
+        font-weight: 800;
+        margin: 15px 0 7px;
+    }
+
+    .member-photo-dialog input,
+    .member-photo-dialog select {
+        width: 100%;
+        border: 1px solid #D8E2D6;
+        border-radius: 11px;
+        padding: 12px;
+        font-size: 13px;
+        background: #F8FAF7;
+    }
+
+    /* CETAK */
+    #member-print-area {
+        display: none;
+    }
+
+    @media print {
+        @page {
+            size: A4 portrait;
+            margin: 15mm;
+        }
+
+        body * {
+            visibility: hidden !important;
+        }
+
+        #member-print-area,
+        #member-print-area * {
+            visibility: visible !important;
+        }
+
+        #member-print-area {
+            display: block !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+        }
+
+        .member-print-card {
+            width: 85.6mm;
+            height: 54mm;
+            border: 1px solid #C0D1C0;
+            border-bottom: 2mm solid #183C2F;
+            background: #EDF5ED;
+            border-radius: 3mm;
+            padding: 4mm;
+            margin-bottom: 8mm;
+            overflow: hidden;
+            break-inside: avoid;
+            color: #183C2F;
+        }
+
+        .member-print-card h2 {
+            font: bold 15pt Georgia, serif;
+            border-bottom: 1px solid #BBCDBB;
+            padding-bottom: 2mm;
+        }
+
+        .member-print-card p {
+            font-size: 8pt;
+            line-height: 1.6;
+        }
+
+        .member-print-card strong {
+            font-size: 9pt;
+        }
+
+        .member-print-card img {
+            width: 20mm;
+            height: 26mm;
+            object-fit: cover;
+            border-radius: 2mm;
+        }
+
+        .member-print-row {
+            display: flex;
+            align-items: center;
+            gap: 5mm;
+            margin-top: 5mm;
+        }
+    }
+
+    @media (max-width: 530px) {
+        .member-card-key {
+            margin-top: 4px;
+        }
+
+        .member-card-instructions p {
+            margin-top: 3px;
+        }
+
+        .member-modal-actions {
+            justify-content: center;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .member-card-inner {
+            transition: none;
+        }
+    }
+</style>
+
+<div class="members-page space-y-6">
+
+    <!-- PENDAFTAR MENUNGGU ACC -->
+    <section class="members-panel">
+
+        <div class="mb-5">
+            <h2 class="members-heading">
+                Antrean Pendaftaran ({{ $pendingMembers->count() }})
+            </h2>
+
+            <p class="members-description">
+                Periksa identitas, jenis kelamin, dan foto
+                sebelum menyetujui pendaftaran.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-3">
+
+            @forelse($pendingMembers as $member)
+
+                <article class="members-pending">
+
+                    @if($member->photo)
+
+                        <img
+                            src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($member->photo) }}"
+                            alt="Foto {{ $member->name }}"
+                            class="members-avatar"
+                            loading="lazy"
+                        >
+
+                    @else
+
+                        <span class="members-avatar">
+                            {{ mb_strtoupper(mb_substr($member->name ?: 'A', 0, 1)) }}
+                        </span>
+
+                    @endif
+
+                    <div class="flex-1 min-w-0">
+
+                        <p class="members-name">
+                            {{ $member->name }}
+                        </p>
+
+                        <p class="members-meta">
+                            {{ $member->banom }} •
+                            {{ $member->gender ?: 'Belum diisi' }}
+                        </p>
+
+                        <p class="members-meta">
+                            Menunggu ACC
+                        </p>
+
                     </div>
-                </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                    @forelse($approvedMembers as $m)
-                        @php
-                            $photoUrl = $m->photo ? asset('storage/'.$m->photo) : 'https://ui-avatars.com/api/?name='.urlencode($m->name).'&background=166534&color=fff';
-                            $memberId = 'ID-' . str_pad($m->id, 4, '0', STR_PAD_LEFT);
-                            $formattedDate = $m->created_at ? $m->created_at->format('d M Y') : '-';
-                            $genderText = $m->gender ?? 'Laki-laki';
-                        @endphp
-                        
-                        <div onclick="openKtpModal('{{ $m->id }}', '{{ addslashes($m->name) }}', '{{ $m->banom }}', '{{ $genderText }}', '{{ $formattedDate }}', '{{ $photoUrl }}', '{{ $memberId }}')"
-                             class="bg-gray-50/70 hover:bg-white border border-gray-100 hover:border-[#aaaaaa] p-5 rounded-3xl cursor-pointer hover:shadow-md transition-all duration-300 group flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center justify-between mb-3">
-                                    <img src="{{ $photoUrl }}" alt="{{ $m->name }}" class="w-12 h-12 rounded-2xl object-cover border border-gray-100">
-                                    <span class="text-xs font-normal text-gray-300 group-hover:text-[#292929] transition">
-                                        <i class="ph ph-identification-card text-xl"></i>
-                                    </span>
-                                </div>
-                                <h4 class="font-medium text-gray-800 text-sm leading-snug group-hover:text-[#171717] transition line-clamp-1">
-                                    {{ $m->name }}
-                                </h4>
-                                <div class="mt-1.5">
-                                    <span class="inline-block text-[10px] font-normal text-[#292929] bg-[#f4f4f2] px-2.5 py-0.5 rounded-full border border-[#e5e5e2]">
-                                        {{ $m->banom }}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400 font-light">
-                                <span><i class="ph ph-gender-intersex align-middle mr-1"></i> {{ $genderText }}</span>
-                                <span class="font-normal text-[#292929]">Buka KTA →</span>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="col-span-full py-12 text-center text-gray-400 bg-gray-50/50 rounded-3xl border border-dashed border-gray-200">
-                            <p class="text-xs font-medium text-gray-600">Belum Ada Anggota Resmi</p>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
+                    <div class="flex flex-col gap-2">
 
+                        <form
+                            method="POST"
+                            action="{{ route('admin.members.approve', $member->id) }}"
+                        >
+                            @csrf
+                            @method('PATCH')
+
+                            <button
+                                type="submit"
+                                class="members-button primary"
+                            >
+                                ACC
+                            </button>
+                        </form>
+
+                        <form
+                            method="POST"
+                            action="{{ route('admin.members.reject', $member->id) }}"
+                            onsubmit="return confirm('Tolak pendaftaran anggota ini?')"
+                        >
+                            @csrf
+                            @method('DELETE')
+
+                            <button
+                                type="submit"
+                                class="members-button danger"
+                            >
+                                Tolak
+                            </button>
+                        </form>
+
+                    </div>
+
+                </article>
+
+            @empty
+
+                <p class="text-sm text-gray-500 py-6">
+                    Tidak ada pendaftaran yang menunggu ACC.
+                </p>
+
+            @endforelse
+
+        </div>
+    </section>
+
+    <!-- ANGGOTA RESMI -->
+    <section class="members-panel">
+
+        <div class="mb-5">
+            <h2 class="members-heading">
+                Anggota Resmi ({{ $approvedMembers->count() }})
+            </h2>
+
+            <p class="members-description">
+                Klik anggota untuk melihat KIA depan-belakang
+                dengan animasi flip.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+
+            @forelse($approvedMembers as $member)
+
+                <button
+                    type="button"
+                    class="members-card"
+                    data-open-member="{{ $member->id }}"
+                >
+
+                    <div class="flex items-center justify-between mb-5">
+
+                        @if($member->photo)
+
+                            <img
+                                src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($member->photo) }}"
+                                alt="Foto {{ $member->name }}"
+                                class="members-avatar"
+                                loading="lazy"
+                            >
+
+                        @else
+
+                            <span class="members-avatar">
+                                {{ mb_strtoupper(mb_substr($member->name ?: 'A', 0, 1)) }}
+                            </span>
+
+                        @endif
+
+                        <i class="ph ph-identification-card text-2xl text-[#9DB0A1]"></i>
+
+                    </div>
+
+                    <p class="members-name">
+                        {{ $member->name }}
+                    </p>
+
+                    <p class="members-meta">
+                        {{ $member->banom }}
+                    </p>
+
+                    <p class="members-meta">
+                        {{ $member->gender ?: 'Belum diisi' }}
+                    </p>
+
+                    <p class="text-xs font-extrabold mt-5">
+                        Buka KIA
+                        <i class="ph ph-arrow-up-right"></i>
+                    </p>
+
+                </button>
+
+            @empty
+
+                <p class="text-sm text-gray-500 col-span-full py-6">
+                    Belum ada anggota resmi.
+                </p>
+
+            @endforelse
+
+        </div>
+    </section>
 
 </div>
-    <div id="ktpModal" class="fixed inset-0 bg-black/60 z-[100] hidden flex flex-col items-center justify-center backdrop-blur-sm p-4">
-        
-        <div class="relative w-full max-w-xl">
-            <button onclick="closeKtpModal()" class="no-print absolute -top-12 right-0 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-full w-9 h-9 flex items-center justify-center transition">
-                <i class="ph ph-x text-lg"></i>
-            </button>
 
-            <div id="printableKtpCard" class="bg-gradient-to-br from-[#181818] via-[#292929] to-[#101010] text-white rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden border border-[#555555]/60 font-sans">
-                
-                <div class="absolute -right-8 -bottom-8 text-white/5 text-[11rem] font-black pointer-events-none select-none">
-                    <i class="ph ph-globe-hemisphere-west"></i>
-                </div>
+<!-- MODAL KIA -->
+<div
+    id="member-kia-modal"
+    class="member-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Kartu anggota digital"
+    hidden
+>
+    <div class="member-modal">
 
-                <div class="flex items-center justify-between border-b border-white/15 pb-4 mb-6 relative z-10">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-2xl bg-[#e2e2df] text-gray-900 flex items-center justify-center text-xl font-bold shadow-md">
-                            <i class="ph ph-globe-hemisphere-west"></i>
-                        </div>
+        <button
+            id="member-close"
+            type="button"
+            class="member-close"
+            aria-label="Tutup KIA"
+        >
+            &times;
+        </button>
+
+        <div class="member-card-scene">
+
+            <div
+                id="member-card-inner"
+                class="member-card-inner"
+            >
+
+                <!-- DEPAN -->
+                <section class="member-card-face">
+
+                    <header class="member-card-top">
                         <div>
-                            <h3 class="text-xs font-bold tracking-widest uppercase text-[#e2e2df] leading-tight">KARTU TANDA ANGGOTA</h3>
-                            <p class="text-[11px] font-light text-white/80">Pengurus Ranting NU Pasiraman Lor</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span id="modalIdTag" class="text-xs font-mono font-medium bg-white/10 px-3 py-1 rounded-full text-white/90 border border-white/15 inline-block">
-                            ID-0001
-                        </span>
-                    </div>
-                </div>
+                            <h2 class="member-card-title">
+                                Kartu Anggota
+                            </h2>
 
-                <div class="grid grid-cols-12 gap-6 items-center my-2 relative z-10">
-                    <div class="col-span-4 sm:col-span-4 flex flex-col items-center">
-                        <div class="relative">
-                            <img id="modalPhoto" src="" alt="Pasfoto" class="w-24 h-32 sm:w-28 sm:h-36 rounded-2xl object-cover border-2 border-[#e2e2df]/80 shadow-xl bg-[#171717]">
-                            <div class="absolute -bottom-2 -right-2 bg-[#e2e2df] text-gray-900 w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-md">
-                                <i class="ph ph-check-bold"></i>
-                            </div>
-                        </div>
-                        <span class="text-[9px] font-light text-lime-300 mt-3 uppercase tracking-wider">VERIFIED MEMBER</span>
-                    </div>
-
-                    <div class="col-span-8 sm:col-span-8 space-y-3">
-                        <div>
-                            <p class="text-[9px] font-light uppercase tracking-wider text-white/50">Nama Lengkap</p>
-                            <h4 id="modalName" class="font-medium text-base text-white leading-tight">
-                                Nama Anggota
-                            </h4>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-2 pt-1">
-                            <div>
-                                <p class="text-[9px] font-light uppercase tracking-wider text-white/50">Badan Otonom</p>
-                                <span id="modalBanom" class="inline-block text-xs font-medium text-gray-900 bg-[#e2e2df] px-3 py-0.5 rounded-md mt-0.5">
-                                    IPNU
-                                </span>
-                            </div>
-                            <div>
-                                <p class="text-[9px] font-light uppercase tracking-wider text-white/50">Jenis Kelamin</p>
-                                <p id="modalGender" class="text-xs font-normal text-white/90 mt-0.5">
-                                    Laki-laki
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="pt-1">
-                            <p class="text-[9px] font-light uppercase tracking-wider text-white/50">Tanggal Diterima</p>
-                            <p id="modalJoinedAt" class="text-xs font-normal text-white/90 mt-0.5">
-                                01 Jan 2026
+                            <p class="member-card-subtitle">
+                                Pengurus Ranting NU Lesmana
                             </p>
                         </div>
+
+                        <span class="text-[#B29455] text-2xl">
+                            ✦
+                        </span>
+                    </header>
+
+                    <div class="member-card-main">
+
+                        <img
+                            id="card-photo"
+                            class="member-card-photo"
+                            alt="Foto anggota"
+                            hidden
+                        >
+
+                        <div
+                            id="card-initial"
+                            class="member-card-placeholder"
+                        >
+                            A
+                        </div>
+
+                        <div class="member-card-details">
+
+                            <p class="member-card-key">
+                                NAMA LENGKAP
+                            </p>
+
+                            <p
+                                id="card-name"
+                                class="member-card-value"
+                            >
+                                -
+                            </p>
+
+                            <p class="member-card-key">
+                                NOMOR INDUK ANGGOTA
+                            </p>
+
+                            <p
+                                id="card-nia"
+                                class="member-card-value"
+                            >
+                                -
+                            </p>
+
+                            <p class="member-card-key">
+                                BADAN OTONOM
+                            </p>
+
+                            <p
+                                id="card-banom"
+                                class="member-card-value"
+                            >
+                                -
+                            </p>
+
+                            <p class="member-card-key">
+                                JENIS KELAMIN
+                            </p>
+
+                            <p
+                                id="card-gender"
+                                class="member-card-value"
+                            >
+                                -
+                            </p>
+
+                        </div>
                     </div>
-                </div>
 
-                <div class="flex items-center justify-between pt-4 mt-4 border-t border-white/15 text-[10px] text-white/60 font-light relative z-10">
-                    <span>Dokumen Digital Resmi PRNU Pasiraman Lor</span>
-                    <span class="text-lime-300 font-normal">Status: Aktif</span>
-                </div>
+                    <footer class="member-card-bottom">
+                        <span>IDENTITAS KEANGGOTAAN</span>
+                        <span>NU LESMANA</span>
+                    </footer>
 
-            </div>
+                    <span class="member-card-gold"></span>
+                </section>
 
-            <div class="no-print mt-4 flex flex-wrap justify-between items-center gap-3">
-                <div class="flex gap-2">
-                    <button onclick="window.print()" class="bg-[#e2e2df] hover:bg-lime-300 text-gray-900 font-medium px-4 py-2.5 rounded-2xl transition text-xs flex items-center gap-2 shadow-md">
-                        <i class="ph ph-printer text-base"></i> Cetak KTA (PDF)
-                    </button>
+                <!-- BELAKANG -->
+                <section class="member-card-face member-card-back">
 
-                    <button onclick="openEditPhotoModal()" class="bg-white/10 hover:bg-white/20 text-white font-normal px-4 py-2.5 rounded-2xl transition text-xs flex items-center gap-2 border border-white/20">
-                        <i class="ph ph-camera text-base"></i> Ganti Foto Profil
-                    </button>
-                </div>
+                    <header class="member-card-top">
+                        <div>
+                            <h2 class="member-card-title">
+                                Kartu Anggota
+                            </h2>
 
-                <form id="deleteMemberForm" method="POST" action="" onsubmit="return confirm('Apakah Anda yakin ingin menghapus anggota ini dari database?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="bg-red-500/80 hover:bg-red-600 text-white font-normal px-4 py-2.5 rounded-2xl transition text-xs flex items-center gap-2 backdrop-blur-sm">
-                        <i class="ph ph-trash text-sm"></i> Hapus
-                    </button>
-                </form>
+                            <p class="member-card-subtitle">
+                                Perawatan dan Informasi
+                            </p>
+                        </div>
+
+                        <span class="text-[#B29455] text-2xl">
+                            ✦
+                        </span>
+                    </header>
+
+                    <div class="member-card-instructions">
+
+                        <p class="font-extrabold">
+                            Petunjuk Perawatan
+                        </p>
+
+                        <p>
+                            • Simpan kartu dengan baik.
+                        </p>
+
+                        <p>
+                            • Hindarkan dari panas,
+                            air, dan lipatan.
+                        </p>
+
+                        <p>
+                            • Jika hilang atau rusak,
+                            hubungi pengurus NU Lesmana.
+                        </p>
+
+                        <p>
+                            Nama:
+                            <strong id="card-back-name">-</strong>
+                        </p>
+
+                        <p>
+                            NIA:
+                            <strong id="card-back-nia">-</strong>
+                        </p>
+
+                        <p>
+                            Jika ditemukan, mohon serahkan
+                            kepada pengurus organisasi.
+                        </p>
+
+                    </div>
+
+                    <footer class="member-card-bottom">
+                        <span>KARTU ANGGOTA DIGITAL</span>
+                        <span>NU LESMANA</span>
+                    </footer>
+
+                    <span class="member-card-gold"></span>
+                </section>
+
             </div>
         </div>
 
-    </div>
+        <!-- TOMBOL AKSI -->
+        <div class="member-modal-actions">
 
-    <div id="editPhotoModal" class="fixed inset-0 bg-black/70 z-[110] hidden flex items-center justify-center backdrop-blur-sm p-4">
-        <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-sm font-medium text-gray-800">Ganti Foto Profil Anggota</h3>
-                <button onclick="closeEditPhotoModal()" class="text-gray-400 hover:text-gray-600"><i class="ph ph-x text-lg"></i></button>
-            </div>
+            <button
+                id="member-flip"
+                type="button"
+                class="members-button primary"
+            >
+                <i class="ph ph-arrows-clockwise"></i>
+                <span id="member-flip-text">
+                    Lihat Belakang
+                </span>
+            </button>
 
-            <form id="updatePhotoForm" method="POST" action="" enctype="multipart/form-data" class="space-y-4">
+            <button
+                id="member-print"
+                type="button"
+                class="members-button"
+            >
+                <i class="ph ph-printer"></i>
+                Cetak KIA
+            </button>
+
+            <button
+                id="member-edit"
+                type="button"
+                class="members-button"
+            >
+                <i class="ph ph-camera"></i>
+                Ubah Foto / Gender
+            </button>
+
+            <form
+                id="member-delete"
+                method="POST"
+                onsubmit="return confirm('Hapus anggota ini secara permanen?')"
+            >
                 @csrf
-                @method('PUT')
-                
-                <input type="hidden" id="edit_name" name="name">
-                <input type="hidden" id="edit_banom" name="banom">
+                @method('DELETE')
 
-                <div>
-                    <label class="block text-xs font-normal text-gray-600 mb-1">Pilih Foto Baru (Maks 2MB)</label>
-                    <input type="file" name="photo" accept="image/*" required class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-2 text-xs">
-                </div>
-
-                <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="closeEditPhotoModal()" class="flex-1 bg-gray-100 text-gray-700 font-normal py-2.5 rounded-xl text-xs">Batal</button>
-                    <button type="submit" class="flex-1 bg-[#252525] hover:bg-[#111111] text-white font-normal py-2.5 rounded-xl text-xs">Simpan Foto</button>
-                </div>
+                <button
+                    type="submit"
+                    class="members-button danger"
+                >
+                    <i class="ph ph-trash"></i>
+                    Hapus
+                </button>
             </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EDIT FOTO + GENDER -->
+<div
+    id="member-edit-modal"
+    class="member-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Edit foto dan jenis kelamin"
+    hidden
+>
+    <div class="member-photo-dialog">
+
+        <div class="flex items-center justify-between gap-3">
+
+            <h2 class="text-lg font-extrabold">
+                Edit Anggota
+            </h2>
+
+            <button
+                id="member-edit-close"
+                type="button"
+                class="members-button"
+            >
+                Tutup
+            </button>
+
+        </div>
+
+        <form
+            id="member-edit-form"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+            @csrf
+            @method('PUT')
+
+            <input
+                type="hidden"
+                name="name"
+                id="edit-member-name"
+            >
+
+            <input
+                type="hidden"
+                name="banom"
+                id="edit-member-banom"
+            >
+
+            <label for="edit-member-photo">
+                Ganti Foto (opsional)
+            </label>
+
+            <input
+                id="edit-member-photo"
+                type="file"
+                name="photo"
+                accept="image/jpeg,image/png,image/webp"
+            >
+
+            <p class="text-[11px] text-gray-500 mt-1">
+                Maksimal 2 MB. Kosongkan jika foto tidak diubah.
+            </p>
+
+            <label for="edit-member-gender">
+                Jenis Kelamin
+            </label>
+
+            <select
+                id="edit-member-gender"
+                name="gender"
+            >
+                <option value="">
+                    Belum diisi
+                </option>
+
+                <option value="Laki-laki">
+                    Laki-laki
+                </option>
+
+                <option value="Perempuan">
+                    Perempuan
+                </option>
+            </select>
+
+            <button
+                type="submit"
+                class="members-button primary mt-5 w-full"
+            >
+                Simpan Perubahan
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- LEMBAR CETAK -->
+<div id="member-print-area">
+
+    <!-- DEPAN -->
+    <div class="member-print-card">
+
+        <h2>Kartu Anggota</h2>
+
+        <p>Pengurus Ranting NU Lesmana • Depan</p>
+
+        <div class="member-print-row">
+
+            <img
+                id="print-member-photo"
+                alt="Foto anggota"
+                hidden
+            >
+
+            <div>
+
+                <p>NAMA</p>
+                <strong id="print-member-name">-</strong>
+
+                <p>NIA</p>
+                <strong id="print-member-nia">-</strong>
+
+                <p>BANOM</p>
+                <strong id="print-member-banom">-</strong>
+
+                <p>JENIS KELAMIN</p>
+                <strong id="print-member-gender">-</strong>
+
+            </div>
         </div>
     </div>
 
+    <!-- BELAKANG -->
+    <div class="member-print-card">
+
+        <h2>Kartu Anggota</h2>
+
+        <p>Pengurus Ranting NU Lesmana • Belakang</p>
+
+        <p style="margin-top:6mm">
+            Simpan kartu dengan baik.
+            Jika hilang atau rusak,
+            hubungi pengurus NU Lesmana.
+        </p>
+
+        <p>
+            Nama:
+            <strong id="print-member-back-name">-</strong>
+        </p>
+
+        <p>
+            NIA:
+            <strong id="print-member-back-nia">-</strong>
+        </p>
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+(function () {
+    'use strict';
+
+    const cards = {{ \Illuminate\Support\Js::from($cardData) }};
+
+    const memberMap = new Map(
+        cards.map(member => [String(member.id), member])
+    );
+
+    const get = id => document.getElementById(id);
+
+    const modal = get('member-kia-modal');
+    const editModal = get('member-edit-modal');
+    const rotor = get('member-card-inner');
+
+    let selectedMember = null;
+    let lastButton = null;
+
+    function populate(member) {
+
+        selectedMember = member;
+
+        // Isi depan.
+        get('card-name').textContent = member.name;
+        get('card-nia').textContent = member.nia;
+        get('card-banom').textContent = member.banom;
+        get('card-gender').textContent = member.gender;
+
+        // Isi belakang.
+        get('card-back-name').textContent = member.name;
+        get('card-back-nia').textContent = member.nia;
+
+        // Data cetak.
+        get('print-member-name').textContent = member.name;
+        get('print-member-nia').textContent = member.nia;
+        get('print-member-banom').textContent = member.banom;
+        get('print-member-gender').textContent = member.gender;
+
+        get('print-member-back-name').textContent = member.name;
+        get('print-member-back-nia').textContent = member.nia;
+
+        // Foto.
+        const photo = get('card-photo');
+        const printPhoto = get('print-member-photo');
+
+        photo.hidden = !member.photo;
+        printPhoto.hidden = !member.photo;
+
+        get('card-initial').hidden = !!member.photo;
+
+        get('card-initial').textContent =
+            member.name.trim().charAt(0).toUpperCase() || 'A';
+
+        if (member.photo) {
+            photo.src = member.photo;
+            printPhoto.src = member.photo;
+        } else {
+            photo.removeAttribute('src');
+            printPhoto.removeAttribute('src');
+        }
+
+        // Route edit dan hapus.
+        const path = '/admin/members/' +
+            encodeURIComponent(member.id);
+
+        get('member-delete').action = path;
+        get('member-edit-form').action = path;
+
+        // Isi form edit.
+        get('edit-member-name').value = member.name;
+        get('edit-member-banom').value = member.banom;
+        get('edit-member-gender').value =
+            member.gender === 'Belum diisi'
+                ? ''
+                : member.gender;
+
+        get('edit-member-photo').value = '';
+
+        // Reset flip.
+        rotor.classList.remove('flipped');
+
+        get('member-flip-text').textContent =
+            'Lihat Belakang';
+    }
+
+    // Buka KIA.
+    document.querySelectorAll('[data-open-member]').forEach(
+        button => {
+
+            button.addEventListener('click', function () {
+
+                const member = memberMap.get(
+                    button.dataset.openMember
+                );
+
+                if (!member) {
+                    return;
+                }
+
+                lastButton = button;
+
+                populate(member);
+
+                modal.hidden = false;
+
+                document.body.style.overflow = 'hidden';
+
+                get('member-close').focus();
+            });
+        }
+    );
+
+    // Putar 3D.
+    get('member-flip').addEventListener('click', function () {
+
+        const flipped = rotor.classList.toggle('flipped');
+
+        get('member-flip-text').textContent =
+            flipped ? 'Lihat Depan' : 'Lihat Belakang';
+    });
+
+    // Cetak dua sisi.
+    get('member-print').addEventListener('click', function () {
+        window.print();
+    });
+
+    // Edit foto/gender.
+    get('member-edit').addEventListener('click', function () {
+
+        if (!selectedMember) {
+            return;
+        }
+
+        modal.hidden = true;
+        editModal.hidden = false;
+
+        get('member-edit-close').focus();
+    });
+
+    // Tutup.
+    function closeEverything() {
+
+        modal.hidden = true;
+        editModal.hidden = true;
+
+        document.body.style.overflow = '';
+
+        lastButton?.focus();
+    }
+
+    get('member-close').addEventListener(
+        'click',
+        closeEverything
+    );
+
+    get('member-edit-close').addEventListener(
+        'click',
+        closeEverything
+    );
+
+    modal.addEventListener('click', function (event) {
+
+        if (event.target === modal) {
+            closeEverything();
+        }
+    });
+
+    editModal.addEventListener('click', function (event) {
+
+        if (event.target === editModal) {
+            closeEverything();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+
+        if (
+            event.key === 'Escape' &&
+            (!modal.hidden || !editModal.hidden)
+        ) {
+            closeEverything();
+        }
+    });
+
+})();
+</script>
 
 @endsection
-@push('styles')
-<style>
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            #printableKtpCard, #printableKtpCard * {
-                visibility: visible;
-            }
-            #printableKtpCard {
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                width: 100%;
-                max-width: 600px;
-                box-shadow: none !important;
-                border: 1px solid #166534 !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-        }
-
-</style>
-@endpush
-@push('scripts')
-    <script>
-        let currentMemberId = null;
-        let currentMemberName = '';
-        let currentMemberBanom = '';
-
-        function openKtpModal(id, name, banom, gender, joinedAt, photoUrl, memberId) {
-            currentMemberId = id;
-            currentMemberName = name;
-            currentMemberBanom = banom;
-
-            document.getElementById('modalPhoto').src = photoUrl;
-            document.getElementById('modalName').innerText = name;
-            document.getElementById('modalBanom').innerText = banom;
-            document.getElementById('modalGender').innerText = gender;
-            document.getElementById('modalJoinedAt').innerText = joinedAt;
-            document.getElementById('modalIdTag').innerText = memberId;
-
-            // Action Hapus & Update Foto
-            document.getElementById('deleteMemberForm').action = "/admin/members/" + id;
-            document.getElementById('updatePhotoForm').action = "/admin/members/" + id;
-
-            // Tampilkan Modal KTP
-            document.getElementById('ktpModal').classList.remove('hidden');
-        }
-
-        function closeKtpModal() {
-            document.getElementById('ktpModal').classList.add('hidden');
-        }
-
-        // Sub Modal Ganti Foto
-        function openEditPhotoModal() {
-            document.getElementById('edit_name').value = currentMemberName;
-            document.getElementById('edit_banom').value = currentMemberBanom;
-            document.getElementById('editPhotoModal').classList.remove('hidden');
-        }
-
-        function closeEditPhotoModal() {
-            document.getElementById('editPhotoModal').classList.add('hidden');
-        }
-
-        // Close modal saat klik latar belakang hitam
-        window.onclick = function(event) {
-            const ktpModal = document.getElementById('ktpModal');
-            if (event.target === ktpModal) {
-                closeKtpModal();
-            }
-        }
-    </script>
-
-@endpush

@@ -1,541 +1,407 @@
+
 @extends('layouts.member')
-@section('title', 'KIA Digital')
+
+@section('title', 'Kartu Anggota Digital')
+
 @section('content')
+
 <style>
-:root {
-    --forest: #183c2f;
-    --ivory: #f5f4f0;
-    --muted: #7a8c80;
-}
-.kia-shell {
-    font-family: Arial,sans-serif;
-    color: var(--forest);
-    max-width: 1120px;
-    margin: 24px auto;
-    padding: 22px;
-}
-.kia-grid {
-    display: grid;
-    grid-template-columns: minmax(0,1fr) minmax(0,1.2fr);
-    gap: 26px;
-    align-items: center;
-}
-.kia-panel {
-    background: #fff;
-    border: 1px solid #e8ebe6;
-    border-radius: 26px;
-    padding: 32px;
-    box-shadow: 0 12px 38px #183c2f0c;
-}
-.kia-kicker {
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-.kia-title {
-    font-size: clamp(28px,4vw,46px);
-    line-height: 1.08;
-    margin: 14px 0;
-}
-.kia-description {
-    color: #64766c;
-    line-height: 1.7;
-    font-size: 14px;
-}
-.kia-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 23px;
-}
-.kia-btn {
-    display: inline-block;
-    background: var(--forest);
-    color: white!important;
-    border: 0;
-    border-radius: 12px;
-    padding: 12px 16px;
-    font-size: 13px;
-    font-weight: 800;
-    text-decoration: none;
-    cursor: pointer;
-}
-.kia-btn.secondary {
-    background: var(--ivory);
-    color: var(--forest)!important;
-}
-.kia-card-button {
-    border: 0;
-    background: transparent;
-    padding: 0;
-    cursor: pointer;
-    width: 100%;
-    text-align: left;
-}
-.kia-card {
-    width: 100%;
-    max-width: 480px;
-    aspect-ratio: 85.6/54;
-    border-radius: 19px;
-    padding: 6%;
-    box-sizing: border-box;
-    background: linear-gradient(145deg,#214f3c,#102e24);
-    color: var(--ivory);
-    box-shadow: 0 18px 38px #122c2240;
-    position: relative;
-    overflow: hidden;
-}
-.kia-card:after {
-    content: '';
-    position: absolute;
-    width: 210px;
-    height: 210px;
-    border: 1px solid #ffffff23;
-    border-radius: 50%;
-    right: -75px;
-    top: -100px;
-}
-.kia-card h3 {
-    font-size: clamp(17px,2vw,24px);
-    margin: 3px 0 18px;
-    font-weight: 900;
-    letter-spacing: .3px;
-}
-.kia-card small {
-    font-size: 9px;
-    letter-spacing: 1.2px;
-    color: #d2dfd6;
-}
-.kia-content {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
-.kia-photo {
-    width: 28%;
-    aspect-ratio: 3/4;
-    border: 2px solid #d8e1d6;
-    border-radius: 11px;
-    overflow: hidden;
-    background: #f5f4f0;
-    color: #183c2f;
-    display: grid;
-    place-items: center;
-    font-size: 40px;
-    font-weight: 900;
-    flex-shrink: 0;
-}
-.kia-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.kia-details {
-    min-width: 0;
-    display: grid;
-    gap: 8px;
-}
-.kia-details span {
-    font-size: 9px;
-    opacity: .75;
-    display: block;
-}
-.kia-details strong {
-    font-size: clamp(11px,1.5vw,16px);
-    overflow-wrap: anywhere;
-    display: block;
-}
-.kia-card-footer {
-    font-size: 9px;
-    margin-top: 13px;
-    border-top: 1px solid #ffffff50;
-    padding-top: 9px;
-}
-.kia-hint {
-    font-size: 12px;
-    color: #6b7c72;
-    margin-top: 14px;
-}
-.kia-overlay[hidden] {
-    display: none!important;
-}
-.kia-overlay {
-    position: fixed;
-    inset: 0;
-    background: #071a14d9;
-    z-index: 99999;
-    display: grid;
-    place-items: center;
-    padding: 22px;
-}
-.kia-dialog {
-    width: min(100%,610px);
-    position: relative;
-}
-.kia-modal-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    margin-bottom: 14px;
-    gap: 10px;
-}
-.kia-close {
-    border: 1px solid #ffffff55;
-    background: #ffffff22;
-    color: white;
-    border-radius: 10px;
-    padding: 10px 14px;
-    cursor: pointer;
-}
-.kia-scene {
-    perspective: 1100px;
-    cursor: pointer;
-}
-.kia-rotor {
-    position: relative;
-    aspect-ratio: 85.6/54;
-    transform-style: preserve-3d;
-    transition: transform .65s cubic-bezier(.2,.8,.2,1);
-}
-.kia-rotor.flipped {
-    transform: rotateY(180deg);
-}
-.kia-face {
-    position: absolute;
-    inset: 0;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-}
-.kia-face .kia-card {
-    max-width: none;
-    height: 100%;
-    box-shadow: none;
-}
-.kia-face.back {
-    transform: rotateY(180deg);
-}
-.kia-back {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
-    gap: 12px;
-}
-.kia-back h3 {
-    font-size: 26px;
-    margin: 0;
-}
-.kia-back p {
-    font-size: 13px;
-    line-height: 1.6;
-    max-width: 320px;
-}
-.kia-flip {
-    color: white;
-    background: none;
-    border: 1px solid #ffffff66;
-    border-radius: 12px;
-    padding: 10px 16px;
-    margin-top: 15px;
-    cursor: pointer;
-}
-.kia-upload {
-    margin-top: 22px;
-    padding-top: 20px;
-    border-top: 1px solid #e7ece7;
-}
-.kia-upload input {
-    width: 100%;
-    margin: 12px 0;
-    font-size: 13px;
-}
-.kia-upload label {
-    display: block;
-    font-weight: 800;
-    font-size: 13px;
-}
-.kia-success {
-    padding: 12px;
-    border-radius: 10px;
-    background: #e7f4e8;
-    color: #21603b;
-    font-size: 13px;
-    margin: 15px 0;
-}
-@media(max-width:790px) {
-    .kia-grid {
-        grid-template-columns: 1fr;
+    .kia-page {
+        max-width: 850px;
+        margin: 0 auto;
+        padding: 15px 0 55px;
+        color: #183C2F;
+        font-family: 'DM Sans', sans-serif;
     }
-    .kia-panel {
-        padding: 24px;
+
+    .kia-scene {
+        width: 100%;
+        max-width: 650px;
+        aspect-ratio: 1.586;
+        margin: 30px auto 0;
+        perspective: 1400px;
     }
-    .kia-card {
-        margin: auto;
+
+    .kia-rotor {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform .8s cubic-bezier(.2,.75,.2,1);
     }
-    .kia-shell {
-        padding: 12px;
+
+    .kia-rotor.flipped {
+        transform: rotateY(180deg);
     }
-}
+
+    .kia-face {
+        position: absolute;
+        inset: 0;
+        padding: 5%;
+        background: #EDF5ED;
+        border: 1px solid #CEDFCE;
+        border-radius: 20px;
+        color: #183C2F;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        box-shadow: 0 22px 55px rgba(24,60,47,.15);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kia-face::before {
+        content: '';
+        position: absolute;
+        inset: 7px;
+        border: 1px solid rgba(174,140,70,.46);
+        border-radius: 13px;
+        pointer-events: none;
+    }
+
+    .kia-back {
+        transform: rotateY(180deg);
+    }
+
+    .kia-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #C8D6C8;
+        padding-bottom: 3%;
+    }
+
+    .kia-title {
+        font: bold clamp(16px, 3vw, 27px) Georgia, serif;
+    }
+
+    .kia-subtitle {
+        font-size: clamp(8px, 1.1vw, 11px);
+        color: #607967;
+    }
+
+    .kia-body {
+        display: flex;
+        align-items: center;
+        gap: 5%;
+        margin: auto 0;
+        min-height: 0;
+    }
+
+    .kia-photo {
+        width: 24%;
+        aspect-ratio: 3 / 4;
+        object-fit: cover;
+        background: #DCE9DD;
+        border: 1px solid #B6CCB8;
+        border-radius: 8px;
+    }
+
+    .kia-placeholder {
+        width: 24%;
+        aspect-ratio: 3 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #DCE9DD;
+        border-radius: 8px;
+        color: #829D88;
+        font-size: clamp(26px, 5vw, 55px);
+        font-weight: 800;
+    }
+
+    .kia-details {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .kia-key {
+        color: #7A907E;
+        font-size: clamp(7px, 1vw, 10px);
+        font-weight: 800;
+        margin-top: 8px;
+    }
+
+    .kia-value {
+        font-size: clamp(10px, 1.7vw, 17px);
+        font-weight: 800;
+        overflow-wrap: anywhere;
+        line-height: 1.25;
+    }
+
+    .kia-footer {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        border-top: 1px solid #C8D6C8;
+        padding-top: 3%;
+        font-size: clamp(8px, 1vw, 10px);
+        color: #66826E;
+        font-weight: 800;
+    }
+
+    .kia-gold {
+        height: 5px;
+        background: linear-gradient(
+            90deg,
+            #AB894D,
+            #E1C58E,
+            #AB894D
+        );
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .kia-instructions {
+        font-size: clamp(9px, 1.6vw, 13px);
+        line-height: 1.8;
+        margin: auto 0;
+    }
+
+    .kia-actions {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 11px;
+        margin-top: 27px;
+    }
+
+    .kia-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #183C2F;
+        color: white;
+        padding: 13px 19px;
+        border: none;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .kia-button.secondary {
+        color: #183C2F;
+        background: white;
+        border: 1px solid #CFDBCF;
+    }
+
+    @media (max-width: 480px) {
+        .kia-key {
+            margin-top: 4px;
+        }
+
+        .kia-instructions {
+            line-height: 1.45;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kia-rotor {
+            transition: none;
+        }
+    }
 </style>
-<div class="kia-shell">
-    <div class="kia-grid">
-        <section class="kia-panel">
-            <div class="kia-kicker">
-                NU LESMANA · PORTAL ANGGOTA
-            </div>
-            <h1 class="kia-title">
-                KIA Digital Saya
-            </h1>
-            <p class="kia-description">
-                Lihat identitas keanggotaan, unggah foto profil, dan cetak kartu. Klik pratinjau kartu untuk membuka tampilan besar dan membaliknya.
-            </p>
-            @if(session('success'))
-            <div class="kia-success">
-                {{ session('success') }}
-            </div>
-            @endif
 
-            <div class="kia-actions">
-                <a class="kia-btn" href="{{ route('member.cetak-kartu') }}">
-                    Cetak Kartu ↗
-                </a>
-                <a class="kia-btn secondary" href="{{ route('member.dashboard') }}">
-                    Dashboard
-                </a>
-                <a class="kia-btn secondary" href="{{ url('/') }}">
-                    Website Utama
-                </a>
-            </div>
-            <div class="kia-upload">
-                <h2 style="font-size:20px;font-weight:900;margin:0 0 8px">
-                    Foto Profil Anggota
-                </h2>
-                <p class="kia-description">
-                    Foto ditampilkan pada KIA dan hasil cetak.
-                </p>
-                @if(Route::has('member.foto.upload'))
-                <form action="{{ route('member.foto.upload') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
+<div class="kia-page">
 
-                    <label for="kiaFoto">
-                        Pilih foto JPG, PNG, atau WebP (maksimal 2 MB)
-                    </label>
-                    <input id="kiaFoto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" required>
-                    @error('foto')
-                    <p style="color:#b42318;font-size:12px">
-                        {{ $message }}
-                    </p>
-                    @enderror
-                    <button class="kia-btn" type="submit">
-                        Simpan Foto
-                    </button>
-                </form>
-                @else
+    <div class="text-center">
 
-                <p class="kia-description">
-                    Route unggah foto belum terdaftar. Periksa route
-                    <code>
-                        member.foto.upload
-                    </code>
-                    .
-                </p>
-                @endif
+        <p class="text-xs uppercase tracking-widest font-bold text-[#718675]">
+            Identitas Digital Warga
+        </p>
 
-            </div>
-        </section>
-        <section>
-            <button type="button" class="kia-card-button" data-open-kia aria-label="Perbesar dan balik kartu">
-                <div class="kia-card">
-                    <small>
-                        PENGURUS RANTING · KARTU IDENTITAS ANGGOTA
-                    </small>
-                    <h3>
-                        NU LESMANA
-                    </h3>
-                    <div class="kia-content">
-                        <div class="kia-photo">
-                            @if(!empty($photoUrl))
-                            <img src="{{ $photoUrl }}" alt="Foto anggota">
-                            @else
-{{ strtoupper(mb_substr($user->name, 0, 1)) }}
-                            @endif
+        <h1 class="font-display text-5xl sm:text-6xl mt-3">
+            KARTU ANGGOTA.
+        </h1>
 
-                        </div>
-                        <div class="kia-details">
-                            <div>
-                                <span>
-                                    NAMA ANGGOTA
-                                </span>
-                                <strong>
-                                    {{ $member->name ?: $user->name }}
-                                </strong>
-                            </div>
-                            <div>
-                                <span>
-                                    BANOM
-                                </span>
-                                <strong>
-                                    {{ $member->banom ?: 'Anggota' }}
-                                </strong>
-                            </div>
-                            <div>
-                                <span>
-                                    NOMOR INDUK ANGGOTA
-                                </span>
-                                <strong>
-                                    {{ $nia }}
-                                </strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="kia-card-footer">
-                        ANGGOTA TERVERIFIKASI · NU LESMANA
-                    </div>
-                </div>
-            </button>
-            <p class="kia-hint">
-                Klik kartu untuk memperbesar · klik lagi untuk membalik
-            </p>
-        </section>
+        <p class="text-sm text-gray-600 mt-3">
+            Kartu resmi anggota NU Lesmana yang telah diverifikasi.
+        </p>
+
     </div>
-</div>
-<div class="kia-overlay" id="kiaOverlay" hidden>
-    <div class="kia-dialog" role="dialog" aria-modal="true" aria-label="Detail KIA">
-        <div class="kia-modal-top">
-            <strong>
-                Kartu Identitas Anggota
-            </strong>
-            <button type="button" class="kia-close" id="kiaClose">
-                Tutup ✕
-            </button>
-        </div>
-        <div class="kia-scene" id="kiaScene" role="button" tabindex="0" aria-label="Balik kartu">
-            <div class="kia-rotor" id="kiaRotor">
-                <div class="kia-face">
-                    <div class="kia-card">
-                        <small>
-                            PENGURUS RANTING · KARTU IDENTITAS ANGGOTA
-                        </small>
-                        <h3>
-                            NU LESMANA
-                        </h3>
-                        <div class="kia-content">
-                            <div class="kia-photo">
-                                @if(!empty($photoUrl))
-                                <img src="{{ $photoUrl }}" alt="Foto anggota">
-                                @else
-{{ strtoupper(mb_substr($user->name, 0, 1)) }}
-                            @endif
 
-                            </div>
-                            <div class="kia-details">
-                                <div>
-                                    <span>
-                                        NAMA ANGGOTA
-                                    </span>
-                                    <strong>
-                                        {{ $member->name ?: $user->name }}
-                                    </strong>
-                                </div>
-                                <div>
-                                    <span>
-                                        BANOM
-                                    </span>
-                                    <strong>
-                                        {{ $member->banom ?: 'Anggota' }}
-                                    </strong>
-                                </div>
-                                <div>
-                                    <span>
-                                        NOMOR INDUK ANGGOTA
-                                    </span>
-                                    <strong>
-                                        {{ $nia }}
-                                    </strong>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="kia-card-footer">
-                            ANGGOTA TERVERIFIKASI · NU LESMANA
-                        </div>
-                    </div>
-                </div>
-                <div class="kia-face back">
-                    <div class="kia-card kia-back">
-                        <small>
-                            PENGURUS RANTING
-                        </small>
-                        <h3>
-                            NU LESMANA
-                        </h3>
-                        <p>
-                            Kartu identitas digital anggota terverifikasi. Simpan dan gunakan secara bertanggung jawab.
+    <!-- KARTU FLIP -->
+    <div class="kia-scene">
+
+        <div id="kia-rotor" class="kia-rotor">
+
+            <!-- DEPAN -->
+            <section class="kia-face">
+
+                <header class="kia-top">
+                    <div>
+                        <h2 class="kia-title">Kartu Anggota</h2>
+                        <p class="kia-subtitle">
+                            Pengurus Ranting NU Lesmana
                         </p>
-                        <strong>
-                            {{ $nia }}
-                        </strong>
+                    </div>
+
+                    <span class="text-2xl text-[#AD8951]">
+                        ✦
+                    </span>
+                </header>
+
+                <div class="kia-body">
+
+                    @if($photoUrl)
+
+                        <img
+                            src="{{ $photoUrl }}"
+                            alt="Foto {{ $member->name }}"
+                            class="kia-photo"
+                        >
+
+                    @else
+
+                        <div class="kia-placeholder">
+                            {{ mb_strtoupper(mb_substr($member->name, 0, 1)) }}
+                        </div>
+
+                    @endif
+
+                    <div class="kia-details">
+
+                        <p class="kia-key">NAMA LENGKAP</p>
+                        <p class="kia-value">{{ $member->name }}</p>
+
+                        <p class="kia-key">NIA</p>
+                        <p class="kia-value">{{ $nia }}</p>
+
+                        <p class="kia-key">BANOM</p>
+                        <p class="kia-value">{{ $member->banom }}</p>
+
+                        <p class="kia-key">JENIS KELAMIN</p>
+                        <p class="kia-value">
+                            {{ $member->gender ?: 'Belum diisi' }}
+                        </p>
+
                     </div>
                 </div>
-            </div>
+
+                <footer class="kia-footer">
+                    <span>ANGGOTA TERVERIFIKASI</span>
+                    <span>NU LESMANA</span>
+                </footer>
+
+                <span class="kia-gold"></span>
+            </section>
+
+            <!-- BELAKANG -->
+            <section class="kia-face kia-back">
+
+                <header class="kia-top">
+                    <div>
+                        <h2 class="kia-title">Kartu Anggota</h2>
+                        <p class="kia-subtitle">
+                            Perawatan dan Pengembalian
+                        </p>
+                    </div>
+
+                    <span class="text-2xl text-[#AD8951]">
+                        ✦
+                    </span>
+                </header>
+
+                <div class="kia-instructions">
+
+                    <strong>Petunjuk Perawatan</strong>
+
+                    <p>• Simpan kartu dengan baik.</p>
+                    <p>• Hindarkan dari panas, air, dan lipatan.</p>
+                    <p>• Jika hilang, hubungi pengurus organisasi.</p>
+
+                    <p class="mt-3">
+                        Nama:
+                        <strong>{{ $member->name }}</strong>
+                    </p>
+
+                    <p>
+                        NIA:
+                        <strong>{{ $nia }}</strong>
+                    </p>
+
+                    <p class="mt-3">
+                        Jika ditemukan, mohon kembalikan
+                        kepada pengurus Ranting NU Lesmana.
+                    </p>
+
+                </div>
+
+                <footer class="kia-footer">
+                    <span>KARTU ANGGOTA DIGITAL</span>
+                    <span>NU LESMANA</span>
+                </footer>
+
+                <span class="kia-gold"></span>
+            </section>
+
         </div>
-        <button type="button" class="kia-flip" id="kiaFlip">
-            ↻ Balik Kartu
-        </button>
     </div>
+
+    <!-- TOMBOL -->
+    <div class="kia-actions">
+
+        <button
+            id="kia-flip"
+            type="button"
+            class="kia-button"
+        >
+            <i class="ph ph-arrows-clockwise"></i>
+
+            <span id="kia-flip-text">
+                Lihat Belakang
+            </span>
+        </button>
+
+        <a
+            href="/cetak-kartu"
+            class="kia-button secondary"
+        >
+            <i class="ph ph-printer"></i>
+            Cetak KIA
+        </a>
+
+        <a
+            href="{{ route('member.dashboard') }}"
+            class="kia-button secondary"
+        >
+            <i class="ph ph-arrow-left"></i>
+            Dashboard Anggota
+        </a>
+
+    </div>
+
+    <p class="text-xs text-gray-500 text-center mt-6">
+        Data kartu mengikuti identitas anggota
+        yang disetujui pengurus.
+    </p>
+
 </div>
+
 <script>
-    (function () {
-        const overlay = document.getElementById('kiaOverlay');
-        const rotor = document.getElementById('kiaRotor');
+(function () {
+    const rotor = document.getElementById('kia-rotor');
+    const button = document.getElementById('kia-flip');
+    const label = document.getElementById('kia-flip-text');
 
-        if (!overlay || !rotor) return;
+    if (!rotor || !button || !label) {
+        return;
+    }
 
-        const closeButton = document.getElementById('kiaClose');
-        const flipButton = document.getElementById('kiaFlip');
-        const scene = document.getElementById('kiaScene');
+    button.addEventListener('click', function () {
 
-        function openCard() {
-            overlay.hidden = false;
-            rotor.classList.remove('flipped');
-            document.body.style.overflow = 'hidden';
-            closeButton.focus();
-        }
+        const flipped = rotor.classList.toggle('flipped');
 
-        function closeCard() {
-            overlay.hidden = true;
-            document.body.style.overflow = '';
-        }
-
-        function flipCard() {
-            rotor.classList.toggle('flipped');
-        }
-
-        document.querySelectorAll('[data-open-kia]').forEach(function (button) {
-            button.addEventListener('click', openCard);
-        });
-
-        closeButton.addEventListener('click', closeCard);
-        flipButton.addEventListener('click', flipCard);
-        scene.addEventListener('click', flipCard);
-
-        scene.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                flipCard();
-            }
-        });
-
-        overlay.addEventListener('click', function (event) {
-            if (event.target === overlay) closeCard();
-        });
-
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape' && !overlay.hidden) closeCard();
-        });
-    })();
+        label.textContent = flipped
+            ? 'Lihat Depan'
+            : 'Lihat Belakang';
+    });
+})();
 </script>
-@endsection
 
+@endsection

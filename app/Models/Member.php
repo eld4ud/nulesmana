@@ -17,6 +17,8 @@ class Member extends Model
         'banom',
         'phone',
         'address',
+        'photo',
+        'gender',
     ];
 
     public function user()

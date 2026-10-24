@@ -1,564 +1,897 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="id">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>
-            Cetak KIA - {{ $user->name }}
-        </title>
-        <style>
-:root {
-    --forest: #183c2f;
-    --ivory: #f5f4f0;
-    --muted: #7a8c80;
-}
-.kia-shell {
-    font-family: Arial,sans-serif;
-    color: var(--forest);
-    max-width: 1120px;
-    margin: 24px auto;
-    padding: 22px;
-}
-.kia-grid {
-    display: grid;
-    grid-template-columns: minmax(0,1fr) minmax(0,1.2fr);
-    gap: 26px;
-    align-items: center;
-}
-.kia-panel {
-    background: #fff;
-    border: 1px solid #e8ebe6;
-    border-radius: 26px;
-    padding: 32px;
-    box-shadow: 0 12px 38px #183c2f0c;
-}
-.kia-kicker {
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-.kia-title {
-    font-size: clamp(28px,4vw,46px);
-    line-height: 1.08;
-    margin: 14px 0;
-}
-.kia-description {
-    color: #64766c;
-    line-height: 1.7;
-    font-size: 14px;
-}
-.kia-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 23px;
-}
-.kia-btn {
-    display: inline-block;
-    background: var(--forest);
-    color: white!important;
-    border: 0;
-    border-radius: 12px;
-    padding: 12px 16px;
-    font-size: 13px;
-    font-weight: 800;
-    text-decoration: none;
-    cursor: pointer;
-}
-.kia-btn.secondary {
-    background: var(--ivory);
-    color: var(--forest)!important;
-}
-.kia-card-button {
-    border: 0;
-    background: transparent;
-    padding: 0;
-    cursor: pointer;
-    width: 100%;
-    text-align: left;
-}
-.kia-card {
-    width: 100%;
-    max-width: 480px;
-    aspect-ratio: 85.6/54;
-    border-radius: 19px;
-    padding: 6%;
-    box-sizing: border-box;
-    background: linear-gradient(145deg,#214f3c,#102e24);
-    color: var(--ivory);
-    box-shadow: 0 18px 38px #122c2240;
-    position: relative;
-    overflow: hidden;
-}
-.kia-card:after {
-    content: '';
-    position: absolute;
-    width: 210px;
-    height: 210px;
-    border: 1px solid #ffffff23;
-    border-radius: 50%;
-    right: -75px;
-    top: -100px;
-}
-.kia-card h3 {
-    font-size: clamp(17px,2vw,24px);
-    margin: 3px 0 18px;
-    font-weight: 900;
-    letter-spacing: .3px;
-}
-.kia-card small {
-    font-size: 9px;
-    letter-spacing: 1.2px;
-    color: #d2dfd6;
-}
-.kia-content {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
-.kia-photo {
-    width: 28%;
-    aspect-ratio: 3/4;
-    border: 2px solid #d8e1d6;
-    border-radius: 11px;
-    overflow: hidden;
-    background: #f5f4f0;
-    color: #183c2f;
-    display: grid;
-    place-items: center;
-    font-size: 40px;
-    font-weight: 900;
-    flex-shrink: 0;
-}
-.kia-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.kia-details {
-    min-width: 0;
-    display: grid;
-    gap: 8px;
-}
-.kia-details span {
-    font-size: 9px;
-    opacity: .75;
-    display: block;
-}
-.kia-details strong {
-    font-size: clamp(11px,1.5vw,16px);
-    overflow-wrap: anywhere;
-    display: block;
-}
-.kia-card-footer {
-    font-size: 9px;
-    margin-top: 13px;
-    border-top: 1px solid #ffffff50;
-    padding-top: 9px;
-}
-.kia-hint {
-    font-size: 12px;
-    color: #6b7c72;
-    margin-top: 14px;
-}
-.kia-overlay[hidden] {
-    display: none!important;
-}
-.kia-overlay {
-    position: fixed;
-    inset: 0;
-    background: #071a14d9;
-    z-index: 99999;
-    display: grid;
-    place-items: center;
-    padding: 22px;
-}
-.kia-dialog {
-    width: min(100%,610px);
-    position: relative;
-}
-.kia-modal-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    margin-bottom: 14px;
-    gap: 10px;
-}
-.kia-close {
-    border: 1px solid #ffffff55;
-    background: #ffffff22;
-    color: white;
-    border-radius: 10px;
-    padding: 10px 14px;
-    cursor: pointer;
-}
-.kia-scene {
-    perspective: 1100px;
-    cursor: pointer;
-}
-.kia-rotor {
-    position: relative;
-    aspect-ratio: 85.6/54;
-    transform-style: preserve-3d;
-    transition: transform .65s cubic-bezier(.2,.8,.2,1);
-}
-.kia-rotor.flipped {
-    transform: rotateY(180deg);
-}
-.kia-face {
-    position: absolute;
-    inset: 0;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-}
-.kia-face .kia-card {
-    max-width: none;
-    height: 100%;
-    box-shadow: none;
-}
-.kia-face.back {
-    transform: rotateY(180deg);
-}
-.kia-back {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
-    gap: 12px;
-}
-.kia-back h3 {
-    font-size: 26px;
-    margin: 0;
-}
-.kia-back p {
-    font-size: 13px;
-    line-height: 1.6;
-    max-width: 320px;
-}
-.kia-flip {
-    color: white;
-    background: none;
-    border: 1px solid #ffffff66;
-    border-radius: 12px;
-    padding: 10px 16px;
-    margin-top: 15px;
-    cursor: pointer;
-}
-.kia-upload {
-    margin-top: 22px;
-    padding-top: 20px;
-    border-top: 1px solid #e7ece7;
-}
-.kia-upload input {
-    width: 100%;
-    margin: 12px 0;
-    font-size: 13px;
-}
-.kia-upload label {
-    display: block;
-    font-weight: 800;
-    font-size: 13px;
-}
-.kia-success {
-    padding: 12px;
-    border-radius: 10px;
-    background: #e7f4e8;
-    color: #21603b;
-    font-size: 13px;
-    margin: 15px 0;
-}
-@media(max-width:790px) {
-    .kia-grid {
-        grid-template-columns: 1fr;
-    }
-    .kia-panel {
-        padding: 24px;
-    }
-    .kia-card {
-        margin: auto;
-    }
-    .kia-shell {
-        padding: 12px;
-    }
-}
-</style>
-        <style>
-            body{margin:0;background:#f5f4f0}.kia-print{display:none}@media print{@page{size:A4;margin:12mm}body{background:white!important}.kia-shell,.kia-overlay{display:none!important}.kia-print{display:block!important}.kia-print .kia-card{width:85.6mm;height:54mm;max-width:none;aspect-ratio:auto;border-radius:3mm;padding:4mm;box-shadow:none;print-color-adjust:exact;-webkit-print-color-adjust:exact}.kia-print .kia-card h3{font-size:17px;margin:2mm 0 3mm}.kia-print .kia-card small{font-size:6px}.kia-print .kia-photo{height:24mm;width:18mm;font-size:24px}.kia-print .kia-details{gap:2mm}.kia-print .kia-details span{font-size:6px}.kia-print .kia-details strong{font-size:9px}.kia-print .kia-content{gap:4mm}.kia-print .kia-card-footer{font-size:6px;margin-top:2mm;padding-top:2mm}}
-        </style>
-    </head>
-    <body>
-        <main class="kia-shell">
-            <div class="kia-grid">
-                <section class="kia-panel">
-                    <div class="kia-kicker">
-                        NU LESMANA · LAYANAN ANGGOTA
-                    </div>
-                    <h1 class="kia-title">
-                        Cetak Kartu Anggota
-                    </h1>
-                    <p class="kia-description">
-                        Pratinjau kartu yang sudah memuat NIA dan foto anggota. Klik kartu untuk melihat ukuran besar dan membalik sisi kartu.
-                    </p>
-                    <div class="kia-actions">
-                        <button class="kia-btn" type="button" onclick="window.print()">
-                            Cetak / Simpan PDF ↗
-                        </button>
-                        <a class="kia-btn secondary" href="{{ route('member.kia') }}">
-                            KIA & Foto Profil
-                        </a>
-                        <a class="kia-btn secondary" href="{{ route('member.dashboard') }}">
-                            Dashboard
-                        </a>
-                        <a class="kia-btn secondary" href="{{ url('/') }}">
-                            Website Utama
-                        </a>
-                    </div>
-                    <p class="kia-hint">
-                        Ukuran cetak: 85,6 × 54 mm. Aktifkan opsi grafik latar belakang pada dialog cetak bila diperlukan.
-                    </p>
-                </section>
-                <section>
-                    <button type="button" class="kia-card-button" data-open-kia aria-label="Perbesar dan balik kartu">
-                        <div class="kia-card">
-                            <small>
-                                PENGURUS RANTING · KARTU IDENTITAS ANGGOTA
-                            </small>
-                            <h3>
-                                NU LESMANA
-                            </h3>
-                            <div class="kia-content">
-                                <div class="kia-photo">
-                                    @if(!empty($photoUrl))
-                                    <img src="{{ $photoUrl }}" alt="Foto anggota">
-                                    @else
-{{ strtoupper(mb_substr($user->name, 0, 1)) }}
-                            @endif
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-                                </div>
-                                <div class="kia-details">
-                                    <div>
-                                        <span>
-                                            NAMA ANGGOTA
-                                        </span>
-                                        <strong>
-                                            {{ $member->name ?: $user->name }}
-                                        </strong>
-                                    </div>
-                                    <div>
-                                        <span>
-                                            BANOM
-                                        </span>
-                                        <strong>
-                                            {{ $member->banom ?: 'Anggota' }}
-                                        </strong>
-                                    </div>
-                                    <div>
-                                        <span>
-                                            NOMOR INDUK ANGGOTA
-                                        </span>
-                                        <strong>
-                                            {{ $nia }}
-                                        </strong>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="kia-card-footer">
-                                ANGGOTA TERVERIFIKASI · NU LESMANA
-                            </div>
-                        </div>
-                    </button>
-                    <p class="kia-hint">
-                        Klik kartu untuk memperbesar dan membalik
-                    </p>
-                </section>
-            </div>
-        </main>
-        <div class="kia-print">
-            <div class="kia-card">
-                <small>
-                    PENGURUS RANTING · KARTU IDENTITAS ANGGOTA
-                </small>
-                <h3>
-                    NU LESMANA
-                </h3>
-                <div class="kia-content">
-                    <div class="kia-photo">
-                        @if(!empty($photoUrl))
-                        <img src="{{ $photoUrl }}" alt="Foto anggota">
-                        @else
-{{ strtoupper(mb_substr($user->name, 0, 1)) }}
-                            @endif
+    <title>Cetak Kartu Anggota | NU Lesmana</title>
 
-                    </div>
-                    <div class="kia-details">
-                        <div>
-                            <span>
-                                NAMA ANGGOTA
-                            </span>
-                            <strong>
-                                {{ $member->name ?: $user->name }}
-                            </strong>
-                        </div>
-                        <div>
-                            <span>
-                                BANOM
-                            </span>
-                            <strong>
-                                {{ $member->banom ?: 'Anggota' }}
-                            </strong>
-                        </div>
-                        <div>
-                            <span>
-                                NOMOR INDUK ANGGOTA
-                            </span>
-                            <strong>
-                                {{ $nia }}
-                            </strong>
-                        </div>
-                    </div>
-                </div>
-                <div class="kia-card-footer">
-                    ANGGOTA TERVERIFIKASI · NU LESMANA
-                </div>
-            </div>
-        </div>
-        <div class="kia-overlay" id="kiaOverlay" hidden>
-            <div class="kia-dialog" role="dialog" aria-modal="true" aria-label="Detail KIA">
-                <div class="kia-modal-top">
-                    <strong>
-                        Kartu Identitas Anggota
-                    </strong>
-                    <button type="button" class="kia-close" id="kiaClose">
-                        Tutup ✕
-                    </button>
-                </div>
-                <div class="kia-scene" id="kiaScene" role="button" tabindex="0" aria-label="Balik kartu">
-                    <div class="kia-rotor" id="kiaRotor">
-                        <div class="kia-face">
-                            <div class="kia-card">
-                                <small>
-                                    PENGURUS RANTING · KARTU IDENTITAS ANGGOTA
-                                </small>
-                                <h3>
-                                    NU LESMANA
-                                </h3>
-                                <div class="kia-content">
-                                    <div class="kia-photo">
-                                        @if(!empty($photoUrl))
-                                        <img src="{{ $photoUrl }}" alt="Foto anggota">
-                                        @else
-{{ strtoupper(mb_substr($user->name, 0, 1)) }}
-                            @endif
+    @php
+        $nama = (string) ($member->name ?? $user->name ?? '-');
+        $niaKartu = (string) ($nia ?? $member->nia ?? $user->nia ?? '-');
+        $banom = (string) ($member->banom ?? '-');
+        $gender = (string) ($member->gender ?? 'Belum diisi');
 
-                                    </div>
-                                    <div class="kia-details">
-                                        <div>
-                                            <span>
-                                                NAMA ANGGOTA
-                                            </span>
-                                            <strong>
-                                                {{ $member->name ?: $user->name }}
-                                            </strong>
-                                        </div>
-                                        <div>
-                                            <span>
-                                                BANOM
-                                            </span>
-                                            <strong>
-                                                {{ $member->banom ?: 'Anggota' }}
-                                            </strong>
-                                        </div>
-                                        <div>
-                                            <span>
-                                                NOMOR INDUK ANGGOTA
-                                            </span>
-                                            <strong>
-                                                {{ $nia }}
-                                            </strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="kia-card-footer">
-                                    ANGGOTA TERVERIFIKASI · NU LESMANA
-                                </div>
-                            </div>
-                        </div>
-                        <div class="kia-face back">
-                            <div class="kia-card kia-back">
-                                <small>
-                                    PENGURUS RANTING
-                                </small>
-                                <h3>
-                                    NU LESMANA
-                                </h3>
-                                <p>
-                                    Kartu identitas digital anggota terverifikasi. Simpan dan gunakan secara bertanggung jawab.
-                                </p>
-                                <strong>
-                                    {{ $nia }}
-                                </strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button type="button" class="kia-flip" id="kiaFlip">
-                    ↻ Balik Kartu
-                </button>
-            </div>
-        </div>
-        <script>
-    (function () {
-        const overlay = document.getElementById('kiaOverlay');
-        const rotor = document.getElementById('kiaRotor');
+        $foto = $photoUrl ?? (
+            !empty($member->photo)
+                ? \Illuminate\Support\Facades\Storage::disk('public')->url($member->photo)
+                : null
+        );
 
-        if (!overlay || !rotor) return;
+        $inisial = mb_strtoupper(mb_substr($nama, 0, 1));
 
-        const closeButton = document.getElementById('kiaClose');
-        const flipButton = document.getElementById('kiaFlip');
-        const scene = document.getElementById('kiaScene');
+        $tanggal = $member->created_at
+            ? $member->created_at->format('d/m/Y')
+            : '-';
 
-        function openCard() {
-            overlay.hidden = false;
-            rotor.classList.remove('flipped');
-            document.body.style.overflow = 'hidden';
-            closeButton.focus();
+        // QR membuka dashboard anggota setelah login.
+        // QR tidak memberikan akses tanpa autentikasi.
+        $qrTarget = route('member.dashboard');
+    @endphp
+
+    <style>
+        /* =====================================
+           RESET HALAMAN
+        ===================================== */
+
+        * {
+            box-sizing: border-box;
         }
 
-        function closeCard() {
-            overlay.hidden = true;
-            document.body.style.overflow = '';
+        html,
+        body {
+            margin: 0;
+            padding: 0;
         }
 
-        function flipCard() {
-            rotor.classList.toggle('flipped');
+        body {
+            background: #F5F4F0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #183C2F;
         }
 
-        document.querySelectorAll('[data-open-kia]').forEach(function (button) {
-            button.addEventListener('click', openCard);
-        });
+        .page {
+            padding: 35px 16px 55px;
+            min-height: 100vh;
+        }
 
-        closeButton.addEventListener('click', closeCard);
-        flipButton.addEventListener('click', flipCard);
-        scene.addEventListener('click', flipCard);
+        .page-heading {
+            text-align: center;
+            margin-bottom: 28px;
+        }
 
-        scene.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                flipCard();
+        .page-heading h1 {
+            margin: 0;
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        .page-heading p {
+            margin: 8px 0 0;
+            font-size: 13px;
+            color: #6A806F;
+        }
+
+        /* =====================================
+           SUSUNAN KARTU
+        ===================================== */
+
+        .card-sheet {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 9mm;
+        }
+
+        .card {
+            position: relative;
+
+            width: 85.6mm;
+            height: 54mm;
+
+            flex: 0 0 54mm;
+
+            background: #EDF5ED;
+            border: .25mm solid #C2D4C2;
+            border-radius: 3mm;
+
+            color: #183C2F;
+            overflow: hidden;
+
+            box-shadow: 0 9px 22px rgba(24, 60, 47, .11);
+
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        /* Garis emas di dalam kartu */
+
+        .card::before {
+            content: "";
+
+            position: absolute;
+            inset: 1.8mm;
+
+            border: .2mm solid #C8B17D;
+            border-radius: 2mm;
+
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Aksen bawah */
+
+        .card::after {
+            content: "";
+
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            height: 1.3mm;
+
+            background: #183C2F;
+            z-index: 3;
+        }
+
+        /* =====================================
+           HEADER KARTU
+           Area: 3.6 - 13 mm
+        ===================================== */
+
+        .card-header {
+            position: absolute;
+
+            top: 3.6mm;
+            left: 4.5mm;
+            right: 4.5mm;
+
+            height: 9.4mm;
+
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+
+            gap: 2mm;
+
+            border-bottom: .2mm solid #C2D2C2;
+        }
+
+        .card-header h2 {
+            margin: 0;
+
+            font-family: Georgia, serif;
+            font-size: 13.5pt;
+            line-height: 1.1;
+            font-weight: 700;
+
+            color: #183C2F;
+        }
+
+        .card-header p {
+            margin: 1mm 0 0;
+
+            font-size: 6pt;
+            line-height: 1.2;
+            color: #587461;
+        }
+
+        .side-label {
+            padding: 1mm 2mm;
+
+            border: .2mm solid #C5D4C4;
+            border-radius: 20mm;
+
+            background: #F8FAF6;
+
+            font-size: 5pt;
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+        /* =====================================
+           DEPAN: TIGA KOLOM TETAP
+           Body: 15.4 - 44.4 mm
+        ===================================== */
+
+        .front-body {
+            position: absolute;
+
+            top: 15.4mm;
+            bottom: 9.6mm;
+
+            left: 4.5mm;
+            right: 4.5mm;
+
+            display: grid;
+
+            grid-template-columns:
+                18mm
+                minmax(0, 1fr)
+                19mm;
+
+            column-gap: 2.6mm;
+
+            align-items: center;
+        }
+
+        /* =====================================
+           FOTO
+        ===================================== */
+
+        .photo-column {
+            width: 18mm;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            gap: 1.3mm;
+        }
+
+        .photo-box {
+            width: 18mm;
+            height: 23mm;
+
+            background: #DCEADD;
+            border: .2mm solid #B5CBB9;
+            border-radius: 1.4mm;
+
+            overflow: hidden;
+        }
+
+        .photo-box img {
+            display: block;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 24pt;
+            font-weight: bold;
+
+            background: #D9E6DA;
+            color: #78977F;
+        }
+
+        .photo-caption {
+            margin: 0;
+
+            font-size: 4.4pt;
+            font-weight: bold;
+            color: #42734E;
+
+            text-align: center;
+        }
+
+        /* =====================================
+           IDENTITAS
+        ===================================== */
+
+        .identity-column {
+            min-width: 0;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            gap: 1.45mm;
+        }
+
+        .identity-field {
+            min-width: 0;
+        }
+
+        .identity-label {
+            display: block;
+            margin-bottom: .4mm;
+
+            font-size: 4.5pt;
+            font-weight: bold;
+            line-height: 1.15;
+
+            text-transform: uppercase;
+            color: #77907B;
+        }
+
+        .identity-value {
+            display: block;
+
+            font-size: 7pt;
+            font-weight: 800;
+            line-height: 1.15;
+
+            color: #183C2F;
+            overflow-wrap: anywhere;
+        }
+
+        .identity-value.nia {
+            font-size: 6.9pt;
+        }
+
+        .identity-two {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 1.4mm;
+        }
+
+        .identity-two .identity-value {
+            font-size: 6.2pt;
+        }
+
+        /* =====================================
+           QR
+        ===================================== */
+
+        .qr-column {
+            width: 19mm;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            gap: 1.5mm;
+        }
+
+        .qr-box {
+            width: 19mm;
+            height: 19mm;
+
+            padding: .8mm;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border: .2mm solid #C5D5C7;
+            border-radius: 1.3mm;
+
+            background: #FFFFFF;
+            overflow: hidden;
+        }
+
+        .qr-box svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .qr-label {
+            margin: 0;
+
+            font-size: 4.6pt;
+            font-weight: bold;
+            line-height: 1.4;
+            text-align: center;
+
+            color: #56725E;
+        }
+
+        /* =====================================
+           FOOTER TETAP
+           Tidak bersinggungan dengan body
+        ===================================== */
+
+        .card-footer {
+            position: absolute;
+
+            bottom: 3mm;
+
+            left: 4.5mm;
+            right: 4.5mm;
+
+            height: 4.6mm;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 2mm;
+
+            padding-top: .9mm;
+            border-top: .2mm solid #C2D2C2;
+        }
+
+        .card-footer span {
+            font-size: 4.6pt;
+            font-weight: bold;
+
+            color: #597461;
+            white-space: nowrap;
+        }
+
+        /* =====================================
+           BELAKANG
+        ===================================== */
+
+        .back-body {
+            position: absolute;
+
+            top: 15.4mm;
+            bottom: 9.6mm;
+
+            left: 4.5mm;
+            right: 4.5mm;
+
+            display: grid;
+
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
+            gap: 3.5mm;
+            align-items: start;
+        }
+
+        .back-column {
+            min-width: 0;
+        }
+
+        .back-heading {
+            margin: 0 0 2mm;
+
+            font-size: 7pt;
+            font-weight: 800;
+
+            color: #183C2F;
+        }
+
+        .back-list {
+            padding-left: 3.6mm;
+            margin: 0;
+        }
+
+        .back-list li {
+            margin: 0 0 1.2mm;
+
+            font-size: 5.7pt;
+            line-height: 1.4;
+
+            color: #476450;
+        }
+
+        .back-description {
+            margin: 0;
+
+            font-size: 5.8pt;
+            line-height: 1.45;
+            color: #476450;
+        }
+
+        .back-identity {
+            margin-top: 2.2mm;
+
+            padding: 1.8mm;
+
+            border: .2mm solid #CBDACC;
+            border-radius: 1.3mm;
+
+            background: #F7FAF5;
+        }
+
+        .back-identity-item + .back-identity-item {
+            margin-top: 1.7mm;
+        }
+
+        .back-identity-label {
+            display: block;
+
+            font-size: 4.5pt;
+            color: #7B917D;
+
+            margin-bottom: .4mm;
+        }
+
+        .back-identity-value {
+            display: block;
+
+            font-size: 6.5pt;
+            font-weight: bold;
+            line-height: 1.2;
+
+            overflow-wrap: anywhere;
+        }
+
+        /* =====================================
+           TOMBOL HALAMAN
+        ===================================== */
+
+        .page-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-wrap: wrap;
+            gap: 10px;
+
+            margin-top: 27px;
+        }
+
+        .action-btn {
+            padding: 12px 19px;
+
+            border: 1px solid #183C2F;
+            border-radius: 11px;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            background: #183C2F;
+            color: #FFFFFF;
+
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .action-btn.secondary {
+            background: #FFFFFF;
+            color: #183C2F;
+        }
+
+        .print-note {
+            margin-top: 17px;
+
+            text-align: center;
+
+            font-size: 11px;
+            line-height: 1.6;
+            color: #728576;
+        }
+
+        /* =====================================
+           PRINT A4
+        ===================================== */
+
+        @page {
+            size: A4 portrait;
+            margin: 12mm;
+        }
+
+        @media print {
+            html,
+            body {
+                padding: 0 !important;
+                margin: 0 !important;
+
+                background: white !important;
             }
-        });
 
-        overlay.addEventListener('click', function (event) {
-            if (event.target === overlay) closeCard();
-        });
+            .page {
+                min-height: 0;
+                padding: 0;
+                margin: 0;
+            }
 
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape' && !overlay.hidden) closeCard();
-        });
-    })();
-</script>
-    </body>
+            .no-print {
+                display: none !important;
+            }
+
+            .card-sheet {
+                width: 85.6mm;
+                margin: 0;
+
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+
+                gap: 8mm;
+            }
+
+            .card {
+                margin: 0;
+                box-shadow: none;
+
+                width: 85.6mm;
+                height: 54mm;
+                flex: 0 0 54mm;
+
+                break-inside: avoid;
+                page-break-inside: avoid;
+
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .page {
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- JUDUL DI LUAR AREA PRINT -->
+    <div class="page-heading no-print">
+        <h1>Cetak Kartu Anggota</h1>
+        <p>NU Lesmana • Kartu depan dan belakang</p>
+    </div>
+
+    <main class="card-sheet">
+
+        <!-- =====================================
+             KARTU DEPAN
+        ===================================== -->
+        <section class="card" aria-label="KIA sisi depan">
+
+            <!-- HEADER -->
+            <header class="card-header">
+
+                <div>
+                    <h2>Kartu Anggota</h2>
+                    <p>Pengurus Ranting NU Lesmana</p>
+                </div>
+
+                <span class="side-label">
+                    DEPAN
+                </span>
+
+            </header>
+
+            <!-- FOTO + IDENTITAS + QR -->
+            <div class="front-body">
+
+                <!-- FOTO -->
+                <div class="photo-column">
+
+                    <div class="photo-box">
+
+                        @if($foto)
+                            <img
+                                src="{{ $foto }}"
+                                alt="Foto {{ $nama }}"
+                            >
+                        @else
+                            <div class="photo-placeholder">
+                                {{ $inisial }}
+                            </div>
+                        @endif
+
+                    </div>
+
+                    <p class="photo-caption">
+                        TERVERIFIKASI
+                    </p>
+
+                </div>
+
+                <!-- IDENTITAS -->
+                <div class="identity-column">
+
+                    <div class="identity-field">
+                        <span class="identity-label">
+                            Nama Lengkap
+                        </span>
+
+                        <strong class="identity-value">
+                            {{ $nama }}
+                        </strong>
+                    </div>
+
+                    <div class="identity-field">
+                        <span class="identity-label">
+                            NIA
+                        </span>
+
+                        <strong class="identity-value nia">
+                            {{ $niaKartu }}
+                        </strong>
+                    </div>
+
+                    <div class="identity-two">
+
+                        <div class="identity-field">
+                            <span class="identity-label">
+                                Banom
+                            </span>
+
+                            <strong class="identity-value">
+                                {{ $banom }}
+                            </strong>
+                        </div>
+
+                        <div class="identity-field">
+                            <span class="identity-label">
+                                Jenis Kelamin
+                            </span>
+
+                            <strong class="identity-value">
+                                {{ $gender }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+                    <div class="identity-field">
+                        <span class="identity-label">
+                            Tanggal Terdaftar
+                        </span>
+
+                        <strong class="identity-value">
+                            {{ $tanggal }}
+                        </strong>
+                    </div>
+
+                </div>
+
+                <!-- QR -->
+                <div class="qr-column">
+
+                    <div class="qr-box">
+
+                        {!! QrCode::format('svg')
+                            ->size(130)
+                            ->margin(1)
+                            ->generate($qrTarget) !!}
+
+                    </div>
+
+                    <p class="qr-label">
+                        SCAN QR<br>
+                        AKUN ANGGOTA
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <footer class="card-footer">
+                <span>IDENTITAS KEANGGOTAAN</span>
+                <span>NU LESMANA</span>
+            </footer>
+
+        </section>
+
+        <!-- =====================================
+             KARTU BELAKANG
+        ===================================== -->
+        <section class="card" aria-label="KIA sisi belakang">
+
+            <!-- HEADER -->
+            <header class="card-header">
+
+                <div>
+                    <h2>Kartu Anggota</h2>
+                    <p>Perawatan dan Pengembalian</p>
+                </div>
+
+                <span class="side-label">
+                    BELAKANG
+                </span>
+
+            </header>
+
+            <!-- INFORMASI BELAKANG -->
+            <div class="back-body">
+
+                <div class="back-column">
+
+                    <h3 class="back-heading">
+                        Petunjuk Perawatan
+                    </h3>
+
+                    <ul class="back-list">
+                        <li>
+                            Simpan kartu dengan baik.
+                        </li>
+
+                        <li>
+                            Hindarkan dari panas, air,
+                            dan lipatan.
+                        </li>
+
+                        <li>
+                            Jika hilang atau rusak,
+                            hubungi pengurus NU Lesmana.
+                        </li>
+                    </ul>
+
+                </div>
+
+                <div class="back-column">
+
+                    <h3 class="back-heading">
+                        Jika Ditemukan
+                    </h3>
+
+                    <p class="back-description">
+                        Mohon kembalikan kepada
+                        pengurus Ranting NU Lesmana.
+                    </p>
+
+                    <div class="back-identity">
+
+                        <div class="back-identity-item">
+
+                            <span class="back-identity-label">
+                                NAMA
+                            </span>
+
+                            <strong class="back-identity-value">
+                                {{ $nama }}
+                            </strong>
+
+                        </div>
+
+                        <div class="back-identity-item">
+
+                            <span class="back-identity-label">
+                                NIA
+                            </span>
+
+                            <strong class="back-identity-value">
+                                {{ $niaKartu }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <footer class="card-footer">
+                <span>KARTU ANGGOTA DIGITAL</span>
+                <span>NU LESMANA</span>
+            </footer>
+
+        </section>
+
+    </main>
+
+    <!-- TOMBOL -->
+    <div class="page-actions no-print">
+
+        <a
+            href="{{ route('member.kia') }}"
+            class="action-btn secondary"
+        >
+            Kembali ke KIA
+        </a>
+
+        <button
+            type="button"
+            class="action-btn"
+            onclick="window.print()"
+        >
+            Cetak / Simpan PDF
+        </button>
+
+    </div>
+
+    <p class="print-note no-print">
+        Ukuran 85,6 × 54 mm per sisi.
+        Gunakan A4, skala 100%, dan aktifkan
+        cetak warna latar belakang.
+    </p>
+
+</div>
+
+</body>
 </html>
