@@ -11,7 +11,6 @@ class AkunController extends Controller
     private const PAGES = [
         'kia' => 'Kartu Identitas Anggota',
         'data' => 'Data Saya',
-        'infaq' => 'Infaq Anggota',
         'notifikasi' => 'Notifikasi',
         'pengaturan' => 'Pengaturan',
     ];
@@ -31,13 +30,10 @@ class AkunController extends Controller
         abort_unless($user && $user->role === 'member', 403);
         $slug = $request->route('page') ?: $request->segment(2);
         abort_unless(is_string($slug) && array_key_exists($slug, self::PAGES), 404);
-        if ($slug === 'infaq') {
-            abort_unless($user->status === 'approved' && $user->member?->status === 'approved', 403);
-            return view('member.infaq', ['user' => $user]);
-        }
+        $member = Member::query()->where('user_id', $user->id)->first();
         return view('member.soon', [
             'user' => $user,
-            'member' => $user->member,
+            'member' => $member,
             'title' => self::PAGES[$slug],
             'page' => $slug,
         ]);

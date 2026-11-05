@@ -6,19 +6,18 @@
 @php
     $initial = mb_strtoupper(mb_substr($user->name ?? 'A', 0, 1));
     $status = $user->status ?? 'pending';
-    $nia = $user->nia ?: ($user->member?->nia ?? null);
+    $nia = $user->member?->nia ?: ($user->nia ?? null);
     $maskedNia = $nia
         ? str_repeat('•', max(mb_strlen($nia) - 4, 0)) . mb_substr($nia, -4)
         : 'Belum tersedia';
     $member = $user->member;
     $banom = $member?->banom ?: 'Anggota';
-    $photoPath = $user->photo ?? $user->photo_path ?? $member?->photo ?? $member?->photo_path ?? null;
-    $photoUrl = $photoPath ? \Illuminate\Support\Facades\Storage::disk('public')->url($photoPath) : null;
+    $photoPath = $member?->photo ?? null;
+    $photoUrl = $photoPath ? url('/storage/' . ltrim($photoPath, '/')) : null;
 
     $menus = [
         ['title' => 'Kartu Identitas Anggota', 'description' => 'Lihat kartu digital dan informasi KIA Anda.', 'route' => 'member.kia', 'icon' => 'ph-identification-card'],
         ['title' => 'Data Keanggotaan', 'description' => 'Periksa informasi pribadi dan data anggota.', 'route' => 'member.data', 'icon' => 'ph-user-circle'],
-        ['title' => 'Riwayat Infaq', 'description' => 'Lihat riwayat kontribusi dan infaq Anda.', 'route' => 'member.infaq', 'icon' => 'ph-wallet'],
         ['title' => 'Notifikasi', 'description' => 'Informasi terbaru terkait akun dan kegiatan.', 'route' => 'member.notifikasi', 'icon' => 'ph-bell'],
         ['title' => 'Pengaturan Akun', 'description' => 'Kelola informasi dan keamanan akun Anda.', 'route' => 'member.pengaturan', 'icon' => 'ph-gear'],
     ];
@@ -58,66 +57,6 @@
 
     .nu-menu-link:hover { background: #F7F9F6; }
 
-    .nu-kia {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 100%;
-        aspect-ratio: 85.6 / 54;
-        padding: 6%;
-        overflow: hidden;
-        border-radius: 20px;
-        background: linear-gradient(135deg, #285440, #183C2F 62%, #102B21);
-        color: #fff;
-        text-align: left;
-    }
-
-    .nu-kia::after {
-        content: '';
-        position: absolute;
-        width: 75%;
-        aspect-ratio: 1;
-        right: -35%;
-        top: -55%;
-        border: 1px solid rgba(255,255,255,.15);
-        border-radius: 50%;
-        pointer-events: none;
-    }
-
-    .nu-kia > * { position: relative; z-index: 1; }
-
-    .nu-kia-label {
-        font-size: clamp(8px, 1vw, 11px);
-        letter-spacing: .13em;
-        text-transform: uppercase;
-        color: #D4E2D7;
-    }
-
-    .nu-kia-value {
-        margin-top: 4px;
-        font-size: clamp(11px, 1.35vw, 17px);
-        font-weight: 800;
-        overflow-wrap: anywhere;
-    }
-
-    .nu-kia-photo {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 23%;
-        aspect-ratio: 3 / 4;
-        overflow: hidden;
-        border-radius: 10px;
-        border: 2px solid rgba(255,255,255,.45);
-        background: #D9E7DD;
-        color: #183C2F;
-        font-weight: 900;
-        font-size: 28px;
-    }
-
-    .nu-kia-photo img { width: 100%; height: 100%; object-fit: cover; }
-
     .nu-modal[hidden] { display: none !important; }
 
     .nu-modal {
@@ -132,7 +71,7 @@
     }
 
     .nu-modal-box {
-        width: min(100%, 660px);
+        width: min(100%, 700px);
         max-height: 95vh;
         overflow-y: auto;
         border-radius: 26px;
@@ -159,13 +98,14 @@
         -webkit-backface-visibility: hidden;
     }
 
+    .nu-flip-face > .kia-unified-card { height: 100%; }
     .nu-flip-back { transform: rotateY(180deg); }
 
     @media (prefers-reduced-motion: reduce) {
         .nu-flip-inner { transition: none; }
     }
 </style>
-
+@include('components.kia-style')
 <div class="nu-dashboard mx-auto max-w-7xl pb-12">
 
     {{-- HEADER --}}
@@ -301,38 +241,7 @@
                             id="openKiaModal"
                             aria-label="Buka pratinjau KIA"
                             class="block w-full max-w-[560px] cursor-pointer rounded-[20px] text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#183C2F]">
-                        <div class="nu-kia shadow-xl">
-                            <div class="flex items-start justify-between gap-4">
-                                <div>
-                                    <p class="nu-kia-label">Pengurus Ranting</p>
-                                    <h4 class="mt-1 text-xl font-black tracking-tight sm:text-2xl">
-                                        NU LESMANA
-                                    </h4>
-                                </div>
-                                <span class="rounded-xl border border-white/30 px-3 py-2 text-xs font-black">NU</span>
-                            </div>
-
-                            <div class="flex items-end gap-4">
-                                <div class="nu-kia-photo">
-                                    @if ($photoUrl)
-                                        <img src="{{ $photoUrl }}" alt="Foto anggota">
-                                    @else
-                                        {{ $initial }}
-                                    @endif
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <p class="nu-kia-label">Nama Anggota</p>
-                                    <p class="nu-kia-value">{{ $user->name }}</p>
-                                    <p class="nu-kia-label mt-3">Nomor Induk Anggota</p>
-                                    <p class="nu-kia-value font-mono">{{ $maskedNia }}</p>
-                                </div>
-                            </div>
-
-                            <div class="flex justify-between gap-3 border-t border-white/25 pt-3 text-[10px] font-bold text-[#D9E6DB]">
-                                <span>{{ $banom }}</span>
-                                <span>{{ $status === 'approved' ? 'TERVERIFIKASI' : strtoupper($status) }}</span>
-                            </div>
-                        </div>
+                        @include('components.kia-card', ['side' => 'front', 'user' => $user, 'member' => $member, 'nia' => $nia])
                     </button>
 
                     <div class="mt-6 flex flex-wrap gap-3">
@@ -417,50 +326,10 @@
                 aria-label="Balik kartu anggota" aria-pressed="false">
             <div class="nu-flip-inner" id="flipKiaInner">
                 <div class="nu-flip-face">
-                    <div class="nu-kia h-full">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <p class="nu-kia-label">Pengurus Ranting</p>
-                                <h3 class="mt-1 text-xl font-black sm:text-3xl">NU LESMANA</h3>
-                            </div>
-                            <span class="rounded-xl border border-white/30 px-3 py-2 text-xs font-black">NU</span>
-                        </div>
-                        <div class="flex items-end gap-4">
-                            <div class="nu-kia-photo">
-                                @if ($photoUrl)
-                                    <img src="{{ $photoUrl }}" alt="Foto anggota">
-                                @else
-                                    {{ $initial }}
-                                @endif
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <p class="nu-kia-label">Nama Anggota</p>
-                                <p class="nu-kia-value">{{ $user->name }}</p>
-                                <p class="nu-kia-label mt-3">Nomor Induk Anggota</p>
-                                <p class="nu-kia-value font-mono">{{ $nia ?: 'Belum tersedia' }}</p>
-                            </div>
-                        </div>
-                        <div class="flex justify-between gap-3 border-t border-white/25 pt-3 text-[10px] font-bold text-[#D9E6DB]">
-                            <span>{{ $banom }}</span>
-                            <span>{{ $status === 'approved' ? 'TERVERIFIKASI' : strtoupper($status) }}</span>
-                        </div>
-                    </div>
+                    @include('components.kia-card', ['side' => 'front', 'user' => $user, 'member' => $member, 'nia' => $nia])
                 </div>
-
                 <div class="nu-flip-face nu-flip-back">
-                    <div class="nu-kia h-full items-center justify-center text-center">
-                        <div>
-                            <p class="text-xs font-bold uppercase tracking-[.2em] text-[#D9E6DB]">
-                                Kartu Identitas Anggota
-                            </p>
-                            <h3 class="mt-3 text-3xl font-black sm:text-5xl">NU LESMANA</h3>
-                            <p class="mt-4 text-sm text-[#D9E6DB]">Pengurus Ranting Nahdlatul Ulama Lesmana</p>
-                            <p class="mt-7 font-mono text-sm font-bold">{{ $nia ?: 'NIA belum tersedia' }}</p>
-                        </div>
-                        <p class="text-[10px] font-bold tracking-widest text-[#D9E6DB]">
-                            KARTU KEANGGOTAAN DIGITAL
-                        </p>
-                    </div>
+                    @include('components.kia-card', ['side' => 'back', 'user' => $user, 'member' => $member, 'nia' => $nia])
                 </div>
             </div>
         </button>

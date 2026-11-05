@@ -12,7 +12,7 @@
             overflow: hidden;
             background: #F5F4F0;
             pointer-events: auto;
-            font-family: 'DM Sans', system-ui, sans-serif;
+            font-family: 'DM Sans', sans-serif;
             opacity: 1;
             visibility: visible;
             transition: opacity 260ms ease, visibility 260ms ease;
@@ -72,15 +72,16 @@
             border-radius: 11px;
         }
         #nu-skeleton .nu-sk-actions {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 12px;
-            max-width: 450px;
+            max-width: 440px;
             margin-top: 12px;
         }
         #nu-skeleton .nu-sk-button {
+            width: 175px;
             height: 52px;
-            border-radius: 10px;
+            border-radius: 999px;
         }
         #nu-skeleton .nu-sk-button:first-child {
             background: #183C2F;
@@ -217,6 +218,60 @@
             font-weight: 700;
             letter-spacing: 0;
         }
+
+        /* Suara Warga: dua jalur review bergerak, minimal, forest green. */
+        #saran .nu-review-showcase { position:relative; margin-top:28px; overflow:hidden; }
+        #saran .nu-review-showcase::before,
+        #saran .nu-review-showcase::after { content:""; position:absolute; top:0; bottom:0; width:clamp(20px,5vw,72px); z-index:2; pointer-events:none; }
+        #saran .nu-review-showcase::before { left:0; background:linear-gradient(to right,#f6f7f3 0%,transparent 100%); }
+        #saran .nu-review-showcase::after { right:0; background:linear-gradient(to left,#f6f7f3 0%,transparent 100%); }
+        #saran .nu-review-row { overflow:hidden; padding:5px 0 12px; }
+        #saran .nu-review-row + .nu-review-row { margin-top:3px; }
+        #saran .nu-review-track { display:flex; width:max-content; animation:nu-review-move-left var(--nu-review-duration,55s) linear infinite; will-change:transform; }
+        #saran .nu-review-track[data-direction="right"] { animation-name:nu-review-move-right; }
+        #saran .nu-review-group { display:flex; width:max-content; flex:0 0 auto; gap:14px; padding-right:14px; }
+        #saran .nu-review-card { display:flex; flex:0 0 clamp(245px,27vw,340px); width:clamp(245px,27vw,340px); min-height:170px; flex-direction:column; align-items:stretch; gap:12px; border:1px solid #D9E3D9; border-radius:18px; background:#FFFFFF; padding:20px 21px; font-family:'DM Sans',sans-serif; color:#183C2F; text-align:left; box-shadow:0 4px 14px rgba(24,60,47,.045); cursor:pointer; transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+        #saran .nu-review-card:hover { transform:translateY(-2px); border-color:#9FB7A6; box-shadow:0 9px 24px rgba(24,60,47,.09); }
+        #saran .nu-review-card:focus-visible { outline:3px solid #77A58A; outline-offset:2px; }
+        #saran .nu-review-avatar { display:flex; width:35px; height:35px; flex:0 0 auto; align-items:center; justify-content:center; border-radius:999px; background:#183C2F; color:#fff; font-size:13px; font-weight:800; }
+        #saran .nu-review-preview { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; line-clamp:2; overflow:hidden; line-height:1.6; overflow-wrap:anywhere; font-size:13px; color:#4B6053; }
+        #saran .nu-review-hint { display:flex; align-items:center; gap:9px; margin-top:14px; color:#809085; font-size:11px; }
+        #saran .nu-review-row:has(.nu-review-card:focus-visible) .nu-review-track,
+        #saran .nu-review-row.is-touched .nu-review-track,
+        body.nu-review-modal-open #saran .nu-review-track { animation-play-state:paused; }
+        @media(hover:hover){ #saran .nu-review-row:hover .nu-review-track { animation-play-state:paused; } }
+        @keyframes nu-review-move-left { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        @keyframes nu-review-move-right { from{transform:translateX(-50%)} to{transform:translateX(0)} }
+        .nu-review-modal[hidden] { display:none!important; }
+        .nu-review-modal { position:fixed; inset:0; z-index:99998; display:grid; place-items:center; overflow-y:auto; padding:18px; background:rgba(10,27,19,.68); backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px); animation:nu-review-overlay-in .22s ease-out; }
+        .nu-review-dialog { width:min(100%,540px); max-height:min(90dvh,760px); overflow-y:auto; border:1px solid #DCE4DA; border-radius:23px; background:#F9FAF7; padding:clamp(22px,4vw,35px); box-shadow:0 25px 80px rgba(5,28,17,.25); animation:nu-review-dialog-in .25s cubic-bezier(.16,1,.3,1); }
+        .nu-review-dialog .nu-modal-message { white-space:pre-wrap; overflow-wrap:anywhere; font-size:15px; line-height:1.8; color:#3D5446; }
+        .nu-review-dialog .nu-review-close { display:grid; width:40px; height:40px; place-items:center; border:1px solid #D9E3D9; border-radius:999px; background:#FFFFFF; color:#183C2F; }
+        .nu-review-dialog .nu-review-close:hover { background:#EAF0E9; }
+        @keyframes nu-review-overlay-in { from{opacity:0} to{opacity:1} }
+        @keyframes nu-review-dialog-in { from{opacity:0;transform:translateY(10px) scale(.985)} to{opacity:1;transform:translateY(0) scale(1)} }
+        #saran .landing-form { min-width:0; }
+        #saran .landing-form textarea { min-width:0; resize:vertical; }
+        #saran .rating-picker label { display:inline-flex; min-width:38px; min-height:44px; align-items:center; justify-content:center; }
+        @media(max-width:640px){
+            #saran { padding-top:64px; padding-bottom:76px; }
+            #saran .nu-review-showcase { margin-left:-16px; margin-right:-16px; }
+            #saran .nu-review-row { padding:5px 0 10px; }
+            #saran .nu-review-group { gap:11px; padding-right:11px; }
+            #saran .nu-review-card { flex-basis:250px; width:250px; min-height:157px; padding:16px 17px; border-radius:16px; }
+            #saran .nu-review-hint { font-size:10px; }
+            #saran .landing-form { border-radius:18px; padding:22px 18px; }
+            #saran .rating-picker { gap:2px; }
+            #saran .rating-picker label { font-size:30px; }
+            .nu-review-dialog { border-radius:19px; padding:21px; max-height:88dvh; }
+        }
+        @media(prefers-reduced-motion:reduce){
+            #saran .nu-review-showcase::before,#saran .nu-review-showcase::after { display:none; }
+            #saran .nu-review-row { overflow-x:auto; scrollbar-width:thin; -webkit-overflow-scrolling:touch; }
+            #saran .nu-review-track { animation:none!important; transform:none!important; will-change:auto; }
+            #saran .nu-review-card:hover { transform:none; }
+            .nu-review-modal,.nu-review-dialog { animation:none; }
+        }
     </style>
     <!-- Animasi reveal cadangan: bekerja juga saat file animasi eksternal gagal dimuat. -->
     <style>
@@ -277,7 +332,7 @@
         })();
     </script>
 </head>
-<body class="bg-[#f6f7f3] text-gray-900 min-h-screen relative overflow-x-hidden selection:bg-[#203d2e] selection:text-white">
+<body class="bg-[#F7F8F5] text-gray-900 min-h-screen relative overflow-x-hidden selection:bg-[#203d2e] selection:text-white">
     <!-- Skeleton overlay for the homepage. All elements are decorative placeholders. -->
     <div id="nu-skeleton" role="status" aria-label="Memuat halaman NU Lesmana">
         <div class="nu-sk-wrap" aria-hidden="true">
@@ -300,18 +355,16 @@
                     <div class="nu-sk-actions">
                         <span class="nu-sk-button nu-sk-pulse"></span>
                         <span class="nu-sk-button nu-sk-pulse"></span>
-                        <span class="nu-sk-button nu-sk-pulse"></span>
-                        <span class="nu-sk-button nu-sk-pulse"></span>
                     </div>
                 </div>
                 <div class="nu-sk-photo nu-sk-pulse"></div>
             </div>
         </div>
     </div>
-    
+
     <!-- NAVBAR + MENU MOBILE (komponen: resources/views/components/site-navbar.blade.php) -->
     <x-site-navbar />
-    
+
     <!-- NOTIFIKASI -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32">
         @if(session('success'))
@@ -321,50 +374,33 @@
             </div>
         @endif
     </div>
-    
-    <!-- ================= HERO ================= -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-4 sm:pt-8 pb-12 sm:pb-16">
-        <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-6">
+
+    <!-- HERO: tipografi ringan dan ruang putih lega -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 lg:pt-14 pb-10 sm:pb-14">
+        <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
             <!-- TEKS KIRI -->
             <div data-hero-enter class="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
-                <div class="mb-5 text-center lg:text-left">
+                <div class="mb-6 text-center lg:text-left">
                     <p lang="ar" dir="rtl" class="font-arabic text-[1.65rem] sm:text-4xl text-[#173d30] leading-[1.8]">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
                     <p class="text-[11px] sm:text-xs tracking-[.16em] uppercase font-semibold text-gray-500 mt-1">Selamat datang di Portal NU Lesmana</p>
                 </div>
-                <h1 class="font-display text-6xl sm:text-8xl lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.92] text-gray-900 mb-5 sm:mb-6">
-                    PORTAL RESMI <br>
-                    <span class="text-[#203d2e]">LESMANA.</span>
+                <h1 class="font-display max-w-[680px] text-6xl sm:text-8xl lg:text-[6rem] xl:text-[6.7rem] leading-[.93] text-gray-900 mb-6 sm:mb-8">
+                    PORTAL RESMI<br>
+                    <span class="text-[#183C2F]">LESMANA.</span>
                 </h1>
-                <p class="text-sm sm:text-base lg:text-lg font-semibold text-gray-800 mb-6 sm:mb-8 leading-relaxed max-w-lg">
+                <p class="max-w-[34rem] mb-9 text-[15px] leading-[1.9] font-normal text-[#58675F] sm:mb-10 sm:text-[17px]">
                     Pusat informasi kegiatan majelis, berita agenda keagamaan, serta layanan pendaftaran anggota Badan Otonom Ranting NU dengan verifikasi NIA otomatis.
                 </p>
-                <div class="grid grid-cols-2 gap-3 sm:gap-4 w-full sm:max-w-md">
-                    <a href="{{ route('member.signup') }}" class="flex items-center justify-center gap-2 text-xs sm:text-sm font-black px-5 sm:px-7 py-3.5 sm:py-4 rounded-lg transition shadow-sm text-center bg-gray-900 text-white hover:bg-[#2f533c]">
-                        <i class="ph ph-user-plus text-base sm:text-lg"></i> Daftar Sekarang
+                <div class="flex w-full flex-wrap items-center justify-center gap-3.5 lg:justify-start">
+                    <a href="{{ route('member.signup') }}" class="inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-[#183C2F] px-9 py-3.5 text-[13px] font-semibold text-white transition-colors hover:bg-[#285340] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#183C2F]">
+                        Daftar Anggota <i class="ph ph-arrow-up-right text-lg" aria-hidden="true"></i>
                     </a>
-                    <a
-                        href="{{ auth()->check() && auth()->user()->role === 'member' && auth()->user()->status === 'approved' ? route('member.kia') : route('member.signup') }}"
-                        class="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-bold"
-                        style="background-color: #183C2F; color: #FFFFFF;"
-                    >
-                        <i class="ph ph-identification-card text-xl"></i>
-                        <span>Cek KIA</span>
-                    </a>
-                    @auth
-                        <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('member.dashboard') }}" class="flex items-center justify-center gap-2 text-xs sm:text-sm font-black px-5 sm:px-7 py-3.5 sm:py-4 rounded-lg transition shadow-sm text-center bg-white border-2 border-gray-900 text-gray-900 hover:bg-gray-50">
-                            <i class="ph ph-squares-four text-base sm:text-lg"></i> {{ auth()->user()->role === 'admin' ? 'Panel Admin' : 'Akun Saya' }}
-                        </a>
-                    @else
-                        <a href="{{ route('member.login') }}" class="flex items-center justify-center gap-2 text-xs sm:text-sm font-black px-5 sm:px-7 py-3.5 sm:py-4 rounded-lg transition shadow-sm text-center bg-white border-2 border-gray-900 text-gray-900 hover:bg-gray-50">
-                            <i class="ph ph-sign-in text-base sm:text-lg"></i> Login Anggota
-                        </a>
-                    @endauth
-                    <a href="{{ route('page.profil') }}" class="flex items-center justify-center gap-2 text-xs sm:text-sm font-black px-5 sm:px-7 py-3.5 sm:py-4 rounded-lg transition shadow-sm text-center border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white">
-                        <i class="ph ph-info text-base sm:text-lg"></i> Profil NU Lesmana
+                    <a href="{{ route('public.news.index') }}" class="inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full border border-[#183C2F]/35 px-8 py-3.5 text-[13px] font-medium text-[#183C2F] transition-colors hover:border-[#183C2F] hover:bg-[#E8EFE7] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#183C2F]">
+                        Berita &amp; Agenda <i class="ph ph-arrow-up-right text-lg" aria-hidden="true"></i>
                     </a>
                 </div>
             </div>
-            <!-- FOTO KH. HASYIM ASY'ARI: satu fokus visual, tanpa ornamen -->
+            <!-- FOTO KH. Hasyim Asy'ari: satu fokus visual, tanpa ornamen -->
             <div class="w-full lg:w-1/2">
                 <figure data-hero-enter class="relative mx-auto max-w-[35rem] overflow-hidden rounded-[1.65rem] bg-[#15392B] lg:ml-auto lg:mr-0">
                     <div class="relative h-[350px] sm:h-[460px] lg:h-[510px]">
@@ -398,48 +434,52 @@
             </div>
         </div>
     </main>
-    
-    <!-- BENEFITS / CARA KERJA -->
-    <section id="manfaat" class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
-        <div data-reveal class="text-center mb-12">
-            <p class="text-[11px] font-bold tracking-[.22em] uppercase text-[#6d8274] mb-3">Portal digital warga</p>
-            <h2 class="text-4xl sm:text-6xl font-semibold tracking-[-.06em] text-[#183C2F]">Satu portal, lebih mudah.</h2>
-            <p class="text-sm text-[#657268] mt-4 max-w-xl mx-auto">Dari pendaftaran anggota sampai informasi kegiatan, semua tersedia dalam satu tempat.</p>
+
+    <!-- JARAK TRANSISI: sengaja tanpa card, ikon, atau tombol tambahan -->
+    <div class="mx-auto max-w-7xl px-4 sm:px-6" aria-hidden="true">
+        <div class="h-12 sm:h-20 lg:h-24"></div>
+        <div class="flex items-center justify-between border-t border-[#DCE3DB] pt-5">
+            <span class="text-[10px] font-medium uppercase tracking-[.2em] text-[#819083]">Jelajahi NU Lesmana</span>
+            <i class="ph ph-arrow-down text-base text-[#819083]"></i>
         </div>
-        <div class="grid md:grid-cols-3 gap-3">
-            @foreach([
-                ['01', 'Daftar anggota.', 'Buat akun dan ikuti proses verifikasi keanggotaan.', 'ph-user-plus'],
-                ['02', 'Akses layanan.', 'Lihat informasi akun dan layanan kartu anggota digital.', 'ph-identification-card'],
-                ['03', 'Ikuti kegiatan.', 'Temukan berita dan agenda terbaru warga NU Lesmana.', 'ph-newspaper']
-            ] as [$number, $heading, $description, $icon])
-                <div data-reveal class="group min-h-[300px] bg-[#eeefeb] rounded-[22px] p-7 sm:p-9 flex flex-col border border-[#e2e6de] hover:bg-[#e7ebe5] transition-colors duration-300">
-                    <span class="text-xs font-bold text-[#76917e]">{{ $number }}</span>
-                    <h3 class="mt-6 text-3xl sm:text-4xl font-medium tracking-[-.06em] text-[#183C2F] leading-tight">{{ $heading }}</h3>
-                    <p class="mt-3 text-sm text-[#66746a] leading-6">{{ $description }}</p>
-                    <div class="mt-auto pt-9 flex justify-end">
-                        <span class="w-16 h-16 rounded-2xl bg-white border border-[#dbe2d9] flex items-center justify-center text-[#183C2F]">
-                            <i class="ph {{ $icon }} text-3xl" aria-hidden="true"></i>
-                        </span>
-                    </div>
+    </div>
+
+    <!-- ABOUT NU LESMANA: editorial, teks kiri dan foto kanan -->
+    <section id="tentang" class="mx-auto max-w-7xl scroll-mt-32 px-4 pt-12 pb-20 sm:px-6 sm:pt-16 sm:pb-28 lg:pb-32" aria-labelledby="about-heading">
+        <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-24">
+            <div data-reveal class="max-w-xl">
+                <p class="mb-5 text-[11px] font-bold uppercase tracking-[.22em] text-[#738A78]">01 / Tentang Kami</p>
+                <h2 id="about-heading" class="text-[clamp(2.7rem,5vw,4.85rem)] font-semibold leading-[1.06] tracking-[-.06em] text-[#183C2F]">About NU Lesmana<span class="text-[#B59A64]">.</span></h2>
+                <h3 class="mt-8 text-lg font-semibold leading-[1.55] tracking-[-.025em] text-[#294637] sm:text-[22px]">Berakar dalam tradisi, hadir untuk masyarakat.</h3>
+                <p class="mt-5 max-w-lg text-[15px] leading-[1.95] text-[#657268] sm:text-base">Pengurus Ranting Nahdlatul Ulama Lesmana merupakan bagian dari organisasi Nahdlatul Ulama di tingkat ranting. Melalui Nulesmana, warga dapat mengenal organisasi, memperoleh informasi, dan mengakses layanan keanggotaan dengan lebih mudah.</p>
+                <a href="{{ route('struktur.organisasi') }}" class="group mt-10 inline-flex items-center gap-3 border-b border-[#183C2F]/35 pb-2 text-[13px] font-medium text-[#183C2F] transition-colors hover:border-[#183C2F]">
+                    Lihat Struktur Organisasi <i class="ph ph-arrow-up-right text-lg transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true"></i>
+                </a>
+            </div>
+            <figure data-reveal class="relative min-h-[320px] overflow-hidden rounded-[22px] bg-[#E4ECE2] sm:min-h-[410px] lg:min-h-[490px]">
+                <div class="absolute inset-0 flex flex-col justify-end bg-[#DCE7DC] p-8 sm:p-10" aria-hidden="true">
+                    <span class="font-display text-[clamp(4rem,12vw,8rem)] leading-none text-[#183C2F]/15">NU</span>
+                    <span class="font-display text-5xl leading-none text-[#183C2F] sm:text-6xl">LESMANA.</span>
+                    <span class="mt-2 text-xs font-semibold uppercase tracking-[.2em] text-[#648171]">Pengurus Ranting Nahdlatul Ulama</span>
                 </div>
-            @endforeach
-        </div>
-        <div class="mt-8 text-center">
-            <a href="{{ route('member.signup') }}" class="inline-flex items-center gap-3 rounded-full bg-[#183C2F] text-white px-7 py-3 text-xs font-bold hover:bg-[#29523f] transition">
-                Mulai daftar <i class="ph ph-arrow-up-right text-base" aria-hidden="true"></i>
-            </a>
+                {{-- Foto asli bisa diletakkan di public/image/about-nu-lesmana.webp. Tampilan fallback tetap rapi jika belum ada. --}}
+                <img src="{{ asset('image/about-nu-lesmana.webp') }}" alt="Dokumentasi Pengurus Ranting NU Lesmana" class="absolute inset-0 h-full w-full object-cover object-center" loading="lazy" decoding="async" onerror="this.hidden=true">
+                <div class="pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-[#0B281C]/70 to-transparent px-6 pb-6 pt-24 text-white">
+                    <p class="text-[10px] font-bold uppercase tracking-[.18em]">Pengurus Ranting NU Lesmana</p>
+                </div>
+            </figure>
         </div>
     </section>
-    
+
     <!-- GALERI COVERFLOW: mouse wheel, drag, touch, dan putaran tanpa akhir -->
     @php
         $galleryNews = collect($publishedNews ?? [])->filter(fn ($item) => filled($item->image))->take(8)->values();
     @endphp
-    <section id="galeri" class="py-16 sm:py-24 scroll-mt-28 overflow-hidden">
+    <section id="galeri" class="py-20 sm:py-28 scroll-mt-28 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <div data-reveal class="text-center mb-8 sm:mb-12">
                 <p class="text-[11px] font-bold tracking-[.22em] uppercase text-[#6d8274] mb-3">Dokumentasi kegiatan</p>
-                <h2 class="text-4xl sm:text-6xl font-semibold tracking-[-.06em] text-[#183C2F]">Cerita dari Lesmana.</h2>
+                <h2 class="text-[clamp(2.6rem,4.7vw,4.7rem)] font-semibold leading-[1.12] tracking-[-.06em] text-[#183C2F]">Cerita dari Lesmana.</h2>
                 <p class="text-sm text-[#657268] mt-4">Geser dengan mouse, scroll, atau sentuh untuk melihat momen lainnya.</p>
             </div>
         </div>
@@ -601,15 +641,15 @@
     </script>
 
 <!-- ULASAN DAN ASPIRASI WARGA -->
-<section id="saran" class="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 scroll-mt-28">
+<section id="saran" class="max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-28 scroll-mt-28">
     <!-- HEADER -->
     <div data-reveal="up"
-         class="flex flex-col md:flex-row md:items-end justify-between gap-5 border-t border-[#d8d9d2] pt-12 mb-10">
+         class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-t border-[#d8d9d2] pt-10 sm:pt-12 mb-9 sm:mb-12">
         <div>
             <p class="text-xs uppercase tracking-[.24em] font-extrabold text-[#416051] mb-3">
                 Cerita dari warga
             </p>
-            <h2 class="font-display text-6xl sm:text-8xl text-[#18271f] leading-none">
+            <h2 class="font-display text-[clamp(3.3rem,10vw,6rem)] leading-none text-[#18271f]">
                 SUARA WARGA.
             </h2>
             <p class="text-sm text-gray-600 leading-relaxed mt-4 max-w-xl">
@@ -617,8 +657,8 @@
                 Semua warga boleh ikut menyampaikan pendapat.
             </p>
         </div>
-        <div class="text-xs font-bold text-[#416051] bg-[#e6eee5] rounded-full px-5 py-3 self-start">
-            Ulasan publik • 1–5 bintang
+        <div class="self-start text-[11px] font-semibold uppercase tracking-[.14em] text-[#728579] md:mb-1">
+            Ruang aspirasi terbuka
         </div>
     </div>
     <!-- NOTIFIKASI -->
@@ -662,25 +702,64 @@
             </ul>
         </div>
     @endif
-    <!-- AMBIL ULASAN PUBLIK -->
+    <!-- SUARA WARGA BERGERAK: semua review dari database, tanpa filter dan pagination -->
     @php
-        $publicReviews = \Illuminate\Support\Facades\Schema::hasTable('reviews')
-            ? \App\Models\Review::query()
-                ->where('is_visible', true)
-                ->latest()
-                ->take(6)
-                ->get()
+        $reviewsTableExists = \Illuminate\Support\Facades\Schema::hasTable('reviews');
+        $publicReviews = $reviewsTableExists
+            ? \App\Models\Review::query()->where('is_visible', true)->latest()->get()->values()
             : collect();
+        $reviewLanes = $publicReviews->count() === 1
+            ? [$publicReviews, $publicReviews]
+            : [
+                $publicReviews->filter(fn ($review, $index) => $index % 2 === 0)->values(),
+                $publicReviews->filter(fn ($review, $index) => $index % 2 === 1)->values()
+            ];
     @endphp
-    <!-- DAFTAR ULASAN: compact editorial cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 items-start gap-4 sm:gap-5 mb-12">
-        @forelse($publicReviews as $review)
+    @if($publicReviews->isNotEmpty())
+        <div class="mb-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#D8DED6] pt-5">
+            <p class="text-xs font-semibold text-[#718075]">{{ $publicReviews->count() }} ulasan warga · Klik kartu untuk membaca selengkapnya</p>
+            <span class="inline-flex items-center gap-2 text-[11px] text-[#819185]"><i class="ph ph-arrows-left-right text-base" aria-hidden="true"></i> Ulasan bergerak otomatis</span>
+        </div>
+        <div class="nu-review-showcase" aria-label="Ulasan warga bergerak otomatis">
+            @foreach($reviewLanes as $laneIndex => $laneReviews)
+                @if($laneReviews->isNotEmpty())
+                    <div class="nu-review-row" data-nu-review-row>
+                        <div class="nu-review-track" data-direction="{{ $laneIndex === 0 ? 'left' : 'right' }}">
+                            <div class="nu-review-group">
+                                @foreach($laneReviews as $review)
+                                    @php
+                                        $reviewName = trim($review->name ?: 'Anonim');
+                                        $reviewRating = max(1, min(5, (int) $review->rating));
+                                    @endphp
+                                    <button type="button" class="nu-review-card" data-nu-review-id="{{ $review->id }}" aria-label="Baca ulasan lengkap dari {{ $reviewName }}">
+                                        <span class="flex items-center gap-3">
+                                            <span class="nu-review-avatar" aria-hidden="true">{{ mb_strtoupper(mb_substr($reviewName, 0, 1)) }}</span>
+                                            <span class="min-w-0 flex-1">
+                                                <span class="block truncate text-[13px] font-bold text-[#183C2F]">{{ $reviewName }}</span>
+                                                <span class="mt-0.5 block text-[10px] text-[#819185]">{{ $review->is_verified_member ? 'Anggota terverifikasi' : 'Pengunjung' }}</span>
+                                            </span>
+                                            <i class="ph ph-arrow-up-right text-[17px] text-[#A3B4A7]" aria-hidden="true"></i>
+                                        </span>
+                                        <span class="block tracking-[.1em] text-[#B9822C]" role="img" aria-label="{{ $reviewRating }} dari 5 bintang">
+                                            @for($star = 1; $star <= 5; $star++)
+                                                <span aria-hidden="true" class="text-[15px] {{ $star <= $reviewRating ? 'text-[#B9822C]' : 'text-[#D6DDD6]' }}">★</span>
+                                            @endfor
+                                        </span>
+                                        <span class="nu-review-preview">{{ $review->message }}</span>
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+        </div>
+        <p class="nu-review-hint"><i class="ph ph-cursor-click text-base" aria-hidden="true"></i> Arahkan kursor atau sentuh kartu untuk menghentikan gerak, lalu klik untuk membaca.</p>
+        <!-- Template popup dibuat sekali dari Blade; salinan animasi tidak menggandakan data di MySQL. -->
+        @foreach($publicReviews as $review)
             @php
                 $reviewName = trim($review->name ?: 'Anonim');
-                $reviewInitial = mb_strtoupper(mb_substr($reviewName, 0, 1));
                 $reviewRating = max(1, min(5, (int) $review->rating));
-            @endphp
-            @php
                 $belongsToUser = auth()->check()
                     && $review->user_id !== null
                     && (int) $review->user_id === (int) auth()->id();
@@ -688,81 +767,177 @@
                     && in_array((int) $review->id, array_map('intval', (array) session('review_owned_ids', [])), true);
                 $canDeleteReview = $belongsToUser || $belongsToGuestSession;
             @endphp
-            <article
-                data-reveal="up"
-                class="review-card self-start rounded-[22px] border border-[#DFE5DC] bg-white p-5 sm:p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
-            >
-                <!-- Profil pengulas -->
-                <div class="flex items-center gap-3">
-                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#183C2F] text-base font-bold text-white"
-                         aria-hidden="true">
-                        {{ $reviewInitial }}
+            <template id="nu-review-detail-{{ $review->id }}">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="nu-review-avatar" aria-hidden="true">{{ mb_strtoupper(mb_substr($reviewName, 0, 1)) }}</span>
+                        <div>
+                            <h3 id="nu-review-modal-title" class="text-base font-bold text-[#183C2F]">{{ $reviewName }}</h3>
+                            <p class="text-xs text-[#7B8B7F]">{{ $review->is_verified_member ? 'Anggota terverifikasi' : 'Pengunjung' }}</p>
+                        </div>
                     </div>
-                    <div class="min-w-0 flex-1">
-                        <h3 class="truncate text-sm font-extrabold text-[#183C2F]">
-                            {{ $reviewName }}
-                        </h3>
-                        <p class="mt-0.5 text-[11px] font-medium text-[#718075]">
-                            {{ $review->is_verified_member ? 'Anggota terverifikasi' : 'Pengunjung' }}
-                        </p>
-                    </div>
-                    <i class="ph ph-quotes text-2xl text-[#B5C3B7]" aria-hidden="true"></i>
                 </div>
-                <!-- Rating terlihat jelas meskipun ikon eksternal gagal dimuat -->
-                <div class="mt-5 flex items-center gap-1" role="img"
-                     aria-label="{{ $reviewRating }} dari 5 bintang">
+                <p class="mt-7 flex items-center gap-1" role="img" aria-label="{{ $reviewRating }} dari 5 bintang">
                     @for($star = 1; $star <= 5; $star++)
-                        <span class="text-[20px] leading-none {{ $star <= $reviewRating ? 'text-[#C18A2F]' : 'text-[#D5DCD3]' }}"
-                              aria-hidden="true">★</span>
+                        <span class="text-xl {{ $star <= $reviewRating ? 'text-[#B9822C]' : 'text-[#D5DDD4]' }}" aria-hidden="true">★</span>
                     @endfor
-                </div>
-                <!-- Isi ulasan -->
-                <p class="mt-4 text-sm leading-7 text-[#30463A] whitespace-pre-line break-words">{{ $review->message }}</p>
-                <!-- Waktu dan kategori -->
-                <div class="mt-5 flex items-center justify-between gap-3 border-t border-[#E5EAE2] pt-4">
-                    <span class="text-[10px] font-bold uppercase tracking-[.14em] text-[#718075]">Suara Warga</span>
-                    <time datetime="{{ $review->created_at?->toIso8601String() }}"
-                          class="shrink-0 text-[11px] text-[#718075]">
-                        {{ $review->created_at?->diffForHumans() }}
-                    </time>
+                </p>
+                <p class="nu-modal-message mt-5">{{ $review->message }}</p>
+                <div class="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-[#DEE5DB] pt-4">
+                    <span class="text-[11px] font-semibold uppercase tracking-[.13em] text-[#819185]">Suara Warga</span>
+                    <time class="text-xs text-[#819185]" datetime="{{ $review->created_at?->toIso8601String() }}">{{ $review->created_at?->translatedFormat('d F Y') }}</time>
                 </div>
                 @if($canDeleteReview)
-                    <form method="POST"
-                          action="{{ route('reviews.destroy', $review) }}"
-                          class="mt-3 text-right"
-                          onsubmit="return confirm('Hapus ulasan milikmu secara permanen?');">
+                    <form method="POST" action="{{ route('reviews.destroy', $review) }}" class="mt-5" onsubmit="return confirm('Hapus ulasan milikmu secara permanen?');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit"
-                                class="rounded-lg border border-[#E0C9C4] bg-[#FFF8F6] px-3 py-2 text-[11px] font-bold text-[#98392C] hover:bg-[#FCEAE6]">
-                            Hapus ulasan saya
-                        </button>
+                        <button type="submit" class="rounded-full border border-[#E0C9C4] bg-[#FFF8F6] px-4 py-2.5 text-xs font-bold text-[#98392C] hover:bg-[#FCEAE6]">Hapus ulasan saya</button>
                     </form>
                 @endif
-            </article>
-        @empty
-            <div data-reveal="up" class="md:col-span-2 xl:col-span-3 rounded-2xl border border-[#DFE5DC] bg-white p-10 text-center">
-                <i class="ph ph-chat-circle-dots text-4xl text-[#183C2F]" aria-hidden="true"></i>
-                <p class="mt-3 text-lg font-bold text-[#183C2F]">Belum ada ulasan warga</p>
-                <p class="mt-2 text-sm text-gray-500">Jadilah orang pertama yang berbagi pengalaman.</p>
+            </template>
+        @endforeach
+        <div class="nu-review-modal" id="nuReviewModal" role="presentation" hidden>
+            <div class="nu-review-dialog" role="dialog" aria-modal="true" aria-labelledby="nu-review-modal-title" tabindex="-1">
+                <div class="flex items-center justify-between gap-3 border-b border-[#DDE6DB] pb-4">
+                    <p class="text-[11px] font-bold uppercase tracking-[.16em] text-[#728679]">Ulasan warga</p>
+                    <button type="button" class="nu-review-close" id="nuReviewClose" aria-label="Tutup ulasan"><i class="ph ph-x text-lg" aria-hidden="true"></i></button>
+                </div>
+                <div id="nuReviewModalContent" class="pt-5"></div>
             </div>
-        @endforelse
-    </div>
+        </div>
+    @else
+        <div class="rounded-[20px] border border-[#DDE5DB] bg-white px-6 py-12 text-center">
+            <i class="ph ph-chat-circle-dots text-3xl text-[#183C2F]" aria-hidden="true"></i>
+            <p class="mt-3 font-bold text-[#183C2F]">Belum ada ulasan warga.</p>
+            <p class="mt-1 text-sm text-[#718075]">Jadilah orang pertama yang berbagi pendapat.</p>
+        </div>
+    @endif
+    <script>
+    (function () {
+        function initMovingReviews() {
+            const root = document.getElementById('saran');
+            if (!root) return;
+            const rows = Array.from(root.querySelectorAll('[data-nu-review-row]'));
+            const modal = document.getElementById('nuReviewModal');
+            const content = document.getElementById('nuReviewModalContent');
+            const close = document.getElementById('nuReviewClose');
+            let focusBeforeModal = null;
+            let previousBodyOverflow = '';
+            let resizeTimer;
+            const makeInaccessible = function (element) {
+                element.setAttribute('aria-hidden', 'true');
+                element.querySelectorAll('button').forEach(function (button) { button.tabIndex = -1; });
+                if (element.matches('button')) element.tabIndex = -1;
+            };
+            function setupRow(row, index) {
+                const track = row.querySelector('.nu-review-track');
+                const group = track ? track.querySelector('.nu-review-group') : null;
+                if (!track || !group) return;
+                track.style.animation = 'none';
+                track.querySelectorAll('[data-nu-track-copy]').forEach(function (element) { element.remove(); });
+                group.querySelectorAll('[data-nu-repeat]').forEach(function (element) { element.remove(); });
+                const originalCards = Array.from(group.children);
+                if (!originalCards.length) return;
+                const requiredWidth = Math.max(row.clientWidth + 40, 360);
+                let repeats = 0;
+                while (group.scrollWidth < requiredWidth && repeats < 30) {
+                    originalCards.forEach(function (card) {
+                        const copy = card.cloneNode(true);
+                        copy.dataset.nuRepeat = '1';
+                        makeInaccessible(copy);
+                        group.appendChild(copy);
+                    });
+                    repeats++;
+                }
+                const secondGroup = group.cloneNode(true);
+                secondGroup.dataset.nuTrackCopy = '1';
+                makeInaccessible(secondGroup);
+                track.appendChild(secondGroup);
+                const distance = group.getBoundingClientRect().width;
+                const pixelsPerSecond = index === 0 ? 33 : 28;
+                track.style.setProperty('--nu-review-duration', Math.max(18, Math.round(distance / pixelsPerSecond)) + 's');
+                void track.offsetWidth;
+                track.style.animation = '';
+            }
+            rows.forEach(function (row, index) {
+                setupRow(row, index);
+                let touchTimer;
+                row.addEventListener('touchstart', function () {
+                    clearTimeout(touchTimer);
+                    row.classList.add('is-touched');
+                }, { passive: true });
+                row.addEventListener('touchend', function () {
+                    clearTimeout(touchTimer);
+                    touchTimer = setTimeout(function () { row.classList.remove('is-touched'); }, 1800);
+                }, { passive: true });
+                row.addEventListener('touchcancel', function () { row.classList.remove('is-touched'); }, { passive: true });
+            });
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    rows.forEach(setupRow);
+                }, 220);
+            }, { passive: true });
+            if (!modal || !content || !close) return;
+            function openReview(button) {
+                const reviewId = button.dataset.nuReviewId;
+                if (!reviewId || !/^\d+$/.test(reviewId)) return;
+                const source = document.getElementById('nu-review-detail-' + reviewId);
+                if (!source) return;
+                focusBeforeModal = button;
+                content.replaceChildren(source.content.cloneNode(true));
+                previousBodyOverflow = document.body.style.overflow;
+                document.body.style.overflow = 'hidden';
+                document.body.classList.add('nu-review-modal-open');
+                modal.hidden = false;
+                close.focus();
+            }
+            function closeReview() {
+                if (modal.hidden) return;
+                modal.hidden = true;
+                content.replaceChildren();
+                document.body.style.overflow = previousBodyOverflow;
+                document.body.classList.remove('nu-review-modal-open');
+                if (focusBeforeModal && focusBeforeModal.isConnected) focusBeforeModal.focus({ preventScroll: true });
+            }
+            root.addEventListener('click', function (event) {
+                const button = event.target.closest('[data-nu-review-id]');
+                if (button && root.contains(button)) openReview(button);
+            });
+            close.addEventListener('click', closeReview);
+            modal.addEventListener('click', function (event) { if (event.target === modal) closeReview(); });
+            document.addEventListener('keydown', function (event) {
+                if (modal.hidden) return;
+                if (event.key === 'Escape') { event.preventDefault(); closeReview(); }
+                if (event.key !== 'Tab') return;
+                const focusable = Array.from(modal.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), textarea:not([disabled])'));
+                if (!focusable.length) { event.preventDefault(); close.focus(); return; }
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+                else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+            });
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initMovingReviews, { once: true });
+        else initMovingReviews();
+    })();
+    </script>
     <!-- FORM ULASAN -->
     <div data-reveal="up"
-         class="grid lg:grid-cols-[.85fr_1.15fr] gap-8 lg:gap-16 items-start">
-        <!-- TEKS KIRI -->
-        <div>
-            <p class="text-xs uppercase tracking-[.2em] font-bold text-[#416051] mb-3">
-                Berikan ulasan
+         class="mt-16 grid min-w-0 items-start gap-10 border-t border-[#D8DED6] pt-12 sm:mt-20 sm:pt-16 lg:grid-cols-[.85fr_1.15fr] lg:gap-20">
+        <!-- TEKS KIRI: singkat dan lega -->
+        <div class="max-w-[440px] lg:pt-6">
+            <p class="mb-4 text-xs font-bold uppercase tracking-[.2em] text-[#416051]">Berikan ulasan</p>
+            <h3 class="font-display text-5xl leading-none text-[#18271F] sm:text-6xl">PENDAPATMU<br>BERARTI.</h3>
+            <p class="mt-7 max-w-sm text-sm leading-8 text-[#53665A] sm:text-[15px]">
+                Bagikan pengalaman, kritik, atau saran untuk NU Lesmana. Masukanmu membantu kami terus berkembang.
             </p>
-            <h3 class="font-display text-5xl sm:text-6xl leading-none text-[#18271f]">
-                PENDAPATMU<br>BERARTI.
-            </h3>
-            <p class="text-sm text-gray-600 leading-7 mt-5 max-w-sm">
-                Ceritakan pengalamanmu, beri penilaian, atau tulis masukan
-                untuk pengurus. Ulasan akan tampil setelah berhasil dikirim.
-            </p>
+            <div class="mt-9 border-t border-[#D6DFD4] pt-5">
+                <p class="flex items-center gap-2 text-xs font-semibold text-[#738578]">
+                    <i class="ph ph-users-three text-lg text-[#183C2F]" aria-hidden="true"></i>
+                    Terbuka untuk anggota maupun pengunjung.
+                </p>
+            </div>
         </div>
         <!-- FORM KANAN -->
         <form id="form-ulasan"
@@ -775,7 +950,7 @@
                 <label class="mb-3 block text-sm font-bold text-[#183C2F]">
                     Penilaian kamu <span class="text-red-600">*</span>
                 </label>
-                <div class="flex flex-row-reverse justify-end gap-2 rating-picker"
+                <div class="flex flex-row-reverse justify-end gap-1 sm:gap-2 rating-picker"
                      role="radiogroup"
                      aria-label="Penilaian bintang">
                     @for($rating = 5; $rating >= 1; $rating--)
@@ -846,7 +1021,7 @@
             </div>
             <!-- SUBMIT -->
             <button type="submit"
-                    class="inline-flex w-full items-center justify-center gap-3 rounded-xl bg-[#183C2F] px-7 py-4 text-sm font-bold text-white hover:bg-[#245541] sm:w-auto">
+                    class="inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#183C2F] px-8 py-4 text-sm font-bold text-white transition-colors hover:bg-[#245541] sm:w-auto">
                 <i class="ph ph-paper-plane-tilt text-lg"></i>
                 Kirim Ulasan
             </button>
@@ -855,10 +1030,10 @@
 </section>
 
     <!-- FAQ -->
-    <section id="faq" class="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24 scroll-mt-28">
+    <section id="faq" class="max-w-5xl mx-auto px-4 sm:px-6 pt-20 pb-20 sm:pt-24 sm:pb-28 scroll-mt-28">
         <div data-reveal class="text-center mb-12">
             <p class="text-[11px] font-bold tracking-[.22em] uppercase text-[#6d8274] mb-3">Pusat informasi</p>
-            <h2 class="text-4xl sm:text-6xl font-semibold tracking-[-.06em] text-[#183C2F]">Pertanyaan umum.</h2>
+            <h2 class="text-[clamp(2.6rem,4.7vw,4.7rem)] font-semibold leading-[1.12] tracking-[-.06em] text-[#183C2F]">Pertanyaan umum.</h2>
             <p class="text-sm text-[#657268] mt-4">Informasi singkat seputar layanan Nulesmana.</p>
         </div>
         @foreach([
@@ -877,7 +1052,47 @@
             </details>
         @endforeach
     </section>
-    
+
+    <!-- ALAMAT & SEKRETARIAT: wilayah terverifikasi, alamat gedung belum tersedia -->
+    <section id="alamat" class="mx-auto max-w-7xl scroll-mt-32 px-4 pt-12 pb-20 sm:px-6 sm:pt-20 sm:pb-28" aria-labelledby="alamat-heading">
+        <div data-reveal class="flex flex-col justify-between gap-5 border-t border-[#D8DED6] pt-9 sm:flex-row sm:items-end">
+            <div>
+                <p class="mb-3 text-[11px] font-bold uppercase tracking-[.22em] text-[#738A78]">05 / Lokasi Kami</p>
+                <h2 id="alamat-heading" class="text-3xl font-semibold tracking-[-.055em] text-[#183C2F] sm:text-5xl">Alamat &amp; Sekretariat.</h2>
+            </div>
+            <p class="max-w-sm text-sm leading-7 text-[#69786E]">Berada di wilayah Desa Lesmana, Ajibarang, Kabupaten Banyumas, Jawa Tengah.</p>
+        </div>
+        <div class="mt-12 grid items-stretch gap-10 lg:grid-cols-[.85fr_1.15fr] lg:gap-16">
+            <div data-reveal class="flex flex-col justify-between border-t border-[#D8DED6] py-7">
+                <div>
+                    <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#D3DED2] text-[#183C2F]">
+                        <i class="ph ph-map-pin text-2xl" aria-hidden="true"></i>
+                    </div>
+                    <p class="text-[11px] font-bold uppercase tracking-[.18em] text-[#708676]">Wilayah Pengurus Ranting NU Lesmana</p>
+                    <address class="mt-5 not-italic text-[22px] font-semibold leading-[1.55] tracking-[-.035em] text-[#183C2F] sm:text-[28px]">
+                        Desa Lesmana,<br>
+                        Kecamatan Ajibarang,<br>
+                        Kabupaten Banyumas,<br>
+                        Jawa Tengah 53163.
+                    </address>
+                    <p class="mt-5 max-w-md text-sm leading-7 text-[#68796C]">Alamat jalan, RT/RW, dan titik sekretariat resmi akan dilengkapi setelah dikonfirmasi oleh pengurus. Lokasi pada peta menunjukkan wilayah Desa Lesmana, bukan titik kantor sekretariat.</p>
+                </div>
+                <div class="mt-8 flex flex-wrap items-center gap-3">
+                    <a href="https://www.google.com/maps/search/?api=1&amp;query=Desa%20Lesmana%2C%20Ajibarang%2C%20Banyumas" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-[#183C2F] px-6 py-3 text-xs font-bold text-white transition-colors hover:bg-[#285340]">
+                        Lihat Wilayah di Maps <i class="ph ph-arrow-up-right text-base" aria-hidden="true"></i>
+                    </a>
+                    <a href="#saran" class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border border-[#183C2F]/35 px-6 py-3 text-xs font-bold text-[#183C2F] transition-colors hover:bg-[#E8EFE7]">
+                        Sampaikan Masukan <i class="ph ph-arrow-up-right text-base" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+            <div data-reveal class="relative min-h-[280px] overflow-hidden rounded-[22px] border border-[#D8DED6] bg-[#E6ECE4] sm:min-h-[350px]">
+                <iframe title="Peta wilayah Desa Lesmana, Ajibarang, Banyumas" src="https://www.google.com/maps?q=Desa%20Lesmana%2C%20Ajibarang%2C%20Banyumas&amp;output=embed" class="absolute inset-0 h-full w-full border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+                <div class="pointer-events-none absolute bottom-4 left-4 rounded-full border border-[#D8DED6] bg-[#F5F4F0]/95 px-4 py-2 text-[10px] font-bold uppercase tracking-[.12em] text-[#183C2F] shadow-sm">Peta wilayah, bukan titik sekretariat</div>
+            </div>
+        </div>
+    </section>
+
     <!-- FOOTER EDITORIAL -->
     <footer class="bg-[#14271e] text-white mt-8">
       <div class="max-w-7xl mx-auto px-6 py-14 sm:py-20">
@@ -892,8 +1107,9 @@
             <nav class="flex flex-col gap-3 text-sm text-white/65">
               <a class="hover:text-white" href="{{ route('home') }}">Beranda</a>
               <a class="hover:text-white" href="{{ route('public.news.index') }}">Berita & Agenda</a>
-              <a class="hover:text-white" href="{{ route('page.profil') }}">Profil Organisasi</a>
+              <a class="hover:text-white" href="#tentang">Tentang NU Lesmana</a>
               <a class="hover:text-white" href="{{ route('struktur.organisasi') }}">Struktur Banom</a>
+              <a class="hover:text-white" href="#alamat">Alamat &amp; Sekretariat</a>
             </nav>
           </div>
           <div>

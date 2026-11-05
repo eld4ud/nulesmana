@@ -22,7 +22,7 @@ Route::middleware(['auth', 'approved.member', 'role:member'])->group(function ()
     Route::prefix('akun')->name('member.')->group(function () {
         Route::get('/', [AkunController::class, 'dashboard'])->name('dashboard');
         Route::get('/kia', [KartuController::class, 'kia'])->name('kia');
-        foreach (['data', 'infaq', 'notifikasi', 'pengaturan'] as $slug) {
+        foreach (['data', 'notifikasi', 'pengaturan'] as $slug) {
             Route::get('/'.$slug, [AkunController::class, 'page'])
                 ->defaults('page', $slug)->name($slug);
         }

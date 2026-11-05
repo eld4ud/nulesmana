@@ -23,7 +23,6 @@
         ['Dashboard Saya', 'member.dashboard', 'ph-squares-four'],
         ['Lihat KIA Saya', 'member.kia', 'ph-identification-card'],
         ['Data Saya', 'member.data', 'ph-user'],
-        ['Infaq Anggota', 'member.infaq', 'ph-hand-coins'],
         ['Notifikasi', 'member.notifikasi', 'ph-bell'],
         ['Pengaturan', 'member.pengaturan', 'ph-gear'],
     ];
@@ -35,8 +34,8 @@
     .nu-navbar .nav-link{position:relative}
     .nu-navbar .nav-link::after{content:"";position:absolute;left:0;right:100%;bottom:-5px;height:1px;background:#183C2F;transition:right .2s ease}
     .nu-navbar .nav-link:hover::after,.nu-navbar .nav-link:focus-visible::after{right:0}
-    .nu-navbar .nu-brandmark{width:43px;height:43px;display:grid;place-items:center;flex-shrink:0;background:#183C2F;border-radius:13px;color:white}
-    .nu-navbar .nu-brandmark svg{display:block;width:30px;height:30px}
+    .nu-navbar .nu-brandmark{width:62px;height:44px;display:grid;place-items:center;flex-shrink:0;background:#fff;border:1px solid #DAE1D9;border-radius:12px;overflow:hidden}
+    .nu-navbar .nu-brandmark img{display:block;width:55px;height:39px;object-fit:contain}
     .nu-navbar details[open]>summary{background:#F0F3EF}
     .nu-navbar a:focus-visible,.nu-navbar button:focus-visible,.nu-navbar summary:focus-visible{outline:2px solid #183C2F;outline-offset:3px}
     @media(prefers-reduced-motion:reduce){.nu-navbar *{transition:none!important}}
@@ -89,11 +88,7 @@
                     <span class="block text-[9px] font-medium tracking-wide text-stone-500">PORTAL RESMI WARGA</span>
                 </span>
                 <span class="nu-brandmark">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" role="img" aria-label="Monogram Nulesmana NL">
-                        <path d="M8 34V14L22 34V14" stroke="currentColor" stroke-width="3.5" stroke-linecap="square" stroke-linejoin="miter"/>
-                        <path d="M29 14V34H40" stroke="currentColor" stroke-width="3.5" stroke-linecap="square" stroke-linejoin="miter"/>
-                        <path d="M8 40H40" stroke="currentColor" stroke-opacity=".45" stroke-width="1.25"/>
-                    </svg>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Nahdlatul_Ulama_Logo.svg" alt="Lambang Nahdlatul Ulama" width="55" height="39" decoding="async">
                 </span>
             </a>
             <details class="relative lg:hidden">
