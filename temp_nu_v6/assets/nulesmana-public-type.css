@@ -1,0 +1,67 @@
+/* Nulesmana V6 | homepage typography + compact, responsive hero.
+   Only the homepage receives the nu-public-v6 class; admin is unchanged. */
+body.nu-public-v6 { font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+body.nu-public-v6 :is(p, a, button, label, small, summary, input, textarea, select):not(.font-arabic):not([lang='ar']) {
+  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+body.nu-public-v6 .font-arabic, body.nu-public-v6 [lang='ar'] { font-family: 'Amiri', Georgia, serif !important; }
+/* Small labels are readable without enlarging everything or overriding existing bold weights. */
+body.nu-public-v6 :is(p, a, button, label, small, summary):not([lang='ar']):not(.font-arabic) {
+  -webkit-font-smoothing: antialiased;
+}
+#nu-home-hero { min-width: 0; }
+#nu-home-hero > div { min-width: 0; }
+#nu-home-hero .nu-v6-hero-copy { min-width: 0; }
+#nu-home-hero .nu-v6-greeting { margin-bottom: clamp(12px, 2.5vw, 23px) !important; }
+#nu-home-hero .nu-v6-greeting [lang='ar'] {
+  font-size: clamp(23px, 2.7vw, 34px) !important;
+  line-height: 1.55 !important;
+}
+#nu-home-hero .nu-v6-greeting p:last-child {
+  font-size: clamp(10.5px, 1.05vw, 12px) !important;
+  font-weight: 700 !important;
+  letter-spacing: .12em !important;
+  color: #567064 !important;
+}
+#nu-home-hero .nu-v6-description {
+  max-width: 35rem !important;
+  font-family: 'Manrope', system-ui, sans-serif !important;
+  font-size: clamp(14.5px, 1.22vw, 16.5px) !important;
+  line-height: 1.76 !important;
+  font-weight: 500 !important;
+  letter-spacing: -.012em;
+  color: #405b4d !important;
+  margin-bottom: clamp(20px, 3vw, 35px) !important;
+}
+#nu-home-hero a { font-family: 'Manrope', sans-serif !important; font-weight: 650 !important; font-size: 13px !important; }
+#nu-home-hero figure figcaption .font-display { font-family: 'Bebas Neue', Impact, sans-serif; }
+/* Readability of smaller PUBLIC text without disrupting button/logo/Arabic layouts. */
+body.nu-public-v6 p[class*='text-[10px]'],
+body.nu-public-v6 p[class*='text-[11px]'],
+body.nu-public-v6 p[class*='text-xs'] {
+  font-weight: 600;
+}
+body.nu-public-v6 section p.text-sm { font-weight: 500; line-height: 1.75; }
+@media (max-width: 1023px) {
+  #nu-home-hero { padding-top: 13px !important; padding-bottom: 30px !important; }
+  #nu-home-hero > div { gap: 25px !important; }
+  #nu-home-hero .nu-v6-hero-copy { align-items: center; text-align: center; }
+  #nu-home-hero .nu-v6-description { max-width: 550px !important; text-wrap: pretty; }
+}
+@media (max-width: 639px) {
+  #nu-home-hero { padding-top: 4px !important; padding-bottom: 18px !important; }
+  #nu-home-hero > div { gap: 24px !important; }
+  #nu-home-hero .nu-v6-hero-copy { width: 100%; }
+  #nu-home-hero .nu-v6-greeting { margin-bottom: 14px !important; }
+  #nu-home-hero .nu-v6-greeting [lang='ar'] { font-size: clamp(23px, 6.5vw, 29px) !important; line-height: 1.48 !important; }
+  #nu-home-hero .nu-v6-description { font-size: 14.5px !important; line-height: 1.72 !important; margin-bottom: 24px !important; }
+  #nu-home-hero figure > div.relative:first-child { height: clamp(258px, 76vw, 342px) !important; }
+  #nu-home-hero figure figcaption .font-display { font-size: clamp(28px, 8vw, 39px) !important; }
+  #nu-home-hero .nu-v6-hero-actions { gap: 10px !important; }
+  #nu-home-hero .nu-v6-hero-actions a { min-height: 49px; }
+}
+@media (max-width: 440px) {
+  #nu-home-hero .nu-v6-hero-actions { display: grid !important; grid-template-columns: 1fr; width: 100%; }
+  #nu-home-hero .nu-v6-hero-actions a { width: 100%; padding-inline: 15px !important; }
+  #nu-home-hero .nu-v6-description { max-width: 34ch !important; }
+}

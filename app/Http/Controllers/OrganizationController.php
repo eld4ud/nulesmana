@@ -6,8 +6,9 @@ use App\Models\Member;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class OrganizationController extends Controller
@@ -20,116 +21,140 @@ class OrganizationController extends Controller
         'Muslimat' => 'Muslimat NU',
     ];
 
-    /**
-     * Menyatukan variasi nama Banom yang mungkin sudah ada di tabel members.
-     * Tidak mengubah data aslinya dan tidak memasukkan NU umum ke salah satu Banom.
-     */
+    // Tidak mengubah struktur tabel. Foto disimpan berdasarkan ID jabatan.
+    private const PHOTO_DIRECTORY = 'organization-positions';
+    private const PHOTO_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
+    // Metadata crop per jabatan, disimpan tanpa mengubah skema database.
+    private const ADJUST_DEFAULTS = ['x' => 50, 'y' => 25, 'zoom' => 100];
+
     private static function canonicalBanom(?string $value): ?string
     {
-        $text = mb_strtolower(trim((string) $value));
-        $text = preg_replace('/[^a-z]+/', '', $text);
-
-        if (str_contains($text, 'ippnu')) {
-            return 'IPPNU';
-        }
-        if (str_contains($text, 'ipnu')) {
-            return 'IPNU';
-        }
-        if (str_contains($text, 'ansor') || str_contains($text, 'banser')) {
-            return 'Ansor';
-        }
-        if (str_contains($text, 'fatayat')) {
-            return 'Fatayat';
-        }
-        if (str_contains($text, 'muslimat')) {
-            return 'Muslimat';
-        }
-
+        $text = preg_replace('/[^a-z]+/', '', mb_strtolower(trim((string) $value)));
+        if (str_contains($text, 'ippnu')) return 'IPPNU';
+        if (str_contains($text, 'ipnu')) return 'IPNU';
+        if (str_contains($text, 'ansor') || str_contains($text, 'banser')) return 'Ansor';
+        if (str_contains($text, 'fatayat')) return 'Fatayat';
+        if (str_contains($text, 'muslimat')) return 'Muslimat';
         return null;
     }
 
-    /** Jumlah dihitung langsung dari status ACC, bukan dari frekuensi login. */
     private function approvedCounts(): array
     {
         $counts = array_fill_keys(array_keys(self::BANOMS), 0);
-
-        $rows = Member::query()
-            ->where('status', 'approved')
-            ->select('banom')
-            ->selectRaw('COUNT(*) AS total')
-            ->groupBy('banom')
-            ->get();
+        $rows = Member::query()->where('status', 'approved')
+            ->select('banom')->selectRaw('COUNT(*) as total')->groupBy('banom')->get();
 
         foreach ($rows as $row) {
             $key = self::canonicalBanom($row->banom);
-            if ($key !== null) {
-                $counts[$key] += (int) $row->total;
-            }
+            if ($key !== null) $counts[$key] += (int) $row->total;
         }
-
         return $counts;
     }
 
-    /**
-     * Halaman struktur publik. Tidak menampilkan semua nama anggota pribadi.
-     * Nama tampil hanya pada jabatan yang dipublikasikan pengurus.
-     */
+    private function photoUrl(int $id): ?string
+    {
+        $disk = Storage::disk('public');
+        foreach (self::PHOTO_EXTENSIONS as $extension) {
+            $path = self::PHOTO_DIRECTORY . '/position-' . $id . '.' . $extension;
+            if ($disk->exists($path)) return $disk->url($path) . '?v=' . $disk->lastModified($path);
+        }
+        return null;
+    }
+
+    private function adjustmentPath(int $id): string
+    {
+        return self::PHOTO_DIRECTORY . '/position-' . $id . '.json';
+    }
+
+    private function photoAdjustment(int $id): array
+    {
+        $disk = Storage::disk('public');
+        $path = $this->adjustmentPath($id);
+        if (!$disk->exists($path)) return self::ADJUST_DEFAULTS;
+
+        $saved = json_decode($disk->get($path), true);
+        if (!is_array($saved)) return self::ADJUST_DEFAULTS;
+
+        return [
+            'x' => max(0, min(100, (int) ($saved['x'] ?? 50))),
+            'y' => max(0, min(100, (int) ($saved['y'] ?? 25))),
+            'zoom' => max(100, min(200, (int) ($saved['zoom'] ?? 100))),
+        ];
+    }
+
+    private function savePhotoAdjustment(Request $request, int $id): void
+    {
+        if ($request->boolean('remove_photo') && !$request->hasFile('photo')) {
+            Storage::disk('public')->delete($this->adjustmentPath($id));
+            return;
+        }
+
+        // Form lama yang tidak mengirim slider tetap kompatibel.
+        if (!$request->hasAny(['photo_x', 'photo_y', 'photo_zoom'])) return;
+
+        $adjustment = [
+            'x' => (int) $request->input('photo_x', self::ADJUST_DEFAULTS['x']),
+            'y' => (int) $request->input('photo_y', self::ADJUST_DEFAULTS['y']),
+            'zoom' => (int) $request->input('photo_zoom', self::ADJUST_DEFAULTS['zoom']),
+        ];
+        if (!Storage::disk('public')->put($this->adjustmentPath($id), json_encode($adjustment, JSON_THROW_ON_ERROR))) {
+            throw ValidationException::withMessages([
+                'photo_x' => 'Pengaturan posisi foto gagal disimpan. Periksa izin tulis storage.',
+            ]);
+        }
+    }
+
+    private function attachPhotoUrls($positions)
+    {
+        return $positions->map(function ($position) {
+            $position->photo_url = $this->photoUrl((int) $position->id);
+            $position->photo_adjust = $this->photoAdjustment((int) $position->id);
+            $position->display_name = $position->member_name ?: ($position->person_name ?: 'Belum ditetapkan');
+            return $position;
+        });
+    }
+
     public function index(): View
     {
         $counts = $this->approvedCounts();
-        $positions = DB::table('organization_positions as p')
+        $allPositions = DB::table('organization_positions as p')
             ->leftJoin('members as m', 'm.id', '=', 'p.member_id')
             ->where('p.is_visible', true)
             ->select('p.*', 'm.name as member_name', 'm.status as member_status')
-            ->orderBy('p.level')
-            ->orderBy('p.sort_order')
-            ->orderBy('p.id')
-            ->get()
-            ->groupBy('banom');
+            ->orderBy('p.level')->orderBy('p.sort_order')->orderBy('p.id')->get()
+            ->filter(fn ($item) => $item->member_id === null || $item->member_status === 'approved');
+        $allPositions = $this->attachPhotoUrls($allPositions)->groupBy('banom');
 
         $banoms = [];
         foreach (self::BANOMS as $key => $label) {
             $banoms[$key] = [
                 'label' => $label,
                 'count' => $counts[$key],
-                'positions' => ($positions->get($key) ?? collect())->filter(
-                    fn ($position) => $position->member_id === null || $position->member_status === 'approved'
-                )->values(),
+                'positions' => ($allPositions->get($key) ?? collect())->values(),
             ];
         }
-
         return view('struktur-organisasi', compact('banoms'));
     }
 
-    /** Panel admin untuk menetapkan jabatan, bukan mengedit status member. */
     public function manage(Request $request): View
     {
         $this->ensureAdmin($request);
-
         $selected = $request->query('banom', 'IPNU');
-        if (!is_string($selected) || !array_key_exists($selected, self::BANOMS)) {
-            $selected = 'IPNU';
-        }
+        if (!is_string($selected) || !array_key_exists($selected, self::BANOMS)) $selected = 'IPNU';
 
         $positions = DB::table('organization_positions as p')
             ->leftJoin('members as m', 'm.id', '=', 'p.member_id')
             ->where('p.banom', $selected)
             ->select('p.*', 'm.name as member_name')
-            ->orderBy('p.level')
-            ->orderBy('p.sort_order')
-            ->orderBy('p.id')
-            ->get();
+            ->orderBy('p.level')->orderBy('p.sort_order')->orderBy('p.id')->get();
+        $positions = $this->attachPhotoUrls($positions);
 
-        $members = Member::query()
-            ->where('status', 'approved')
-            ->orderBy('name')
+        $members = Member::query()->where('status', 'approved')->orderBy('name')
             ->get(['id', 'name', 'banom'])
-            ->filter(fn ($member) => self::canonicalBanom($member->banom) === $selected)
-            ->values();
+            ->filter(fn ($member) => self::canonicalBanom($member->banom) === $selected)->values();
 
         $counts = $this->approvedCounts();
         $banomLabels = self::BANOMS;
-
         return view('admin.struktur', compact('selected', 'positions', 'members', 'counts', 'banomLabels'));
     }
 
@@ -137,43 +162,67 @@ class OrganizationController extends Controller
     {
         $this->ensureAdmin($request);
         $data = $this->validatedPosition($request);
-
-        DB::table('organization_positions')->insert([
-            ...$data,
-            'created_at' => now(),
-            'updated_at' => now(),
+        $id = DB::table('organization_positions')->insertGetId([
+            ...$data, 'created_at' => now(), 'updated_at' => now(),
         ]);
-
+        $this->savePhoto($request, (int) $id);
+        $this->savePhotoAdjustment($request, (int) $id);
         return redirect()->route('admin.struktur.index', ['banom' => $data['banom']])
-            ->with('success', 'Jabatan pengurus berhasil ditambahkan.');
+            ->with('success', 'Pengurus dan foto berhasil disimpan.');
     }
 
     public function update(Request $request, int $id): RedirectResponse
     {
         $this->ensureAdmin($request);
-        $current = DB::table('organization_positions')->where('id', $id)->first();
-        abort_if($current === null, 404);
-
+        abort_unless(DB::table('organization_positions')->where('id', $id)->exists(), 404);
         $data = $this->validatedPosition($request);
-        DB::table('organization_positions')->where('id', $id)->update([
-            ...$data,
-            'updated_at' => now(),
-        ]);
-
+        DB::table('organization_positions')->where('id', $id)
+            ->update([...$data, 'updated_at' => now()]);
+        $this->savePhoto($request, $id);
+        $this->savePhotoAdjustment($request, $id);
         return redirect()->route('admin.struktur.index', ['banom' => $data['banom']])
-            ->with('success', 'Struktur pengurus berhasil diperbarui.');
+            ->with('success', 'Data struktur dan foto berhasil diperbarui.');
     }
 
     public function destroy(Request $request, int $id): RedirectResponse
     {
         $this->ensureAdmin($request);
-        $current = DB::table('organization_positions')->where('id', $id)->first();
-        abort_if($current === null, 404);
-
+        $position = DB::table('organization_positions')->where('id', $id)->first();
+        abort_if($position === null, 404);
         DB::table('organization_positions')->where('id', $id)->delete();
+        $this->deletePhoto($id);
+        Storage::disk('public')->delete($this->adjustmentPath($id));
+        return redirect()->route('admin.struktur.index', ['banom' => $position->banom])
+            ->with('success', 'Jabatan beserta fotonya dihapus. Data anggota tetap aman.');
+    }
 
-        return redirect()->route('admin.struktur.index', ['banom' => $current->banom])
-            ->with('success', 'Jabatan dihapus dari struktur. Data anggota tidak ikut terhapus.');
+    private function savePhoto(Request $request, int $id): void
+    {
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            // Simpan foto baru dulu; apabila upload gagal, foto lama tidak dihapus.
+            $extension = strtolower($photo->extension());
+            if (!in_array($extension, self::PHOTO_EXTENSIONS, true)) {
+                throw ValidationException::withMessages(['photo' => 'Format foto harus JPG, PNG, atau WEBP.']);
+            }
+            $path = self::PHOTO_DIRECTORY . '/position-' . $id . '.' . $extension;
+            $stored = $photo->storeAs(self::PHOTO_DIRECTORY, 'position-' . $id . '.' . $extension, 'public');
+            if (!$stored) {
+                throw ValidationException::withMessages(['photo' => 'Foto gagal disimpan. Periksa penyimpanan server.']);
+            }
+            $this->deletePhoto($id, except: $path);
+        } elseif ($request->boolean('remove_photo')) {
+            $this->deletePhoto($id);
+        }
+    }
+
+    private function deletePhoto(int $id, ?string $except = null): void
+    {
+        $disk = Storage::disk('public');
+        foreach (self::PHOTO_EXTENSIONS as $extension) {
+            $path = self::PHOTO_DIRECTORY . '/position-' . $id . '.' . $extension;
+            if ($path !== $except && $disk->exists($path)) $disk->delete($path);
+        }
     }
 
     private function validatedPosition(Request $request): array
@@ -182,23 +231,24 @@ class OrganizationController extends Controller
             'banom' => ['required', Rule::in(array_keys(self::BANOMS))],
             'role' => ['required', 'string', 'max:100'],
             'person_name' => ['nullable', 'string', 'max:120', 'required_without:member_id'],
-            'member_id' => [
-                'nullable',
-                'integer',
-                Rule::exists('members', 'id')->where('status', 'approved'),
-            ],
+            'member_id' => ['nullable', 'integer', Rule::exists('members', 'id')->where('status', 'approved')],
             'description' => ['nullable', 'string', 'max:180'],
             'level' => ['required', 'integer', 'between:1,3'],
             'sort_order' => ['required', 'integer', 'between:0,999'],
             'is_visible' => ['required', 'boolean'],
+            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'remove_photo' => ['nullable', 'boolean'],
+            'photo_x' => ['sometimes', 'required', 'integer', 'between:0,100'],
+            'photo_y' => ['sometimes', 'required', 'integer', 'between:0,100'],
+            'photo_zoom' => ['sometimes', 'required', 'integer', 'between:100,200'],
         ]);
 
         $memberId = $validated['member_id'] ?? null;
         if ($memberId !== null) {
             $member = Member::query()->findOrFail($memberId);
             if (self::canonicalBanom($member->banom) !== $validated['banom']) {
-                throw \Illuminate\Validation\ValidationException::withMessages([
-                    'member_id' => 'Anggota harus berasal dari Banom yang dipilih.',
+                throw ValidationException::withMessages([
+                    'member_id' => 'Anggota harus berasal dari Banom yang sedang dikelola.',
                 ]);
             }
         }
@@ -208,7 +258,7 @@ class OrganizationController extends Controller
             'role' => trim($validated['role']),
             'person_name' => $memberId !== null ? null : trim($validated['person_name'] ?? ''),
             'member_id' => $memberId,
-            'description' => $validated['description'] ?? null,
+            'description' => trim($validated['description'] ?? '') ?: null,
             'level' => (int) $validated['level'],
             'sort_order' => (int) $validated['sort_order'],
             'is_visible' => (bool) $validated['is_visible'],

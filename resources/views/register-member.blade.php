@@ -11,6 +11,11 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
+    <!-- Nulesmana typography public only - tidak untuk admin -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link data-nu-public-type rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Instrument+Serif:ital@0;1&amp;display=swap">
+    <link rel="stylesheet" href="{{ asset('css/nulesmana-public-type.css') }}">
 </head>
 <body class="bg-white min-h-screen flex text-gray-900">
 

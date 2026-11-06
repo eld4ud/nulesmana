@@ -1,0 +1,45 @@
+/* Nulesmana | Tipografi publik v2. Hanya di-load pada Blade publik, BUKAN admin. */
+:root { --nu-type-ink: #284837; }
+body {
+  font-family: 'Manrope', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+}
+/* Deskripsi, isi artikel, FAQ, teks daftar dan label agar tidak tampak tipis. */
+body :is(p, li, figcaption, small, summary, label, input, select, textarea):not([lang="ar"]):not(.font-arabic) {
+  font-family: 'Manrope', system-ui, sans-serif !important;
+}
+body :is(p, li, figcaption, small, summary):not([lang="ar"]):not(.font-arabic):not(.font-bold):not(.font-semibold) {
+  font-weight: 550 !important;
+  letter-spacing: -.012em;
+}
+body :is(nav a, a, button, input, select, textarea, label):not(.font-arabic) {
+  font-family: 'Manrope', system-ui, sans-serif !important;
+}
+body :is(nav a, button, label):not(.font-arabic):not(.font-bold) {
+  font-weight: 650;
+}
+/* Tulisan mini di header, caption, badge, tanggal, dan statistik. */
+body :is([class*="text-xs"], [class*="text-[10px]"], [class*="text-[11px]"], [class*="text-[12px]"], [class*="text-[13px]"], [class*="text-[14px]"]):not(.font-arabic):not([lang="ar"]):not(.ph):not([class*="icon"]) {
+  font-family: 'Manrope', system-ui, sans-serif !important;
+  font-weight: 650;
+}
+/* Hero: deskripsi memang diprioritaskan agar tampak tegas dan terbaca. */
+body .nu-type-hero-description,
+body .nu-tech-hero-desc {
+  font-family: 'Manrope', system-ui, sans-serif !important;
+  font-size: clamp(15px, 1.18vw, 17px) !important;
+  font-weight: 600 !important;
+  line-height: 1.78 !important;
+  letter-spacing: -.015em !important;
+  color: #405B4D !important;
+  max-width: 34rem;
+}
+/* Jagalah kaligrafi Arab dan icon font dari override tipografi. */
+body [lang="ar"], body .font-arabic { font-family: 'Amiri', serif !important; }
+@media (max-width: 639px) {
+  body .nu-type-hero-description, body .nu-tech-hero-desc {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+  }
+}

@@ -93,7 +93,12 @@ Route::middleware(['auth', 'admin'])
         // KELOLA BERITA DAN AGENDA
         Route::get('/news', [AdminDashboardController::class, 'newsIndex'])->name('news.index');
         Route::post('/news', [AdminDashboardController::class, 'storeNews'])->name('news.store');
-        Route::delete('/news/{id}', [AdminDashboardController::class, 'destroyNews'])
+        // EDIT BERITA: hanya admin, lewat grup middleware auth + admin di atas.
+Route::get('/news/{id}/edit', [\App\Http\Controllers\Admin\NewsEditController::class, 'edit'])
+    ->whereNumber('id')->name('news.edit');
+Route::put('/news/{id}', [\App\Http\Controllers\Admin\NewsEditController::class, 'update'])
+    ->whereNumber('id')->name('news.update');
+Route::delete('/news/{id}', [AdminDashboardController::class, 'destroyNews'])
             ->whereNumber('id')
             ->name('news.destroy');
 

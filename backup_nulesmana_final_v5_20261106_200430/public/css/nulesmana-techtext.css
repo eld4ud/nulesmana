@@ -1,0 +1,105 @@
+/* Nulesmana TechText Lite v4 | landing page only, no Canvas. */
+.nu-tech-hero-title {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 0 1.45rem;
+  line-height: 1;
+  text-align: left;
+}
+.nu-tech-line {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(67px, 6.9vw, 92px);
+  touch-action: pan-y;
+  user-select: none;
+}
+.nu-tech-line--serif { height: clamp(74px, 7.5vw, 105px); margin-top: -3px; }
+.nu-tech-fallback, .nu-lite-word {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  white-space: pre;
+  font-family: 'Manrope', Arial, sans-serif;
+  font-size: clamp(3.35rem, 5.9vw, 5.5rem);
+  font-weight: 600;
+  letter-spacing: -.052em;
+  line-height: 1.07;
+  color: #18382B;
+}
+.nu-tech-line--serif :is(.nu-tech-fallback, .nu-lite-word) {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(3.9rem, 6.55vw, 6.15rem);
+  letter-spacing: -.042em;
+  color: #204634;
+}
+/* No JS? Still readable. In JS mode only the interactive layer is shown. */
+.nu-lite-word { display: none; }
+.nu-tech-line[data-ready='true'] .nu-tech-fallback { visibility: hidden; }
+.nu-tech-line[data-ready='true'] .nu-lite-word { display: block; }
+.nu-lite-letter {
+  display: inline-block;
+  position: relative;
+  transform: translate3d(var(--nu-x, 0px), var(--nu-y, 0px), 0);
+  transition: transform 580ms cubic-bezier(.16,1.3,.30,1), color 160ms ease;
+  will-change: auto;
+  cursor: grab;
+  animation: nu-lite-appear 420ms ease-out both;
+  animation-delay: var(--nu-delay, 0ms);
+}
+/* The requested per-letter dashed selection box is visible whenever a mouse hovers. */
+.nu-lite-letter::after {
+  content: '';
+  position: absolute;
+  inset: -.07em -.085em -.055em -.08em;
+  border: 1px dashed #578367;
+  border-radius: 2px;
+  background:
+    linear-gradient(#578367, #578367) left top / 4px 4px no-repeat,
+    linear-gradient(#578367, #578367) right top / 4px 4px no-repeat,
+    linear-gradient(#578367, #578367) left bottom / 4px 4px no-repeat,
+    linear-gradient(#578367, #578367) right bottom / 4px 4px no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .nu-lite-letter:hover::after,
+  .nu-lite-letter.nu-lite-grabbing::after { opacity: 1; }
+  .nu-lite-letter:hover { -webkit-text-stroke: .55px currentColor; }
+}
+.nu-lite-grabbing {
+  transition: none;
+  cursor: grabbing;
+  z-index: 2;
+}
+.nu-lite-kick:not(.nu-lite-grabbing) { animation: nu-lite-kick 580ms cubic-bezier(.22,.8,.2,1) both; }
+@keyframes nu-lite-kick {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  32% { transform: translate3d(0, -9px, 0); }
+  65% { transform: translate3d(0, 3px, 0); }
+}
+@keyframes nu-lite-appear {
+  from { opacity: .25; transform: translate3d(0, 6px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@media (max-width: 1023px) {
+  .nu-tech-hero-title { max-width: 100%; }
+}
+@media (max-width: 639px) {
+  .nu-tech-hero-title { margin-bottom: 1.15rem; }
+  .nu-tech-line { height: clamp(50px, 12vw, 74px); }
+  .nu-tech-line--serif { height: clamp(57px, 14vw, 81px); }
+  .nu-tech-fallback, .nu-lite-word { font-size: clamp(2.05rem, 8vw, 4.4rem); }
+  .nu-tech-line--serif :is(.nu-tech-fallback, .nu-lite-word) { font-size: clamp(2.65rem, 9.4vw, 4.8rem); }
+}
+@media (hover: none), (pointer: coarse) {
+  .nu-lite-letter { cursor: default; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nu-lite-letter { animation: none !important; transition: none !important; }
+  .nu-lite-letter::after { transition: none !important; }
+}

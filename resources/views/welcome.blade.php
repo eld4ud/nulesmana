@@ -140,8 +140,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('css/nulesmana-animations.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         body { font-family: 'DM Sans', sans-serif; }
         .font-arabic { font-family: 'Amiri', serif; font-weight: 400; }
@@ -331,8 +330,18 @@
             }, { once: true });
         })();
     </script>
+    <!-- Manrope + Instrument Serif untuk hero publik -->
+<!-- Nulesmana typography public only - tidak untuk admin -->
+    <!-- Nulesmana publik V5: font lama yang dipakai komponen + font hero editorial -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Nulesmana V6 FIX: satu permintaan font publik + tipografi responsif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link data-nu-v6-fonts rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Bebas+Neue&amp;family=Instrument+Serif:ital@1&amp;family=Manrope:wght@500;600;700&amp;display=swap">
+    <link rel="stylesheet" href="{{ asset('css/nulesmana-public-type.css') }}?v=61">
+    <link rel="stylesheet" href="{{ asset('css/nulesmana-techtext.css') }}?v=61">
 </head>
-<body class="bg-[#F7F8F5] text-gray-900 min-h-screen relative overflow-x-hidden selection:bg-[#203d2e] selection:text-white">
+<body class="nu-public-v6 bg-[#F7F8F5] text-gray-900 min-h-screen relative overflow-x-hidden selection:bg-[#203d2e] selection:text-white">
     <!-- Skeleton overlay for the homepage. All elements are decorative placeholders. -->
     <div id="nu-skeleton" role="status" aria-label="Memuat halaman NU Lesmana">
         <div class="nu-sk-wrap" aria-hidden="true">
@@ -376,22 +385,22 @@
     </div>
 
     <!-- HERO: tipografi ringan dan ruang putih lega -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 lg:pt-14 pb-10 sm:pb-14">
+    <main id="nu-home-hero" class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 lg:pt-14 pb-10 sm:pb-14">
         <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
             <!-- TEKS KIRI -->
-            <div data-hero-enter class="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
-                <div class="mb-6 text-center lg:text-left">
+            <div data-hero-enter class="nu-v6-hero-copy w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
+                <div class="nu-v6-greeting mb-6 text-center lg:text-left">
                     <p lang="ar" dir="rtl" class="font-arabic text-[1.65rem] sm:text-4xl text-[#173d30] leading-[1.8]">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</p>
                     <p class="text-[11px] sm:text-xs tracking-[.16em] uppercase font-semibold text-gray-500 mt-1">Selamat datang di Portal NU Lesmana</p>
                 </div>
-                <h1 class="font-display max-w-[680px] text-6xl sm:text-8xl lg:text-[6rem] xl:text-[6.7rem] leading-[.93] text-gray-900 mb-6 sm:mb-8">
-                    PORTAL RESMI<br>
-                    <span class="text-[#183C2F]">LESMANA.</span>
-                </h1>
-                <p class="max-w-[34rem] mb-9 text-[15px] leading-[1.9] font-normal text-[#58675F] sm:mb-10 sm:text-[17px]">
+                <h1 class="nu-tech-hero-title" aria-label="Portal Resmi NU Lesmana.">
+    <span class="nu-tech-line nu-tech-line--sans" data-nu-tech-text="Portal Resmi"><span class="nu-tech-fallback" aria-hidden="true">Portal Resmi</span></span>
+    <span class="nu-tech-line nu-tech-line--serif" data-nu-tech-text="NU Lesmana."><span class="nu-tech-fallback" aria-hidden="true">NU Lesmana.</span></span>
+</h1>
+                <p class="nu-v6-description nu-type-hero-description max-w-[34rem] mb-9 text-[15px] leading-[1.9] font-normal text-[#58675F] sm:mb-10 sm:text-[17px]">
                     Pusat informasi kegiatan majelis, berita agenda keagamaan, serta layanan pendaftaran anggota Badan Otonom Ranting NU dengan verifikasi NIA otomatis.
                 </p>
-                <div class="flex w-full flex-wrap items-center justify-center gap-3.5 lg:justify-start">
+                <div class="nu-v6-hero-actions flex w-full flex-wrap items-center justify-center gap-3.5 lg:justify-start">
                     <a href="{{ route('member.signup') }}" class="inline-flex min-h-[52px] items-center justify-center gap-3 rounded-full bg-[#183C2F] px-9 py-3.5 text-[13px] font-semibold text-white transition-colors hover:bg-[#285340] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#183C2F]">
                         Daftar Anggota <i class="ph ph-arrow-up-right text-lg" aria-hidden="true"></i>
                     </a>
@@ -472,174 +481,180 @@
     </section>
 
     <!-- GALERI COVERFLOW: mouse wheel, drag, touch, dan putaran tanpa akhir -->
-    @php
-        $galleryNews = collect($publishedNews ?? [])->filter(fn ($item) => filled($item->image))->take(8)->values();
-    @endphp
-    <section id="galeri" class="py-20 sm:py-28 scroll-mt-28 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <div data-reveal class="text-center mb-8 sm:mb-12">
-                <p class="text-[11px] font-bold tracking-[.22em] uppercase text-[#6d8274] mb-3">Dokumentasi kegiatan</p>
-                <h2 class="text-[clamp(2.6rem,4.7vw,4.7rem)] font-semibold leading-[1.12] tracking-[-.06em] text-[#183C2F]">Cerita dari Lesmana.</h2>
-                <p class="text-sm text-[#657268] mt-4">Geser dengan mouse, scroll, atau sentuh untuk melihat momen lainnya.</p>
+   @php
+    $galleryNews = collect($publishedNews ?? [])->filter(fn ($item) => filled($item->image))->take(8)->values();
+@endphp
+<section id="galeri" class="py-20 sm:py-28 scroll-mt-28 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div data-reveal class="text-center mb-8 sm:mb-12">
+            <p class="text-[11px] font-bold tracking-[.22em] uppercase text-[#6d8274] mb-3">Dokumentasi kegiatan</p>
+            <h2 class="text-[clamp(2.6rem,4.7vw,4.7rem)] font-semibold leading-[1.12] tracking-[-.06em] text-[#183C2F]">Cerita dari Lesmana.</h2>
+            <p class="text-sm text-[#657268] mt-4">Geser dengan mouse, scroll, atau sentuh untuk melihat momen lainnya.</p>
+        </div>
+    </div>
+
+    @if($galleryNews->isNotEmpty())
+        <div class="nulesmana-coverflow relative mx-auto max-w-[1440px] select-none"
+             data-coverflow tabindex="0" role="region"
+             aria-label="Galeri dokumentasi kegiatan NU Lesmana">
+            <div class="coverflow-stage relative h-[255px] sm:h-[340px] lg:h-[415px] overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y">
+                @foreach($galleryNews as $photo)
+                    @php
+                        $original = $photo->image;
+                        $webp = preg_replace('/\.png$/i', '.webp', $original);
+
+                        $imagePath = $webp !== $original
+                            && \Illuminate\Support\Facades\Storage::disk('public')->exists($webp)
+                            ? $webp
+                            : $original;
+                    @endphp
+
+                    <a class="coverflow-slide absolute top-1/2 left-1/2 block w-[280px] h-[158px] sm:w-[400px] sm:h-[225px] lg:w-[520px] lg:h-[293px] rounded-[20px] overflow-hidden bg-[#e4e8e1] shadow-lg outline-offset-4 focus-visible:outline-2 focus-visible:outline-[#183C2F]"
+                       href="{{ route('public.news.show', $photo->id) }}"
+                       aria-label="Baca berita: {{ $photo->title }}" draggable="false">
+                        <img src="{{ \Illuminate\Support\Facades\Storage::url($imagePath) }}"
+                             alt="{{ $photo->title }}"
+                             loading="lazy"
+                             decoding="async"
+                             draggable="false"
+                             class="w-full h-full object-cover pointer-events-none">
+                        <div class="absolute inset-x-0 bottom-0 pt-20 pb-5 px-5 bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
+                            <p class="text-white text-sm sm:text-base font-semibold leading-snug line-clamp-2">{{ $photo->title }}</p>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 mt-3 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="coverflow-current text-sm font-semibold text-[#183C2F] tabular-nums">01</span>
+                    <span class="w-9 h-px bg-[#b8c7ba]"></span>
+                    <span class="text-sm text-[#758779] tabular-nums">{{ str_pad((string)$galleryNews->count(), 2, '0', STR_PAD_LEFT) }}</span>
+                </div>
+                <div class="flex gap-2">
+                    <button type="button" class="coverflow-prev w-11 h-11 rounded-full border border-[#b9c9bd] text-[#183C2F] hover:bg-[#183C2F] hover:text-white transition" aria-label="Foto sebelumnya"><i class="ph ph-arrow-left text-lg"></i></button>
+                    <button type="button" class="coverflow-next w-11 h-11 rounded-full border border-[#b9c9bd] text-[#183C2F] hover:bg-[#183C2F] hover:text-white transition" aria-label="Foto berikutnya"><i class="ph ph-arrow-right text-lg"></i></button>
+                </div>
             </div>
         </div>
-        @if($galleryNews->isNotEmpty())
-            <div class="nulesmana-coverflow relative mx-auto max-w-[1440px] select-none"
-                 data-coverflow tabindex="0" role="region"
-                 aria-label="Galeri dokumentasi kegiatan NU Lesmana">
-                <div class="coverflow-stage relative h-[255px] sm:h-[340px] lg:h-[415px] overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y">
-                    @foreach($galleryNews as $photo)
-                        <a class="coverflow-slide absolute top-1/2 left-1/2 block w-[280px] h-[158px] sm:w-[400px] sm:h-[225px] lg:w-[520px] lg:h-[293px] rounded-[20px] overflow-hidden bg-[#e4e8e1] shadow-lg outline-offset-4 focus-visible:outline-2 focus-visible:outline-[#183C2F]"
-                           href="{{ route('public.news.show', $photo->id) }}"
-                           aria-label="Baca berita: {{ $photo->title }}" draggable="false">
-                            <img src="{{ \Illuminate\Support\Facades\Storage::url($photo->image) }}"
-                                 alt="{{ $photo->title }}" loading="lazy" draggable="false"
-                                 class="w-full h-full object-cover pointer-events-none">
-                            <div class="absolute inset-x-0 bottom-0 pt-20 pb-5 px-5 bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
-                                <p class="text-white text-sm sm:text-base font-semibold leading-snug line-clamp-2">{{ $photo->title }}</p>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 mt-3 flex items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <span class="coverflow-current text-sm font-semibold text-[#183C2F] tabular-nums">01</span>
-                        <span class="w-9 h-px bg-[#b8c7ba]"></span>
-                        <span class="text-sm text-[#758779] tabular-nums">{{ str_pad((string)$galleryNews->count(), 2, '0', STR_PAD_LEFT) }}</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <button type="button" class="coverflow-prev w-11 h-11 rounded-full border border-[#b9c9bd] text-[#183C2F] hover:bg-[#183C2F] hover:text-white transition" aria-label="Foto sebelumnya"><i class="ph ph-arrow-left text-lg"></i></button>
-                        <button type="button" class="coverflow-next w-11 h-11 rounded-full border border-[#b9c9bd] text-[#183C2F] hover:bg-[#183C2F] hover:text-white transition" aria-label="Foto berikutnya"><i class="ph ph-arrow-right text-lg"></i></button>
-                    </div>
-                </div>
-            </div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 mt-6 text-right">
-                <a href="{{ route('public.news.index') }}" class="text-xs font-bold text-[#183C2F] inline-flex items-center gap-2 hover:underline">Lihat semua berita <i class="ph ph-arrow-up-right"></i></a>
-            </div>
-        @else
-            <div class="max-w-7xl mx-auto px-4 sm:px-6">
-                <div class="rounded-2xl bg-[#eeefeb] border border-[#dfe5dc] px-6 py-14 text-center">
-                    <p class="text-sm text-[#637569]">Dokumentasi muncul setelah berita dengan foto dipublikasikan.</p>
-                </div>
-            </div>
-        @endif
-    </section>
-    <style>
-        .coverflow-slide {
-            transform-origin: center center;
-            transition: transform 650ms cubic-bezier(.2,.8,.2,1), opacity 550ms ease, filter 550ms ease;
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-        }
-        .coverflow-stage { perspective: 1400px; }
-        @media (prefers-reduced-motion: reduce) {
-            .coverflow-slide { transition-duration: 0.01ms; }
-        }
-    </style>
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('[data-coverflow]').forEach(carousel => {
-            const stage = carousel.querySelector('.coverflow-stage');
-            const slides = Array.from(carousel.querySelectorAll('.coverflow-slide'));
-            const current = carousel.querySelector('.coverflow-current');
-            const count = slides.length;
-            if (!count) return;
-            let index = 0;
-            let startX = null;
-            let startY = null;
-            let lastWheel = 0;
-            let dragging = false;
-            let suppressClick = false;
-            const render = () => {
-                const mobile = window.innerWidth < 640;
-                const spacing = mobile ? 150 : window.innerWidth < 1024 ? 230 : 320;
-                slides.forEach((slide, i) => {
-                    // Posisi melingkar: foto setelah urutan terakhir kembali ke awal.
-                    let distance = (i - index + count) % count;
-                    if (distance > count / 2) distance -= count;
-                    // Untuk jumlah genap, kartu di sisi belakang tetap konsisten.
-                    const abs = Math.abs(distance);
-                    const visible = abs <= (mobile ? 2 : 3);
-                    const x = distance * spacing;
-                    const rotate = distance === 0 ? 0 : (distance < 0 ? 23 : -23);
-                    const scale = distance === 0 ? 1 : Math.max(.64, 1 - abs * .13);
-                    slide.style.transform = `translate(-50%, -50%) translateX(${x}px) rotateY(${rotate}deg) scale(${scale})`;
-                    slide.style.opacity = visible ? String(Math.max(.3, 1 - abs * .24)) : '0';
-                    slide.style.filter = distance === 0 ? 'saturate(1)' : 'saturate(.55)';
-                    slide.style.zIndex = String(100 - abs);
-                    slide.style.pointerEvents = visible ? 'auto' : 'none';
-                    slide.tabIndex = visible ? 0 : -1;
-                    slide.setAttribute('aria-hidden', visible ? 'false' : 'true');
-                });
-                current.textContent = String(index + 1).padStart(2, '0');
-            };
-            const move = step => {
-                if (count <= 1) return;
-                index = (index + step + count) % count;
-                render();
-            };
-            carousel.querySelector('.coverflow-prev').addEventListener('click', () => move(-1));
-            carousel.querySelector('.coverflow-next').addEventListener('click', () => move(1));
-            carousel.addEventListener('keydown', event => {
-                if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-                    event.preventDefault();
-                    move(event.key === 'ArrowRight' ? 1 : -1);
-                }
-            });
-            stage.addEventListener('wheel', event => {
-                if (count <= 1) return;
-                // Scroll vertikal di atas galeri menggerakkan carousel.
-                // Trackpad/mouse yang mengirim banyak event dibatasi per langkah.
-                const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-                if (Math.abs(delta) < 3) return;
-                event.preventDefault();
-                const now = performance.now();
-                if (now - lastWheel < 390) return;
-                lastWheel = now;
-                move(delta > 0 ? 1 : -1);
-            }, { passive: false });
-            stage.addEventListener('pointerdown', event => {
-                if (event.pointerType === 'mouse' && event.button !== 0) return;
-                startX = event.clientX;
-                startY = event.clientY;
-                dragging = false;
-            });
-            stage.addEventListener('pointermove', event => {
-                if (startX === null) return;
-                if (Math.abs(event.clientX - startX) > 12) dragging = true;
-            });
-            stage.addEventListener('pointerup', event => {
-                if (startX === null) return;
-                const dx = event.clientX - startX;
-                const dy = event.clientY - startY;
-                if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
-                    move(dx < 0 ? 1 : -1);
-                    suppressClick = true;
-                    setTimeout(() => { suppressClick = false; }, 100);
-                }
-                startX = null;
-                startY = null;
-                dragging = false;
-            });
-            stage.addEventListener('pointercancel', () => { startX = null; startY = null; dragging = false; });
-            stage.addEventListener('click', event => {
-                if (suppressClick) { event.preventDefault(); event.stopPropagation(); return; }
-                const slide = event.target.closest('.coverflow-slide');
-                if (!slide) return;
-                const target = slides.indexOf(slide);
-                if (target !== index) {
-                    event.preventDefault();
-                    // Klik foto samping memindahkan fokus, klik foto tengah membuka berita.
-                    const forward = (target - index + count) % count;
-                    move(forward <= count / 2 ? forward : forward - count);
-                }
-            }, true);
-            window.addEventListener('resize', render, { passive: true });
-            render();
-        });
-    });
-    </script>
 
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 mt-6 text-right">
+            <a href="{{ route('public.news.index') }}" class="text-xs font-bold text-[#183C2F] inline-flex items-center gap-2 hover:underline">Lihat semua berita <i class="ph ph-arrow-up-right"></i></a>
+        </div>
+    @else
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="rounded-2xl bg-[#eeefeb] border border-[#dfe5dc] px-6 py-14 text-center">
+                <p class="text-sm text-[#637569]">Dokumentasi muncul setelah berita dengan foto dipublikasikan.</p>
+            </div>
+        </div>
+    @endif
+</section>
+<style>
+    /* Galeri coverflow asli Nulesmana: efek 3D saat scroll, drag, dan sentuh. */
+    .coverflow-slide {
+        transform-origin: center center;
+        transition: transform 650ms cubic-bezier(.2,.8,.2,1), opacity 550ms ease, filter 550ms ease;
+        will-change: transform, opacity;
+        backface-visibility: hidden;
+    }
+    .coverflow-stage { perspective: 1400px; }
+    @media (prefers-reduced-motion: reduce) {
+        .coverflow-slide { transition-duration: 0.01ms; }
+    }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-coverflow]').forEach(carousel => {
+        const stage = carousel.querySelector('.coverflow-stage');
+        const slides = Array.from(carousel.querySelectorAll('.coverflow-slide'));
+        const current = carousel.querySelector('.coverflow-current');
+        const previousButton = carousel.querySelector('.coverflow-prev');
+        const nextButton = carousel.querySelector('.coverflow-next');
+        const count = slides.length;
+        if (!stage || !current || !previousButton || !nextButton || !count) return;
+        let index = 0;
+        let startX = null;
+        let startY = null;
+        let lastWheel = 0;
+        let suppressClick = false;
+        const render = () => {
+            const mobile = window.innerWidth < 640;
+            const spacing = mobile ? 150 : window.innerWidth < 1024 ? 230 : 320;
+            slides.forEach((slide, i) => {
+                let distance = (i - index + count) % count;
+                if (distance > count / 2) distance -= count;
+                const abs = Math.abs(distance);
+                const visible = abs <= (mobile ? 2 : 3);
+                const x = distance * spacing;
+                const rotate = distance === 0 ? 0 : (distance < 0 ? 23 : -23);
+                const scale = distance === 0 ? 1 : Math.max(.64, 1 - abs * .13);
+                slide.style.transform = `translate(-50%, -50%) translateX(${x}px) rotateY(${rotate}deg) scale(${scale})`;
+                slide.style.opacity = visible ? String(Math.max(.3, 1 - abs * .24)) : '0';
+                slide.style.filter = distance === 0 ? 'saturate(1)' : 'saturate(.55)';
+                slide.style.zIndex = String(100 - abs);
+                slide.style.pointerEvents = visible ? 'auto' : 'none';
+                slide.tabIndex = visible ? 0 : -1;
+                slide.setAttribute('aria-hidden', visible ? 'false' : 'true');
+            });
+            current.textContent = String(index + 1).padStart(2, '0');
+        };
+        const move = step => {
+            if (count <= 1) return;
+            index = (index + step + count) % count;
+            render();
+        };
+        previousButton.addEventListener('click', () => move(-1));
+        nextButton.addEventListener('click', () => move(1));
+        carousel.addEventListener('keydown', event => {
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                event.preventDefault();
+                move(event.key === 'ArrowRight' ? 1 : -1);
+            }
+        });
+        stage.addEventListener('wheel', event => {
+            if (count <= 1) return;
+            const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+            if (Math.abs(delta) < 3) return;
+            event.preventDefault();
+            const now = performance.now();
+            if (now - lastWheel < 390) return;
+            lastWheel = now;
+            move(delta > 0 ? 1 : -1);
+        }, { passive: false });
+        stage.addEventListener('pointerdown', event => {
+            if (event.pointerType === 'mouse' && event.button !== 0) return;
+            startX = event.clientX;
+            startY = event.clientY;
+        });
+        stage.addEventListener('pointerup', event => {
+            if (startX === null) return;
+            const dx = event.clientX - startX;
+            const dy = event.clientY - startY;
+            if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy)) {
+                move(dx < 0 ? 1 : -1);
+                suppressClick = true;
+                setTimeout(() => { suppressClick = false; }, 100);
+            }
+            startX = null;
+            startY = null;
+        });
+        stage.addEventListener('pointercancel', () => { startX = null; startY = null; });
+        stage.addEventListener('click', event => {
+            if (suppressClick) { event.preventDefault(); event.stopPropagation(); return; }
+            const slide = event.target.closest('.coverflow-slide');
+            if (!slide) return;
+            const target = slides.indexOf(slide);
+            if (target !== index) {
+                event.preventDefault();
+                const forward = (target - index + count) % count;
+                move(forward <= count / 2 ? forward : forward - count);
+            }
+        }, true);
+        window.addEventListener('resize', render, { passive: true });
+        render();
+    });
+});
+</script>
 <!-- ULASAN DAN ASPIRASI WARGA -->
 <section id="saran" class="max-w-7xl mx-auto px-4 sm:px-6 py-20 sm:py-28 scroll-mt-28">
     <!-- HEADER -->
@@ -1194,5 +1209,6 @@
             });
         })();
     </script>
+        <script defer src="{{ asset('js/nulesmana-techtext.js') }}?v=61"></script>
 </body>
 </html>

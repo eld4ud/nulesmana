@@ -215,6 +215,83 @@
     .news-pagination-pages{font-size:11px}
 }
 
+/* FIX: Live search tampil di atas konten berita */
+.news-toolbar {
+    position: relative;
+    z-index: 100;
+    overflow: visible;
+}
+.news-search-shell {
+    position: relative;
+    z-index: 101;
+    isolation: isolate;
+}
+.news-suggest {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    z-index: 102;
+    background: #FFFFFF;
+    opacity: 1;
+    border: 1px solid #D7E0D5;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 20px 45px rgba(24, 60, 47, 0.14);
+}
+.news-lead-layout,
+.news-section {
+    position: relative;
+}
+
+/* FIX FINAL: URUTAN LAYER NAVBAR, SEARCH, BERITA */
+
+/* Area pencarian tidak boleh mengalahkan navbar */
+.news-page .news-toolbar {
+    position: relative;
+    z-index: 10;
+    overflow: visible;
+}
+
+/* Kontainer pencarian */
+.news-page .news-search-shell {
+    position: relative;
+    z-index: 11;
+    isolation: isolate;
+}
+
+/* Dropdown tetap di atas gambar dan kartu berita */
+.news-page .news-suggest {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    z-index: 12;
+    background: #FFFFFF;
+    border: 1px solid #D7E0D5;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px rgba(24, 60, 47, 0.14);
+    overflow: hidden;
+}
+
+/* Konten berita di belakang dropdown */
+.news-page .news-lead-layout,
+.news-page .news-section {
+    position: relative;
+    z-index: 1;
+}
+
+/* Hasil pencarian */
+.news-page .news-suggest-item {
+    background: #FFFFFF;
+}
+
+.news-page .news-suggest-item:hover,
+.news-page .news-suggest-item.is-selected {
+    background: #EDF4ED;
+}
+
+
 </style>
 @endpush
 @section('content')

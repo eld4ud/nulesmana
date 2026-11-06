@@ -1,0 +1,62 @@
+/* Nulesmana | V2 editorial hero. Dipakai hanya di welcome.blade.php. */
+.nu-tech-hero-title {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 0 1.45rem;
+  text-align: left;
+  line-height: 1;
+}
+.nu-tech-line {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: clamp(67px, 6.9vw, 92px);
+  user-select: none;
+  touch-action: pan-y;
+}
+.nu-tech-line--serif {
+  height: clamp(74px, 7.5vw, 105px);
+  margin-top: -3px;
+}
+.nu-tech-fallback {
+  position: absolute;
+  top: 50%; left: 0;
+  transform: translateY(-50%);
+  font-family: 'Manrope', Arial, sans-serif;
+  font-size: clamp(3.35rem, 5.9vw, 5.5rem);
+  font-weight: 600;
+  letter-spacing: -.052em;
+  line-height: 1.07;
+  white-space: nowrap;
+  color: #18382B;
+}
+.nu-tech-line--serif .nu-tech-fallback {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(3.9rem, 6.55vw, 6.15rem);
+  letter-spacing: -.042em;
+  color: #204634;
+}
+.nu-tech-canvas {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.nu-tech-line[data-ready='true'] .nu-tech-fallback { opacity: 0; }
+@media (max-width: 1023px) {
+  .nu-tech-hero-title { max-width: 100%; }
+}
+@media (max-width: 639px) {
+  .nu-tech-hero-title { margin-bottom: 1.15rem; }
+  .nu-tech-line { height: clamp(50px, 12vw, 74px); }
+  .nu-tech-line--serif { height: clamp(57px, 14vw, 81px); }
+  .nu-tech-fallback { font-size: clamp(2.05rem, 8vw, 4.4rem); }
+  .nu-tech-line--serif .nu-tech-fallback { font-size: clamp(2.65rem, 9.4vw, 4.8rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nu-tech-line .nu-tech-fallback { opacity: 1 !important; }
+  .nu-tech-canvas { display: none !important; }
+}

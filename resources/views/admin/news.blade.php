@@ -186,7 +186,11 @@
                                             <i class="ph ph-arrow-up-right"></i>
                                         </a>
 
-                                        <form action="{{ route('admin.news.destroy', $news->id) }}"
+                                        <a href="{{ route('admin.news.edit', $news->id) }}"
+   class="inline-flex items-center gap-1 rounded-lg border border-[#cbdace] bg-[#edf4ee] px-3 py-2 text-xs font-bold text-[#173d30] transition hover:bg-[#dae9dd]">
+    <i class="ph ph-pencil-simple"></i> Edit
+</a>
+<form action="{{ route('admin.news.destroy', $news->id) }}"
                                               method="POST"
                                               onsubmit="return confirm('Yakin ingin menghapus berita ini?')">
                                             @csrf

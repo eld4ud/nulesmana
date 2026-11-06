@@ -1,0 +1,34 @@
+/* Nulesmana Final V5 | khusus halaman publik yang memuat file ini.
+   Admin tidak diubah. Aileron bisa dipasang belakangan tanpa mengubah Blade. */
+body {
+  font-family: 'Aileron', 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+}
+body :is(p, li, figcaption, small, summary, label, input, select, textarea, a, button):not([lang="ar"]):not(.font-arabic):not(.ph) {
+  font-family: 'Aileron', 'Outfit', system-ui, sans-serif !important;
+}
+body :is(p, li, figcaption, small, summary):not([lang="ar"]):not(.font-arabic):not(.font-bold):not(.font-semibold) {
+  font-weight: 500 !important; letter-spacing: -.005em;
+}
+body :is(nav a, button, label):not(.font-arabic):not(.ph) { font-weight: 600; }
+/* Pertegas caption, data tanggal, label dan keterangan mini. */
+body :is([class*="text-xs"], [class*="text-[10px]"], [class*="text-[11px]"], [class*="text-[12px]"], [class*="text-[13px]"], [class*="text-[14px]"]):not(.font-arabic):not([lang="ar"]):not(.ph):not(i) {
+  font-family: 'Aileron', 'Outfit', system-ui, sans-serif !important;
+  font-weight: 600;
+}
+/* Heading section publik mengikuti gaya editorial, tidak lagi memaksa Bebas Neue. */
+body .font-display:not(.font-arabic):not(.ph) {
+  font-family: 'Aileron', 'Outfit', system-ui, sans-serif !important;
+  font-weight: 700 !important; letter-spacing: -.045em;
+}
+body [lang="ar"], body .font-arabic { font-family: 'Amiri', serif !important; }
+body .nu-tech-hero-desc, body .nu-type-hero-description {
+  font-family: 'Aileron', 'Outfit', system-ui, sans-serif !important;
+  font-size: clamp(15px, 1.2vw, 17px) !important;
+  font-weight: 500 !important; line-height: 1.72 !important;
+  color: #41584B !important;
+}
+/* Jika sudah punya Aileron (.woff2) legal, buat file berikut dan isi @font-face:
+   public/css/nulesmana-aileron-local.css, lalu tambahkan link-nya di HEAD publik.
+   Paket ini tidak memuat file font. */

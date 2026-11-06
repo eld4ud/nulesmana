@@ -1,0 +1,67 @@
+/* Judul landing Nulesmana. Tidak memengaruhi dashboard admin. */
+.nu-tech-hero-title {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 0 1.5rem;
+  text-align: left;
+  line-height: 1;
+}
+.nu-tech-line {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: clamp(86px, 8.5vw, 119px);
+  overflow: visible;
+  touch-action: pan-y;
+  user-select: none;
+}
+.nu-tech-line--serif { height: clamp(92px, 9vw, 132px); }
+.nu-tech-fallback {
+  position: absolute;
+  top: 50%; left: 0;
+  transform: translateY(-50%);
+  font-family: 'Manrope', Arial, sans-serif;
+  font-size: clamp(2.4rem, 6.3vw, 6.25rem);
+  font-weight: 600;
+  letter-spacing: -.055em;
+  line-height: 1.05;
+  white-space: nowrap;
+  color: #17281F;
+}
+.nu-tech-line--serif .nu-tech-fallback {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(3.1rem, 7.8vw, 7.5rem);
+  letter-spacing: -.035em;
+  color: #183C2F;
+}
+.nu-tech-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%; height: 100%;
+}
+.nu-tech-line[data-ready='true'] .nu-tech-fallback { opacity: 0; }
+.nu-tech-hero-desc {
+  font-family: 'DM Sans', Arial, sans-serif !important;
+  font-weight: 600 !important;
+  color: #425849 !important;
+  line-height: 1.75 !important;
+  letter-spacing: -.012em;
+}
+@media (max-width: 1023px) {
+  .nu-tech-hero-title { max-width: 100%; }
+}
+@media (max-width: 639px) {
+  .nu-tech-hero-title { margin-bottom: 1.2rem; }
+  .nu-tech-line { height: clamp(67px, 19vw, 90px); }
+  .nu-tech-line--serif { height: clamp(76px, 21vw, 102px); }
+  .nu-tech-fallback { font-size: clamp(2.25rem, 10vw, 3.65rem); }
+  .nu-tech-line--serif .nu-tech-fallback { font-size: clamp(2.9rem, 12vw, 4.7rem); }
+  .nu-tech-hero-desc { font-size: .98rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nu-tech-line .nu-tech-fallback { opacity: 1 !important; }
+  .nu-tech-canvas { display: none !important; }
+}

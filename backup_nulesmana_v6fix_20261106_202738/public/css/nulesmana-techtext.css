@@ -1,0 +1,45 @@
+/* Nulesmana Final V5 | hero publik, animasi asli React Bits TechText diadaptasi ke vanilla JS.
+   CSS ini HANYA di-link dari welcome.blade.php. Dashboard admin tidak memakai file ini. */
+.nu-tech-hero-title {
+  width: 100%; max-width: 650px; margin: 0 0 1.55rem;
+  line-height: 1; text-align: left; color: #183B2B;
+}
+.nu-tech-line {
+  display: block; position: relative; width: 100%;
+  height: clamp(66px, 6.5vw, 90px); overflow: visible;
+  touch-action: pan-y; user-select: none;
+}
+.nu-tech-line--serif { height: clamp(74px, 7.5vw, 105px); margin-top: -3px; }
+.nu-tech-fallback {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  white-space: nowrap; display: block;
+  font-family: 'Aileron', 'Outfit', Arial, sans-serif;
+  font-size: clamp(3.0rem, 5.2vw, 4.75rem); font-style: normal; font-weight: 500;
+  letter-spacing: -.045em; line-height: 1.06; color: #183B2B;
+}
+.nu-tech-line--serif .nu-tech-fallback {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(3.6rem, 6.45vw, 5.5rem); font-style: italic; font-weight: 400;
+  letter-spacing: -.028em; color: #1F4332;
+}
+.nu-tech-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.nu-tech-line[data-ready='true'] .nu-tech-fallback { opacity: 0; }
+/* Jika efek dinonaktifkan OS, fallback tetap terbaca. */
+@media (prefers-reduced-motion: reduce) {
+  .nu-tech-line .nu-tech-fallback { opacity: 1 !important; }
+  .nu-tech-canvas { display: none !important; }
+}
+@media (max-width: 639px) {
+  .nu-tech-hero-title { margin-bottom: 1.1rem; }
+  .nu-tech-line { height: clamp(50px, 11.6vw, 73px); }
+  .nu-tech-line--serif { height: clamp(58px, 13.5vw, 84px); margin-top: 0; }
+  .nu-tech-fallback { font-size: clamp(2rem, 8.0vw, 3.6rem); }
+  .nu-tech-line--serif .nu-tech-fallback { font-size: clamp(2.65rem, 9.6vw, 4.35rem); }
+}
+/* Kalimat penjelas: bukan tipis, tapi juga tidak terlalu tebal. */
+body .nu-tech-hero-desc, body .nu-type-hero-description {
+  font-family: 'Aileron', 'Outfit', system-ui, sans-serif !important;
+  font-size: clamp(15px, 1.2vw, 17px) !important;
+  font-weight: 500 !important; line-height: 1.72 !important;
+  letter-spacing: -.012em; color: #41584B !important; max-width: 34rem;
+}
