@@ -14,7 +14,7 @@
             @foreach($galleryItems as $item)
                 @php
                     $path = data_get($item, 'image');
-                    $src = \Illuminate\Support\Str::startsWith($path, ['http://','https://','/']) ? $path : asset('storage/'.$path);
+                    $src = \App\Support\NulesmanaMedia::newsUrl($path);
                 @endphp
                 <button class="nu-gallery-card" type="button" data-index="{{ $loop->index }}" aria-label="Lihat foto {{ data_get($item, 'title', 'Dokumentasi kegiatan') }}">
                     <img src="{{ $src }}" alt="{{ data_get($item, 'title', 'Dokumentasi kegiatan') }}" loading="lazy" draggable="false">

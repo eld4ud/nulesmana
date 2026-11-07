@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Member;
 use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\User;
+use App\Support\NulesmanaMedia;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -60,9 +61,9 @@ class KartuController extends Controller
             403
         );
 
-        $disk = Storage::disk('public');
+        $disk = Storage::disk(NulesmanaMedia::memberDisk());
         $previous = $member->photo;
-        $newPath = $request->file('foto')->store('members', 'public');
+        $newPath = $request->file('foto')->store('members', NulesmanaMedia::memberDisk());
 
         try {
             $member->update(['photo' => $newPath]);
@@ -82,6 +83,7 @@ class KartuController extends Controller
     // Foto lama tetap tampil jika anggota belum mempunyai members.photo.
     private function legacyFotoUrl(int $userId): ?string
     {
+        if (NulesmanaMedia::remote()) return null;
         foreach (Storage::disk('public')->files('member-photos/' . $userId) as $file) {
             if (preg_match('~/avatar\.(jpg|jpeg|png|webp)$~i', $file)) {
                 return Storage::disk('public')->url($file);
@@ -145,7 +147,7 @@ class KartuController extends Controller
 
         $photoPath = $data['member']->photo;
         $data['photoUrl'] = $photoPath
-            ? Storage::disk('public')->url($photoPath)
+            ? NulesmanaMedia::memberUrl($data['member'])
             : $this->legacyFotoUrl((int) $userId);
 
         return $data;

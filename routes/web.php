@@ -10,6 +10,12 @@ use App\Http\Controllers\Admin\ReviewManagementController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 
+// Foto anggota privat: hanya admin atau pemilik yang disetujui.
+Route::get('/media/member-photo/{member}', [\App\Http\Controllers\PrivateMemberPhotoController::class, 'show'])
+    ->middleware('auth')
+    ->whereNumber('member')
+    ->name('nulesmana.member-photo');
+
 // WEBSITE PUBLIK
 Route::get('/', [PublicController::class, 'index'])->name('home');
 Route::get('/profil-organisasi', function () {

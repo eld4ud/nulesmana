@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
+use App\Support\NulesmanaMedia;
 use Illuminate\Validation\ValidationException;
 
 class AdminDashboardController extends Controller
@@ -452,7 +453,7 @@ class AdminDashboardController extends Controller
 
         if ($request->hasFile('photo')) {
             $newPhoto = $request->file('photo')
-                ->store('members', 'public');
+                ->store('members', NulesmanaMedia::memberDisk());
         }
 
         try {
@@ -474,7 +475,7 @@ class AdminDashboardController extends Controller
         } catch (\Throwable $e) {
 
             if ($newPhoto) {
-                Storage::disk('public')->delete($newPhoto);
+                Storage::disk(NulesmanaMedia::memberDisk())->delete($newPhoto);
             }
 
             throw $e;
@@ -489,7 +490,7 @@ class AdminDashboardController extends Controller
             && $oldPhoto
             && $oldPhoto !== $newPhoto
         ) {
-            Storage::disk('public')->delete($oldPhoto);
+            Storage::disk(NulesmanaMedia::memberDisk())->delete($oldPhoto);
         }
 
         return back()->with(
@@ -553,7 +554,7 @@ class AdminDashboardController extends Controller
         });
 
         if ($photoPath) {
-            Storage::disk('public')->delete($photoPath);
+            Storage::disk(NulesmanaMedia::memberDisk())->delete($photoPath);
         }
 
         return back()->with(
@@ -593,7 +594,7 @@ class AdminDashboardController extends Controller
 
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')
-                ->store('news', 'public');
+                ->store('news', NulesmanaMedia::newsDisk());
         }
 
         News::create([

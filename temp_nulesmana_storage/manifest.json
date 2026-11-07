@@ -1,0 +1,136 @@
+{
+  "files": [
+    {
+      "path": "app/Support/NulesmanaMedia.php",
+      "originalSha256": null,
+      "patchedSha256": "e055c26da787d1b4dfdf7ba0da18c8d17ecc0fb16ece559225a063744d5258c9",
+      "originalExists": false
+    },
+    {
+      "path": "app/Http/Controllers/PrivateMemberPhotoController.php",
+      "originalSha256": null,
+      "patchedSha256": "934d166377f65d8a689887cb86483fb885d46bf0b78eb42fd0fe5df6a9705475",
+      "originalExists": false
+    },
+    {
+      "path": "config/filesystems.php",
+      "originalSha256": "861b55f8706512087a53a30a6f91e28defae6de6a07f3ca5ccfb28458f251bf6",
+      "patchedSha256": "452444e8815315ca10db4b79ba15e66f14fbd32134f1c002222de8d563397ac4",
+      "originalExists": true
+    },
+    {
+      "path": "routes/web.php",
+      "originalSha256": "e636795e8bebed3943f084a5f26da0d3d5e38463bfa9181d76b724a373899be4",
+      "patchedSha256": "70ee6f31a26e1f5988736ee17da20c9b1395d9624242036b5fee8cb10375d672",
+      "originalExists": true
+    },
+    {
+      "path": "app/Http/Controllers/PublicController.php",
+      "originalSha256": "7f64b8d57ba825905393a4118259b019655154253325978320bfcdee85180f24",
+      "patchedSha256": "fc28da921d0a333f025f298af1143eaa20f655f99c135eea12268f15db532511",
+      "originalExists": true
+    },
+    {
+      "path": "app/Http/Controllers/Admin/AdminDashboardController.php",
+      "originalSha256": "c110bfc7f31985f428bbf54a1bcab81cddffcba805cead5decdbdddafd98f3af",
+      "patchedSha256": "71de49f4a61a0b5bfd0ac47b9e1f3f57eb751be3f4458be6121ace6ca9ee4cf3",
+      "originalExists": true
+    },
+    {
+      "path": "app/Http/Controllers/Admin/NewsEditController.php",
+      "originalSha256": "0f37b81905a28f0372efe9c8a1f37a12af7596b36a06a4a139312938aedfe8c6",
+      "patchedSha256": "cc883091f199698722346177453e3a2e58dd50f317b2f841e39616af939b351c",
+      "originalExists": true
+    },
+    {
+      "path": "app/Http/Controllers/AdminHomeController.php",
+      "originalSha256": "58684f7af5e83cf2cda0ab719dadc11ed2677f606a7110f739a045dc2be302ee",
+      "patchedSha256": "630bde573ded4f16fa37e5441d33768eea0e38483dc5b66a5546a0157bb5f268",
+      "originalExists": true
+    },
+    {
+      "path": "app/Http/Controllers/Member/KartuController.php",
+      "originalSha256": "6ee8771f63a7bc873be8b33711bde63c341c359b798e7102b0a765c6fdbf2bc8",
+      "patchedSha256": "3930800cfe5873dcea4992e80a06f967de33a8b29343d9e0cfe8212091deb175",
+      "originalExists": true
+    },
+    {
+      "path": "app/Http/Controllers/AdminMemberCardController.php",
+      "originalSha256": "0fe722c8ea3e1125881e43fe5130844fd3967347427689abfdc43881976bc277",
+      "patchedSha256": "524405ecc74caacfeded5a36aee8095b2063bb3276f4a4cfbbf60fc32ef5f0f4",
+      "originalExists": true
+    },
+    {
+      "path": "app/Http/Controllers/OrganizationController.php",
+      "originalSha256": "105a675e9377e6eadf82662cb6dde029ff5881c71cd763ab71baea2339f57a1d",
+      "patchedSha256": "7dc394868d70af6f9ce5c6c7e2a1db66991b3228cb6e7b95ed9d00fcec92e627",
+      "originalExists": true
+    },
+    {
+      "path": "resources/views/admin/home.blade.php",
+      "originalSha256": "b5ab530b817fc52683bee69c71e766c2947d68496006141b0f8e7f956037b7b0",
+      "patchedSha256": "178b0cbb5d341a796320aea26dd87e39743b5441d71ae16432c7ff12b19b3b03",
+      "originalExists": true
+    },
+    {
+      "path": "resources/views/admin/news.blade.php",
+      "originalSha256": "a328ccad7ed759f6466365470fb32115cf3a162c8d17a5265e91796340858ae3",
+      "patchedSha256": "ba852b0c4db82bf3111f096bde332156b9629ee2be1357f0ee0f212c21ff7316",
+      "originalExists": true
+    },
+    {
+      "path": "resources/views/admin/news-edit.blade.php",
+      "originalSha256": "47461f112ffd8cacbd6867898f4ff5785b8553fce3220ceb07e3ed908b700470",
+      "patchedSha256": "1bdf06f8a28c73e1aaf3ba2277ef4f6a944ac401dcb0ad96d95badb0b7058447",
+      "originalExists": true
+    },
+    {
+      "path": "resources/views/news/show.blade.php",
+      "originalSha256": "aed5801e5fbd0a00109bec0d23991daddd3b920d5551b088711835f4dd805a6d",
+      "patchedSha256": "29f2cb220695973b74898058232ef8cbb194fab6ba59bef1e701db051b697f0d",
+      "originalExists": true
+    },
+    {
+      "path": "resources/views/news/index.blade.php",
+      "originalSha256": "cdcafe326f496476c9765590a55196b5521bbfccaa27cf4d11439a6ff85c37b1",
+      "patchedSha256": "a16cd97d27ff0d1e4fb1a62a3d8d8fd4b7643f56d94bdce70d1fc1931d912259",
+      "originalExists": true
+    },
+    {
+      "path": "resources/views/welcome.blade.php",
+      "originalSha256": "8001af74db6894043fa5f2db1eda0455d35b4413f51834e1ba2d113d38207c1f",
+      "patchedSha256": "c5afc99f412ef11041b1c3cc40c3896994c1f90d6d24a6a3671ac1433108e8c9",
+      "originalExists": true
+    },
+    {
+      "path": "resources/views/components/circular-gallery.blade.php",
+      "originalSha256": "3ff57d4f95764a77cb5bd3ff55f4f003f4676fc66cb429c5eac9cc591179e067",
+      "patchedSha256": "3594d27f051c0e14978e0697cb370d49b8be36ec8d5dca8ba5611afa6050d28a",
+      "originalExists": true
+    },
+    {
+      "path": "resources/views/admin/dashboard.blade.php",
+      "originalSha256": "4544ce8d5374309d6ca0bc8edfec3cd4a9878181256b122f2d76d3b88a4bd86b",
+      "patchedSha256": "fff4866591fbb58c2281e8ef2c5b319e626d66c374abab0f63a4a18febe67dfb",
+      "originalExists": true
+    },
+    {
+      "path": "resources/views/admin/members.blade.php",
+      "originalSha256": "abb77bc762414a0abbd35cd2d9a06db146585ffdcd6bea2efc619e26225cfaea",
+      "patchedSha256": "3ab443c3099346cfcb205c4c1e8b769f1db241b07ca9dfaa4a0bd90f27c99365",
+      "originalExists": true
+    },
+    {
+      "path": "resources/views/member/dashboard.blade.php",
+      "originalSha256": "52cff90b7745f9fca32278fa05dd68e3a6c1d1a8f0f2df046a8b95d1cbc01247",
+      "patchedSha256": "23b7f5b6ba751abdad665c3e0e186fe90fb8c2b76ae87c825d317f8442a69843",
+      "originalExists": true
+    },
+    {
+      "path": "resources/views/components/kia-card.blade.php",
+      "originalSha256": "4da82bcfc75744a155417e12d0d188e26332c5fea7cb95642b017d4485c718b6",
+      "patchedSha256": "5e330872ab82db37e51f3a881a0ea78c68af4b50d92763ccbe14cb1be375ff9d",
+      "originalExists": true
+    }
+  ]
+}

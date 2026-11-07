@@ -1,0 +1,27 @@
+# Never package secrets, dependencies from Windows, or local backups.
+.git
+.env
+.env.*
+.env*
+!.env.example
+node_modules
+vendor
+.vscode
+.idea
+.vercel
+.phpunit.cache
+.phpunit.result.cache
+*.log
+*.zip
+/backup_*/
+/temp_*/
+/backup*/
+/temp*/
+/tests/
+database/*.sqlite
+database/database.sqlite
+storage/logs/*
+storage/app/public/*
+public/storage
+public/hot
+public/build

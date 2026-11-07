@@ -1,34 +1,24 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
+/**
+ * Migrasi lama keliru membuat / menghapus tabel `news`.
+ * `news` sudah ditangani oleh create_news_table.php.
+ *
+ * Sengaja tidak membuat tabel `events` karena struktur tabel tersebut
+ * belum dapat dipastikan dari migrasi asli. Jika fitur events diperlukan,
+ * buat migrasi BARU berdasarkan kebutuhan model dan controller.
+ */
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        // Cek dulu apakah tabel news sudah ada, jika belum baru buat
-        if (!Schema::hasTable('news')) {
-            Schema::create('news', function (Blueprint $table) {
-                $table->id();
-                $table->string('title');
-                $table->text('content');
-                $table->string('image')->nullable();
-                $table->date('event_date')->nullable();
-                $table->timestamps();
-            });
-        }
+        // No-op: jangan mengubah tabel news.
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('news');
+        // No-op: jangan menghapus tabel news milik migrasi lain.
     }
 };

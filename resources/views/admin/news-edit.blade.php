@@ -77,8 +77,8 @@
 
                 <div class="mt-5 overflow-hidden rounded-2xl border border-[#d9e1da] bg-[#eff3ee]">
                     <img id="news-edit-preview"
-                         src="{{ $news->image ? \Illuminate\Support\Facades\Storage::url($news->image) : '' }}"
-                         data-original="{{ $news->image ? \Illuminate\Support\Facades\Storage::url($news->image) : '' }}"
+                         src="{{ $news->image ? \App\Support\NulesmanaMedia::newsUrl($news->image) : '' }}"
+                         data-original="{{ $news->image ? \App\Support\NulesmanaMedia::newsUrl($news->image) : '' }}"
                          alt="Pratinjau foto sampul berita"
                          class="{{ $news->image ? '' : 'hidden ' }}aspect-video w-full object-cover">
                     <div id="news-edit-empty" class="{{ $news->image ? 'hidden ' : '' }}flex aspect-video flex-col items-center justify-center gap-2 text-[#7c9182]">

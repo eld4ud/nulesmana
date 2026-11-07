@@ -153,7 +153,7 @@
 
                                 @if($news->image)
                                     <img
-                                        src="{{ \Illuminate\Support\Facades\Storage::url($news->image) }}"
+                                        src="{{ \App\Support\NulesmanaMedia::newsUrl($news->image) }}"
                                         alt="{{ $news->title }}"
                                         class="h-28 w-full rounded-xl bg-gray-100 object-cover sm:w-32"
                                     >

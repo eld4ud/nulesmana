@@ -13,7 +13,7 @@
     $member = $user->member;
     $banom = $member?->banom ?: 'Anggota';
     $photoPath = $member?->photo ?? null;
-    $photoUrl = $photoPath ? url('/storage/' . ltrim($photoPath, '/')) : null;
+    $photoUrl = $photoPath ? \App\Support\NulesmanaMedia::memberUrl($member) : null;
 
     $menus = [
         ['title' => 'Kartu Identitas Anggota', 'description' => 'Lihat kartu digital dan informasi KIA Anda.', 'route' => 'member.kia', 'icon' => 'ph-identification-card'],

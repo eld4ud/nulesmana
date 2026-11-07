@@ -1,0 +1,32 @@
+/* Scoped validation UI for /daftar-anggota. Tidak menyentuh dashboard. */
+#nl-signup-form .nl-field-invalid {
+  border-color: #c62828 !important;
+  background-color: #fff8f8 !important;
+  box-shadow: 0 0 0 2px rgba(198, 40, 40, .13) !important;
+}
+#nl-signup-form .nl-photo-invalid {
+  border-color: #c62828 !important;
+  background-color: #fff8f8 !important;
+  box-shadow: 0 0 0 2px rgba(198, 40, 40, .12) !important;
+}
+#nl-signup-form .nl-validation-message {
+  display: block;
+  margin-top: 6px;
+  color: #ac1e1e;
+  font-size: .75rem;
+  line-height: 1.45;
+  font-weight: 650;
+}
+#nl-signup-form .nl-field-shake {
+  animation: nl-invalid-nudge .28s ease-in-out 1;
+}
+@keyframes nl-invalid-nudge {
+  0%, 100% { transform: translateX(0); }
+  22% { transform: translateX(-4px); }
+  48% { transform: translateX(4px); }
+  74% { transform: translateX(-2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #nl-signup-form .nl-field-shake { animation: none !important; }
+}
+#nl-signup-form .nl-validation-message[hidden] { display: none !important; }

@@ -18,7 +18,7 @@ return new class extends Migration
     {
         if (! Schema::hasColumn('users', 'username')) {
             Schema::table('users', function (Blueprint $table) {
-                $table->string('username', 30)->nullable()->unique()->after('name');
+                $table->string('username', 30)->nullable()->unique();
             });
         }
 

@@ -12,6 +12,7 @@
     $inputClass = 'w-full bg-[#F5F4F0] border border-[#D9DDD8] rounded-xl px-4 py-3 text-xs sm:text-sm font-semibold text-[#183C2F] outline-none focus:ring-2 focus:ring-[#183C2F]/30 focus:border-[#183C2F] transition';
 @endphp
 @section('content')
+<link data-nl-validation-kit rel="stylesheet" href="{{ asset('css/nulesmana-signup-errors.css') }}">
 <style>
     /* Atribut hidden selalu menang dari class utilitas. */
     .nl-signup-step[hidden],
@@ -415,4 +416,6 @@
     }
 })();
 </script>
+<script data-nl-validation-kit>window.nulesmanaSignupServerErrors = @json($errors->messages());</script>
+<script defer src="{{ asset('js/nulesmana-signup-errors.js') }}"></script>
 @endsection

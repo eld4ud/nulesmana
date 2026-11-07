@@ -18,7 +18,7 @@
         'banom' => (string) $member->banom,
         'gender' => (string) ($member->gender ?: 'Belum diisi'),
         'photo' => $member->photo
-            ? \Illuminate\Support\Facades\Storage::disk('public')->url($member->photo)
+            ? \App\Support\NulesmanaMedia::memberUrl($member)
             : '',
     ])->values();
 @endphp
@@ -501,7 +501,7 @@
                     @if($member->photo)
 
                         <img
-                            src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($member->photo) }}"
+                            src="{{ \App\Support\NulesmanaMedia::memberUrl($member) }}"
                             alt="Foto {{ $member->name }}"
                             class="members-avatar"
                             loading="lazy"
@@ -609,7 +609,7 @@
                         @if($member->photo)
 
                             <img
-                                src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($member->photo) }}"
+                                src="{{ \App\Support\NulesmanaMedia::memberUrl($member) }}"
                                 alt="Foto {{ $member->name }}"
                                 class="members-avatar"
                                 loading="lazy"

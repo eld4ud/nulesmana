@@ -6,6 +6,7 @@ use App\Mail\FeedbackMail;
 use App\Models\Member;
 use App\Models\News;
 use App\Models\User;
+use App\Support\NulesmanaMedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -110,7 +111,7 @@ class PublicController extends Controller
 
         // Simpan foto ke storage/app/public/members.
         $photoPath = $request->file('photo')
-            ->store('members', 'public');
+            ->store('members', NulesmanaMedia::memberDisk());
 
         // Batalkan penyimpanan file jika gagal.
         if (! $photoPath) {
@@ -154,7 +155,7 @@ class PublicController extends Controller
         } catch (\Throwable $e) {
 
             // Jangan menyisakan file jika database gagal.
-            Storage::disk('public')->delete($photoPath);
+            Storage::disk(NulesmanaMedia::memberDisk())->delete($photoPath);
 
             throw $e;
         }

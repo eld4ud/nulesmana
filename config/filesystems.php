@@ -15,6 +15,9 @@ return [
 
     'default' => env('FILESYSTEM_DISK', 'local'),
 
+    // Local Laragon stays unchanged; use 'supabase' in .env.supabase / Vercel.
+    'nulesmana_mode' => env('NULESMANA_STORAGE_MODE', 'local'),
+
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
@@ -29,6 +32,30 @@ return [
     */
 
     'disks' => [
+// Nulesmana: Supabase Storage (S3-compatible). Never expose S3 keys to the browser.
+'supabase_news' => [
+    'driver' => 's3',
+    'key' => env('SUPABASE_S3_KEY'),
+    'secret' => env('SUPABASE_S3_SECRET'),
+    'region' => env('SUPABASE_S3_REGION', 'ap-southeast-1'),
+    'bucket' => 'news-images',
+    'endpoint' => env('SUPABASE_S3_ENDPOINT'),
+    'use_path_style_endpoint' => true,
+    'url' => env('SUPABASE_NEWS_PUBLIC_URL'),
+    'throw' => true,
+],
+
+'supabase_members' => [
+    'driver' => 's3',
+    'key' => env('SUPABASE_S3_KEY'),
+    'secret' => env('SUPABASE_S3_SECRET'),
+    'region' => env('SUPABASE_S3_REGION', 'ap-southeast-1'),
+    'bucket' => 'member-photos',
+    'endpoint' => env('SUPABASE_S3_ENDPOINT'),
+    'use_path_style_endpoint' => true,
+    'throw' => true,
+],
+
 
         'local' => [
             'driver' => 'local',

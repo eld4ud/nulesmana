@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Support\NulesmanaMedia;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,7 +17,7 @@ class AdminMemberCardController extends Controller
         $user = $member->user;
         $nia = $member->nia ?: $user?->nia ?: 'NIA belum terbit';
         $photoUrl = $member->photo
-            ? Storage::disk('public')->url($member->photo)
+            ? NulesmanaMedia::memberUrl($member)
             : null;
 
         return view('admin.kartu-anggota', compact('member', 'user', 'nia', 'photoUrl'));

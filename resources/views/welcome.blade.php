@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
+    <!-- NU_SAFE_SKELETON_BEGIN -->
+    <style id="nu-safe-skeleton-perf">
+        #nu-skeleton { display: none !important; }
+        html.nl-reveal-enabled [data-hero-enter] {
+            opacity: 1 !important;
+            visibility: visible !important;
+            filter: none !important;
+            transform: none !important;
+        }
+    </style>
+    <!-- NU_SAFE_SKELETON_END -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Skeleton styles: inline so they render before the large page styles/scripts. -->
@@ -138,9 +149,9 @@
     <noscript><style>#nu-skeleton { display: none !important; }</style></noscript>
     <title>Ranting NU Lesmana - Portal Resmi Warga</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.tailwindcss.com"></script>
+    
     <link rel="stylesheet" href="{{ asset('css/nulesmana-animations.css') }}">
-<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
     <style>
         body { font-family: 'DM Sans', sans-serif; }
         .font-arabic { font-family: 'Amiri', serif; font-weight: 400; }
@@ -340,6 +351,7 @@
     <link data-nu-v6-fonts rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Bebas+Neue&amp;family=Instrument+Serif:ital@1&amp;family=Manrope:wght@500;600;700&amp;display=swap">
     <link rel="stylesheet" href="{{ asset('css/nulesmana-public-type.css') }}?v=61">
     <link rel="stylesheet" href="{{ asset('css/nulesmana-techtext.css') }}?v=61">
+    <link data-nu-mobile-stable rel="stylesheet" href="{{ asset('css/nulesmana-mobile-stable.css') }}?v=1">
 </head>
 <body class="nu-public-v6 bg-[#F7F8F5] text-gray-900 min-h-screen relative overflow-x-hidden selection:bg-[#203d2e] selection:text-white">
     <!-- Skeleton overlay for the homepage. All elements are decorative placeholders. -->
@@ -472,7 +484,7 @@
                     <span class="mt-2 text-xs font-semibold uppercase tracking-[.2em] text-[#648171]">Pengurus Ranting Nahdlatul Ulama</span>
                 </div>
                 {{-- Foto asli bisa diletakkan di public/image/about-nu-lesmana.webp. Tampilan fallback tetap rapi jika belum ada. --}}
-                <img src="{{ asset('image/about-nu-lesmana.webp') }}" alt="Dokumentasi Pengurus Ranting NU Lesmana" class="absolute inset-0 h-full w-full object-cover object-center" loading="lazy" decoding="async" onerror="this.hidden=true">
+                <img src="{{ asset('image/pengurus.webp') }}" alt="Dokumentasi Pengurus Ranting NU Lesmana" class="absolute inset-0 h-full w-full object-cover object-center" loading="lazy" decoding="async" onerror="this.hidden=true">
                 <div class="pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-[#0B281C]/70 to-transparent px-6 pb-6 pt-24 text-white">
                     <p class="text-[10px] font-bold uppercase tracking-[.18em]">Pengurus Ranting NU Lesmana</p>
                 </div>
@@ -500,19 +512,13 @@
             <div class="coverflow-stage relative h-[255px] sm:h-[340px] lg:h-[415px] overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y">
                 @foreach($galleryNews as $photo)
                     @php
-                        $original = $photo->image;
-                        $webp = preg_replace('/\.png$/i', '.webp', $original);
-
-                        $imagePath = $webp !== $original
-                            && \Illuminate\Support\Facades\Storage::disk('public')->exists($webp)
-                            ? $webp
-                            : $original;
+                        $imageUrl = \App\Support\NulesmanaMedia::preferredNewsUrl($photo->image);
                     @endphp
 
                     <a class="coverflow-slide absolute top-1/2 left-1/2 block w-[280px] h-[158px] sm:w-[400px] sm:h-[225px] lg:w-[520px] lg:h-[293px] rounded-[20px] overflow-hidden bg-[#e4e8e1] shadow-lg outline-offset-4 focus-visible:outline-2 focus-visible:outline-[#183C2F]"
                        href="{{ route('public.news.show', $photo->id) }}"
                        aria-label="Baca berita: {{ $photo->title }}" draggable="false">
-                        <img src="{{ \Illuminate\Support\Facades\Storage::url($imagePath) }}"
+                        <img src="{{ $imageUrl }}"
                              alt="{{ $photo->title }}"
                              loading="lazy"
                              decoding="async"

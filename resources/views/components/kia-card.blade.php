@@ -10,7 +10,7 @@
     $cardStatus = $cardMember?->status ?: ($cardUser?->status ?? 'pending');
     $cardSide = $side ?? 'front';
     $cardPhotoPath = $cardMember?->photo;
-    $cardPhotoUrl = filled($cardPhotoPath) ? '/storage/' . ltrim($cardPhotoPath, '/') : null;
+    $cardPhotoUrl = filled($cardPhotoPath) ? \App\Support\NulesmanaMedia::memberUrl($cardMember) : null;
     $cardQRRouteExists = \Illuminate\Support\Facades\Route::has('member.kartu.qr-profile');
     $cardQRUrl = $cardQRRouteExists && $cardMember?->id
         ? route('member.kartu.qr-profile', ['member' => $cardMember->id], false)

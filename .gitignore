@@ -25,3 +25,10 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+.env.supabase
+
+.env.vercel
+.env.vercel.local
+/backup_deploy_*/
+/temp_deploy_*/

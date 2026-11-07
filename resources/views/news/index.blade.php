@@ -308,7 +308,7 @@
         if ($path === '') return null;
         if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://', '/'])) return $path;
         if (\Illuminate\Support\Str::startsWith($path, 'storage/')) return asset($path);
-        return \Illuminate\Support\Facades\Storage::disk('public')->url($path);
+        return \App\Support\NulesmanaMedia::newsUrl($path);
     };
     $published = fn ($item) => $item->created_at?->translatedFormat('d M Y') ?? '-';
     $eventDate = fn ($item) => $item->event_date ? \Carbon\Carbon::parse($item->event_date)->translatedFormat('d M Y') : null;

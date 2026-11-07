@@ -1,0 +1,42 @@
+/* Nulesmana | Safe mobile stability patch.
+   Only loaded by welcome.blade.php. Does not modify the dashboard or JS.
+*/
+html { max-width: 100%; overflow-x: clip; }
+body { max-width: 100%; overflow-x: clip; }
+#nu-home-hero, #nu-home-hero > div, #nu-home-hero .nu-v6-hero-copy { min-width: 0; }
+#nu-home-hero img { max-width: 100%; }
+#galeri { position: relative; z-index: 0; overflow: clip; }
+#galeri .nulesmana-coverflow { max-width: 100%; isolation: isolate; }
+#galeri .coverflow-stage { overflow: hidden !important; isolation: isolate; touch-action: pan-y; }
+#galeri .coverflow-slide { max-width: calc(100vw - 32px); }
+#galeri .coverflow-slide img { display: block; width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 1023px) {
+  #nu-home-hero .nu-tech-hero-title { width: 100%; max-width: 100%; text-align: center; align-items: center; }
+  #nu-home-hero .nu-v6-description { max-width: 56ch !important; margin-inline: auto; }
+}
+@media (max-width: 639px) {
+  #nu-home-hero .nu-tech-hero-title { gap: 0; padding: .05em 0 .1em; margin-bottom: 18px !important; }
+  #nu-home-hero .nu-tech-line,
+  #nu-home-hero .nu-tech-line--sans {
+    display: block; max-width: 100%; height: auto; min-height: 1.25em;
+    font-size: clamp(32px, 9.5vw, 46px) !important;
+    line-height: 1.25 !important; letter-spacing: -.055em !important;
+    text-align: center;
+  }
+  #nu-home-hero .nu-tech-line--serif {
+    font-size: clamp(40px, 11.2vw, 54px) !important;
+    line-height: 1.27 !important; letter-spacing: -.045em !important;
+  }
+  #nu-home-hero .nu-tech-line :is(.nu-tt-word, .nu-tech-fallback) { max-width: 100%; }
+  #nu-home-hero .nu-v6-description { font-size: 14.5px !important; line-height: 1.72 !important; max-width: 38ch !important; }
+  #galeri .coverflow-stage { height: clamp(220px, 69vw, 285px) !important; }
+  #galeri .coverflow-slide { width: min(280px, calc(100vw - 36px)) !important; height: auto !important; aspect-ratio: 16 / 9; }
+  #galeri .coverflow-stage + div { padding-inline: 16px; }
+  #galeri .coverflow-stage + div button { flex-shrink: 0; }
+}
+@media (max-width: 359px) {
+  #nu-home-hero .nu-tech-line,
+  #nu-home-hero .nu-tech-line--sans { font-size: 31px !important; }
+  #nu-home-hero .nu-tech-line--serif { font-size: 39px !important; }
+  #galeri .coverflow-slide { width: calc(100vw - 32px) !important; }
+}

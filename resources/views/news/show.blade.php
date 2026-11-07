@@ -7,7 +7,7 @@
     $tanggal = $news->event_date
         ? \Carbon\Carbon::parse($news->event_date)->translatedFormat('d F Y')
         : ($news->created_at?->translatedFormat('d F Y') ?? '-');
-    $gambar = $news->image ? \Illuminate\Support\Facades\Storage::url($news->image) : null;
+    $gambar = $news->image ? \App\Support\NulesmanaMedia::newsUrl($news->image) : null;
 @endphp
 
 <div class="min-h-screen bg-[#F5F4F0] text-[#183C2F]">

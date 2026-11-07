@@ -694,7 +694,7 @@
                             @if(!empty($member->photo))
 
                                 <img
-                                    src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($member->photo) }}"
+                                    src="{{ \App\Support\NulesmanaMedia::memberUrl($member) }}"
                                     alt="Foto {{ $member->name }}"
                                     loading="lazy"
                                 >

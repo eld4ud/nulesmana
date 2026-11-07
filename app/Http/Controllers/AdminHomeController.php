@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use App\Models\News;
+use App\Support\NulesmanaMedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 
@@ -79,7 +80,7 @@ class AdminHomeController extends Controller
 
     $imagePath = null;
     if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('news', 'public');
+        $imagePath = $request->file('image')->store('news', NulesmanaMedia::newsDisk());
     }
 
     News::create([

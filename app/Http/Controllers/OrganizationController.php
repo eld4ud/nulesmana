@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Support\NulesmanaMedia;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -53,7 +54,7 @@ class OrganizationController extends Controller
 
     private function photoUrl(int $id): ?string
     {
-        $disk = Storage::disk('public');
+        $disk = Storage::disk(NulesmanaMedia::organizationDisk());
         foreach (self::PHOTO_EXTENSIONS as $extension) {
             $path = self::PHOTO_DIRECTORY . '/position-' . $id . '.' . $extension;
             if ($disk->exists($path)) return $disk->url($path) . '?v=' . $disk->lastModified($path);
@@ -68,7 +69,7 @@ class OrganizationController extends Controller
 
     private function photoAdjustment(int $id): array
     {
-        $disk = Storage::disk('public');
+        $disk = Storage::disk(NulesmanaMedia::organizationDisk());
         $path = $this->adjustmentPath($id);
         if (!$disk->exists($path)) return self::ADJUST_DEFAULTS;
 
@@ -85,7 +86,7 @@ class OrganizationController extends Controller
     private function savePhotoAdjustment(Request $request, int $id): void
     {
         if ($request->boolean('remove_photo') && !$request->hasFile('photo')) {
-            Storage::disk('public')->delete($this->adjustmentPath($id));
+            Storage::disk(NulesmanaMedia::organizationDisk())->delete($this->adjustmentPath($id));
             return;
         }
 
@@ -97,7 +98,7 @@ class OrganizationController extends Controller
             'y' => (int) $request->input('photo_y', self::ADJUST_DEFAULTS['y']),
             'zoom' => (int) $request->input('photo_zoom', self::ADJUST_DEFAULTS['zoom']),
         ];
-        if (!Storage::disk('public')->put($this->adjustmentPath($id), json_encode($adjustment, JSON_THROW_ON_ERROR))) {
+        if (!Storage::disk(NulesmanaMedia::organizationDisk())->put($this->adjustmentPath($id), json_encode($adjustment, JSON_THROW_ON_ERROR))) {
             throw ValidationException::withMessages([
                 'photo_x' => 'Pengaturan posisi foto gagal disimpan. Periksa izin tulis storage.',
             ]);
@@ -191,7 +192,7 @@ class OrganizationController extends Controller
         abort_if($position === null, 404);
         DB::table('organization_positions')->where('id', $id)->delete();
         $this->deletePhoto($id);
-        Storage::disk('public')->delete($this->adjustmentPath($id));
+        Storage::disk(NulesmanaMedia::organizationDisk())->delete($this->adjustmentPath($id));
         return redirect()->route('admin.struktur.index', ['banom' => $position->banom])
             ->with('success', 'Jabatan beserta fotonya dihapus. Data anggota tetap aman.');
     }
@@ -206,7 +207,7 @@ class OrganizationController extends Controller
                 throw ValidationException::withMessages(['photo' => 'Format foto harus JPG, PNG, atau WEBP.']);
             }
             $path = self::PHOTO_DIRECTORY . '/position-' . $id . '.' . $extension;
-            $stored = $photo->storeAs(self::PHOTO_DIRECTORY, 'position-' . $id . '.' . $extension, 'public');
+            $stored = $photo->storeAs(self::PHOTO_DIRECTORY, 'position-' . $id . '.' . $extension, NulesmanaMedia::organizationDisk());
             if (!$stored) {
                 throw ValidationException::withMessages(['photo' => 'Foto gagal disimpan. Periksa penyimpanan server.']);
             }
@@ -218,7 +219,7 @@ class OrganizationController extends Controller
 
     private function deletePhoto(int $id, ?string $except = null): void
     {
-        $disk = Storage::disk('public');
+        $disk = Storage::disk(NulesmanaMedia::organizationDisk());
         foreach (self::PHOTO_EXTENSIONS as $extension) {
             $path = self::PHOTO_DIRECTORY . '/position-' . $id . '.' . $extension;
             if ($path !== $except && $disk->exists($path)) $disk->delete($path);

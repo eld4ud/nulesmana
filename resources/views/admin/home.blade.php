@@ -137,7 +137,7 @@
                             <!-- Foto Sampul -->
                             <div class="h-48 w-full bg-gray-200 relative overflow-hidden">
                                 @if($news->image)
-                                    <img src="{{ \Illuminate\Support\Facades\Storage::url($news->image) }}" class="w-full h-full object-cover">
+                                    <img src="{{ \App\Support\NulesmanaMedia::newsUrl($news->image) }}" class="w-full h-full object-cover">
                                 @else
                                     <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-60">
                                 @endif

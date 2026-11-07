@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\News;
+use App\Support\NulesmanaMedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
@@ -37,7 +38,7 @@ class NewsEditController extends Controller
 
         $newImagePath = null;
         if ($request->hasFile('image')) {
-            $newImagePath = $request->file('image')->store('news', 'public');
+            $newImagePath = $request->file('image')->store('news', NulesmanaMedia::newsDisk());
             $changes['image'] = $newImagePath;
         } elseif ($request->boolean('remove_image')) {
             $changes['image'] = null;
@@ -47,7 +48,7 @@ class NewsEditController extends Controller
             $news->update($changes);
         } catch (Throwable $exception) {
             if ($newImagePath) {
-                Storage::disk('public')->delete($newImagePath);
+                Storage::disk(NulesmanaMedia::newsDisk())->delete($newImagePath);
             }
             throw $exception;
         }
