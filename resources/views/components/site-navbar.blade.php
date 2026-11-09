@@ -14,6 +14,7 @@
         $cekKartuUrl = route('member.signup');
     }
     $links = [
+        ['Beranda', $home],
         ['Berita & Agenda', route('public.news.index')],
         ['Struktur Organisasi', route('struktur.banom')],
         ['Cek Kartu', $cekKartuUrl],

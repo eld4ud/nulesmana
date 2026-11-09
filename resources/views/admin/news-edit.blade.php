@@ -56,8 +56,10 @@
                 <div>
                     <label for="news-edit-date" class="mb-2 block text-sm font-bold text-[#173d30]">Tanggal kegiatan</label>
                     <input id="news-edit-date" name="event_date" type="date" required
+                           max="{{ now('Asia/Jakarta')->toDateString() }}" data-nulesmana-date-limit
                            value="{{ old('event_date', $news->event_date ? \Carbon\Carbon::parse($news->event_date)->format('Y-m-d') : '') }}"
                            class="w-full rounded-xl border border-[#d9e1da] bg-[#f8faf7] px-4 py-3 text-sm text-[#173d30] outline-none focus:border-[#173d30] focus:ring-2 focus:ring-[#dce8df]">
+                    <p class="mt-1 text-xs text-[#617368]">Maksimal tanggal hari ini (WIB). Tanggal besok tidak bisa dipilih.</p>
                     @error('event_date')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                 </div>
 
@@ -118,6 +120,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/nulesmana-news-date-limit.js') }}" defer></script>
 <script>
 (() => {
     const input = document.getElementById('news-edit-image');

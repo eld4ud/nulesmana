@@ -57,10 +57,13 @@
                                 id="event_date"
                                 type="date"
                                 name="event_date"
+                                max="{{ now('Asia/Jakarta')->toDateString() }}"
+                                data-nulesmana-date-limit
                                 value="{{ old('event_date') }}"
                                 required
                                 class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none transition focus:border-[#292929] focus:ring-2 focus:ring-[#e5e5e2]"
                             >
+                            <p class="mt-1 text-xs text-gray-500">Maksimal tanggal hari ini (WIB). Tanggal besok tidak bisa dipilih.</p>
                             @error('event_date')
                                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                             @enderror
@@ -223,6 +226,7 @@
 
 @endsection
 @push('scripts')
+<script src="{{ asset('js/nulesmana-news-date-limit.js') }}" defer></script>
     <script>
         const imageInput = document.getElementById('image');
         const imageName = document.getElementById('imageName');
